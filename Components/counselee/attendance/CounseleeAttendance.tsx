@@ -102,6 +102,7 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
       phoneNumber,
       currentCounselor,
     };
+    // console.log(formDataParticipantRegistration)
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     try {
