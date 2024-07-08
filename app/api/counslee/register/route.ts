@@ -2,8 +2,16 @@ import { SERVER_URL } from "@/Components/config/config";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const { firstName, lastName, age, gender, address, phoneNumber } =
-    await req.json();
+  const {
+    firstName,
+    lastName,
+    age,
+    gender,
+    address,
+    phoneNumber,
+    currentCounselor,
+  } = await req.json();
+
   const formData = {
     firstName,
     lastName,
@@ -11,14 +19,23 @@ export async function POST(req: NextRequest, res: NextResponse) {
     gender,
     address,
     phoneNumber,
+    currentCounselor,
   };
+  const filteredFormData = Object.entries(formData)
+    .filter(
+      ([key, value]) => value !== null && value !== undefined && value !== ""
+    )
+    .reduce((obj: any, [key, value]) => {
+      obj[key] = value;
+      return obj;
+    }, {});
   const header = new Headers();
   header.append("Content-Type", "application/json");
   try {
     const response = await fetch(`${SERVER_URL}/counselee/create`, {
       method: "POST",
       headers: header,
-      body: JSON.stringify(formData),
+      body: JSON.stringify(filteredFormData),
     });
     if (response.ok) {
       const responseData = await response.json();

@@ -19,6 +19,7 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [openRegistration, setOpenRegistration] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [currentCounselor, setCurrentCounselor] = useState("");
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
   const { state, dispatch } = useGlobalState();
@@ -99,6 +100,7 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
       gender,
       address,
       phoneNumber,
+      currentCounselor,
     };
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
@@ -310,7 +312,11 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
           >
             {openRegistration && (
               <div>
-                <RegistrationFormForAll />
+                <RegistrationFormForAll
+                  setCurrentCounselor={(value: string) =>
+                    setCurrentCounselor(value)
+                  }
+                />
               </div>
             )}
             <div className="flex flex-col gap-5 ">
@@ -346,7 +352,11 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
                   {response?.map((item, index) => (
                     <div key={index} className="flex flex-col">
                       <div
-                        className={`bg-gray-50 w-full p-2 flex items-center gap-3`}
+                        className={`${
+                          state.theme.theme === "LIGHT"
+                            ? "bg-gray-50"
+                            : "bg-stone-950"
+                        } w-full p-2 flex items-center gap-3`}
                       >
                         <input
                           type="checkbox"

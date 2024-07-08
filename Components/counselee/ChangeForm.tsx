@@ -20,8 +20,14 @@ import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import SuccessPage from "./SuccessPage";
 import { useFormStatus } from "react-dom";
 import RegistrationFormForAll from "./RegistrationFormForAll";
+interface Counselor {
+  PrabhujiName: any;
+  PrabhujiPhone: any;
+  MatajiName: any;
+  MatajiPhone: any;
+}
 
-function ChangeForm({ counselors }: { counselors?: counselor[] }) {
+function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   const router = useRouter();
   const { state, dispatch } = useGlobalState();
   const [formState, setFormState] = useState({
@@ -55,6 +61,7 @@ function ChangeForm({ counselors }: { counselors?: counselor[] }) {
   const [counselorPreference3, setCounselorPreference3] = useState("");
   const [reasonForCounselorChange, setReasonForCounselorChange] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [currentCounselor, setCurrentCounselor] = useState("");
   const [alreadyAskedToExistingCounselor, setAlreadyAskedToExistingCounselor] =
     useState(false);
   const [alreadyAttendingNewCounselor, setAlreadyAttendingNewCounselor] =
@@ -110,6 +117,7 @@ function ChangeForm({ counselors }: { counselors?: counselor[] }) {
       gender,
       address,
       phoneNumber,
+      currentCounselor,
     };
 
     const headers = new Headers();
@@ -128,7 +136,6 @@ function ChangeForm({ counselors }: { counselors?: counselor[] }) {
         });
         return;
       }
-
       const responseCounselee = await fetch(`/api/counslee/${phoneNumber}`);
       if (!responseCounselee.ok) {
         if (responseCounselee.status === 404) {
@@ -312,7 +319,11 @@ function ChangeForm({ counselors }: { counselors?: counselor[] }) {
           >
             {openRegistration && (
               <div>
-                <RegistrationFormForAll />
+                <RegistrationFormForAll
+                  setCurrentCounselor={(value: string) =>
+                    setCurrentCounselor(value)
+                  }
+                />
               </div>
             )}
             <div className="flex flex-col gap-5 ">
@@ -470,7 +481,7 @@ function MenuIconAndDropDown<T>({
   disabled = false,
 }: PropsMenu<T>) {
   const [isSelectionOpen, toggleSelection] = useState(false);
-  const { state } = useGlobalState();
+  const { state, dispatch } = useGlobalState();
   const menuRef: any = useRef();
   const [selectedOption, setSelectedOption] = useState("");
   const [modalStyle, setModalStyle] = useState({
@@ -522,6 +533,29 @@ function MenuIconAndDropDown<T>({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [toggleSelection, closeModal]);
+
+  async function selectedOptionFetch(phoneNumber: string) {
+    try {
+      const response = await fetch(`/api/counselor/phone/${phoneNumber}`);
+
+      if (response.ok) {
+        const responseData = await response.json();
+        const counselorId = responseData?.content?.id;
+        setSelected(counselorId);
+      } else {
+        const responseData = await response.json();
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { type: "ERROR", message: "not able to find counselor" },
+        });
+      }
+    } catch (error: any) {
+      dispatch({
+        type: "SHOW_TOAST",
+        payload: { type: "ERROR", message: error.message },
+      });
+    }
+  }
   return (
     <div className="relative inline-block text-left w-full" ref={menuRef}>
       <button
@@ -590,11 +624,13 @@ function MenuIconAndDropDown<T>({
                   key={index}
                   onClick={() => {
                     setSelectedOption(
-                      item.initiatedName
-                        ? item.initiatedName
-                        : `${item.firstName} ${item.lastName}`
+                      item.PrabhujiName && item.MatajiName
+                        ? `${item.PrabhujiName} & ${item.MatajiName}`
+                        : `${item.PrabhujiName} ${item.MatajiName}`
                     );
-                    setSelected(item.id);
+                    selectedOptionFetch(item.PrabhujiPhone);
+
+                    // console.log(item.PrabhujiPhone);
                     toggleSelection(false);
                   }}
                   className={`px-2 py-1.5 rounded-lg ${
@@ -605,9 +641,9 @@ function MenuIconAndDropDown<T>({
                       : "hover:bg-stone-700"
                   }`}
                 >
-                  {item.initiatedName
-                    ? item.initiatedName
-                    : `${item.firstName} ${item.lastName}`}
+                  {item.PrabhujiName && item.MatajiName
+                    ? `${item.PrabhujiName} & ${item.MatajiName}`
+                    : `${item.PrabhujiName} ${item.MatajiName}`}
                 </li>
               ))}
             </ul>

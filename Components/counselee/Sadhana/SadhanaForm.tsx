@@ -53,6 +53,7 @@ function SadhanaForm({
   const { state, dispatch } = useGlobalState();
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
+  const [currentCounselor, setCurrentCounselor] = useState("");
   const [formData, setFormData] = useState<any>({});
   const [checkedItems, setCheckedItems] = useState<any[]>([]);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -169,6 +170,7 @@ function SadhanaForm({
       gender,
       address,
       phoneNumber,
+      currentCounselor,
     };
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
@@ -431,7 +433,11 @@ function SadhanaForm({
           >
             {openRegistration && (
               <div>
-                <RegistrationFormForAll />
+                <RegistrationFormForAll
+                  setCurrentCounselor={(value: string) =>
+                    setCurrentCounselor(value)
+                  }
+                />
               </div>
             )}
             <div className="flex flex-col gap-5">

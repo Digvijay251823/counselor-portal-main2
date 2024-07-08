@@ -22,7 +22,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
   const [selectedActivity, setSelectedActivity] = useState("");
   const { state, dispatch } = useGlobalState();
   const { counselorid } = useParams();
-
+  const [currentCounselor, setCurrentCounselor] = useState("");
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
@@ -77,6 +77,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
       gender,
       address,
       phoneNumber,
+      currentCounselor,
     };
 
     const headers = new Headers();
@@ -266,8 +267,20 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
             state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
           }`}
         >
-          <form action={handleSubmitChangeCounselor}>
-            {openRegistration && <RegistrationFormForAll />}
+          <form
+            action={
+              openRegistration
+                ? IfNotRegisteredChangeCounselor
+                : handleSubmitChangeCounselor
+            }
+          >
+            {openRegistration && (
+              <RegistrationFormForAll
+                setCurrentCounselor={(value: string) =>
+                  setCurrentCounselor(value)
+                }
+              />
+            )}
             <div className="flex flex-col gap-5 ">
               <div className="flex flex-col gap-5">
                 {!counseleeDetails?.currentCounselor ? (
