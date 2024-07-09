@@ -328,12 +328,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
             )}
             <div className="flex flex-col gap-5 ">
               <div className="flex flex-col gap-5">
-                {!counseleeObject?.currentCounselor ? (
-                  <h1 className="text-lg font-bold text-red-500 text-center">
-                    Note: Since you you have not been allotted a counselor Fill
-                    The Form Below
-                  </h1>
-                ) : (
+                {counseleeObject?.currentCounselor && (
                   <div className="flex md:flex-row flex-col items-center md:gap-5">
                     <div className="flex items-center gap-4">
                       <p
@@ -355,11 +350,10 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   </div>
                 )}
                 <div>
-                  <h1 className="font-bold text-lg">Give three preference</h1>
-                  <p>
-                    you have three preferences to choose the counselor if you
-                    dont have any you can keep it unchanged
-                  </p>
+                  <h1 className="font-bold text-lg">
+                    Select your three preferred counselor
+                  </h1>
+                  <p>( if you dont have any you can keep it unchanged )</p>
                 </div>
                 <div className="flex flex-col gap-5">
                   <MenuIconAndDropDown
@@ -394,14 +388,22 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   />
                 </div>
               </div>
-              <div
-                className={`flex flex-col gap-2 ${
-                  counseleeObject?.currentCounselee ? "flex " : "hidden"
-                }`}
-              >
-                <label htmlFor="reasonForCounselorChange" className="font-bold">
-                  Reason for change
-                </label>
+              <div className={`flex flex-col gap-2 `}>
+                {counseleeObject?.currentCounselor ? (
+                  <label
+                    htmlFor="reasonForCounselorChange"
+                    className="font-bold"
+                  >
+                    Reason for change <i className="text-red-400">*</i>
+                  </label>
+                ) : (
+                  <label
+                    htmlFor="reasonForCounselorChange"
+                    className="font-bold"
+                  >
+                    Write some description( not mandetory )
+                  </label>
+                )}
                 <input
                   type="text"
                   name="reasonForCounselorChange"
@@ -412,7 +414,11 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                       ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
                       : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
                   }`}
-                  placeholder="why you want to change counselor?"
+                  placeholder={
+                    counseleeObject?.currentCounselor
+                      ? "why you want to change counselor?"
+                      : "why you chosen these counselors?"
+                  }
                 />
               </div>
               <div
@@ -424,7 +430,8 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   htmlFor="alreadySpokenToExistingCounselor"
                   className="font-bold"
                 >
-                  Have you already spoken to the existing counselor?
+                  Have you already spoken to the existing counselor?{" "}
+                  <i className="text-red-400">*</i>
                 </label>
                 <MenuOthersDropDown
                   setSelected={(value: string) =>
@@ -441,7 +448,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
               >
                 <label htmlFor="" className="font-bold">
                   Have you already spoken to the new counselor or attended some
-                  of the meetings?
+                  of the meetings? <i className="text-red-400">*</i>
                 </label>
                 <MenuOthersDropDown
                   setSelected={(value) =>

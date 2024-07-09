@@ -29,6 +29,7 @@ export default function Counselees({ response }: { response: counselee[] }) {
                 }`}
               >
                 <th className={`px-6 py-3`}>CURRENT COUNSELOR</th>
+                <th className={`px-6 py-3`}>INITIATED NAME</th>
                 <th className={`px-6 py-3`}>FIRST NAME</th>
                 <th className={`px-6 py-3`}>LAST NAME</th>
                 <th className={`px-6 py-3`}>PHONE NUMBER</th>
@@ -56,6 +57,13 @@ export default function Counselees({ response }: { response: counselee[] }) {
                 >
                   <td className={`px-4 py-1.5`}>
                     {item?.currentCounselor?.initiatedName}
+                  </td>
+                  <td className={`px-4 py-1.5`}>
+                    {item.initiatedName ? (
+                      <div>{item.initiatedName}</div>
+                    ) : (
+                      <div className="text-gray-400">Not Available</div>
+                    )}
                   </td>
                   <td className={`px-4 py-1.5`}>{item.firstName}</td>
                   <td className={`px-4 py-1.5`}>{item.lastName}</td>

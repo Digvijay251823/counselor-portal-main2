@@ -24,7 +24,7 @@ export default function RegistrationFormForAll({
           state.theme.theme === "LIGHT" ? "bg-gray-100" : "bg-stone-800"
         }`}
       >
-        Please Register First Cause You Are Not Registered
+        Please register yourself
       </div>
       <div className="flex flex-col gap-3 px-3">
         <label htmlFor="firstName" className="font-bold text-lg">

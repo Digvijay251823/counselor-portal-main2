@@ -12,8 +12,8 @@ export default function ChangeCounselor({
 }) {
   const { state } = useGlobalState();
   return (
-    <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
-      <div>
+    <div className="w-screen">
+      <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
         <div className="overflow-x-auto shadow-md rounded">
           <table
             className={`w-full text-left border  ${
@@ -36,6 +36,7 @@ export default function ChangeCounselor({
                     : "border-b-stone-700 font-bold"
                 }`}
               >
+                <td className={`px-6 py-3`}>INITIATED NAME</td>
                 <td className={`px-6 py-3`}>FIRST NAME</td>
                 <td className={`px-6 py-3`}>LAST NAME</td>
                 <td className={`px-6 py-3`}>PHONE NUMBER</td>
@@ -46,7 +47,7 @@ export default function ChangeCounselor({
                 <td className={`px-6 py-3`}>PREFERENCE 1</td>
                 <td className={`px-6 py-3`}>PREFERENCE 2</td>
                 <td className={`px-6 py-3`}>PREFERENCE 3</td>
-                <td className={`px-6 py-3`}>Actions</td>
+                <td className={`px-6 py-3`}>ACTIONS</td>
               </tr>
             </thead>
             <tbody
@@ -65,6 +66,13 @@ export default function ChangeCounselor({
                       : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
                   }
                 >
+                  <td className={`px-4 py-1.5`}>
+                    {item.counselee.initiatedName ? (
+                      <div>{item.counselee.initiatedName}</div>
+                    ) : (
+                      <div className="text-gray-400">Not Available</div>
+                    )}
+                  </td>
                   <td className={`px-4 py-1.5`}>{item.counselee.firstName}</td>
                   <td className={`px-4 py-1.5`}>{item.counselee.lastName}</td>
                   <td className={`px-4 py-1.5`}>
@@ -102,12 +110,16 @@ export default function ChangeCounselor({
                     )}
                   </td>
                   <td>
-                    <div>
-                      <ApproveAndAllotCounselor
-                        changeFormId={item.id}
-                        counseleeId={item.counselee.id}
-                      />
-                    </div>
+                    {item.statusOfChange === "APPROVED" ? (
+                      <div className="text-gray-400 text-center">Approved</div>
+                    ) : (
+                      <div>
+                        <ApproveAndAllotCounselor
+                          changeFormId={item.id}
+                          counseleeId={item.counselee.id}
+                        />
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

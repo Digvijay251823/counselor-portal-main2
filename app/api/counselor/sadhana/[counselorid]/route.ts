@@ -6,10 +6,9 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { counselorid: string } }
 ) {
+  console.log(params.counselorid);
   const {
     numberOfRounds,
-    earlyJapaRoundsBefore8AM,
-    earlyJapaRoundsAfter8AM,
     first8RoundsCompletedTime,
     next8RoundsCompletedTime,
     wakeUpTime,
@@ -22,11 +21,11 @@ export async function POST(
     speaker,
     attendedArti,
     mobileInternetUsage,
+    topic,
+    visibleSadhana,
   } = await req.json();
   const formData = {
     numberOfRounds,
-    earlyJapaRoundsBefore8AM,
-    earlyJapaRoundsAfter8AM,
     first8RoundsCompletedTime,
     next8RoundsCompletedTime,
     wakeUpTime,
@@ -39,6 +38,8 @@ export async function POST(
     speaker,
     attendedArti,
     mobileInternetUsage,
+    topic,
+    visibleSadhana,
   };
   const authcookie = cookies().get("AUTH")?.value;
   const authtoken = authcookie && JSON.parse(authcookie);
@@ -54,7 +55,6 @@ export async function POST(
         body: JSON.stringify(formData),
       }
     );
-
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(

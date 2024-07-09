@@ -32,6 +32,7 @@ function ActivitiesPage({ response }: { response: counseleeActivities[] }) {
                   }`}
                 >
                   <th className={`px-6 py-3`}>ACTIVITY NAME</th>
+                  <th className={`px-6 py-3`}>INITIATED NAME</th>
                   <th className={`px-6 py-3`}>COUNSELOR NAME</th>
                   <th className={`px-6 py-3`}>COUNSELEE FIRSTNAME</th>
                   <th className={`px-6 py-3`}>COUNSELEE LASTNAME</th>
@@ -52,6 +53,13 @@ function ActivitiesPage({ response }: { response: counseleeActivities[] }) {
                     <td className={`px-6 py-4`}>{item?.activity?.name}</td>
                     <td className={`px-6 py-4`}>
                       {item?.counselor?.initiatedName}
+                    </td>
+                    <td className={`px-6 py-4`}>
+                      {item?.counselee?.initiatedName ? (
+                        <div>{item?.counselee?.initiatedName}</div>
+                      ) : (
+                        <div className="text-gray-400">Not Available</div>
+                      )}
                     </td>
                     <td className={`px-6 py-4`}>
                       {item?.counselee?.firstName}

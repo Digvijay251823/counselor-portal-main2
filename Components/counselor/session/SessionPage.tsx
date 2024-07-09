@@ -96,14 +96,20 @@ function SessionPage({ response }: { response: sessions[] }) {
                         </div>
                       </td>
                       <td className={`px-4 py-1.5`}>
-                        <DeleteSession
-                          sessionData={session}
-                          deletedSession={(value: sessions) => {
-                            setSessionArray((prev) =>
-                              prev.filter((item) => item.id !== value.id)
-                            );
-                          }}
-                        />
+                        <div>
+                          {session.expired ? (
+                            <div className="text-gray-400">Expired</div>
+                          ) : (
+                            <DeleteSession
+                              sessionData={session}
+                              deletedSession={(value: sessions) => {
+                                setSessionArray((prev) =>
+                                  prev.filter((item) => item.id !== value.id)
+                                );
+                              }}
+                            />
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

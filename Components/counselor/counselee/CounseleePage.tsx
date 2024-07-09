@@ -67,6 +67,7 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
               }`}
             >
               <tr className="border-b border-b-stone-400">
+                <th className={`px-6 py-3`}>initiatedName</th>
                 <th className={`px-6 py-3`}>firstName</th>
                 <th className={`px-6 py-3`}>lastName</th>
                 <th className={`px-6 py-3`}>Contact Number</th>
@@ -91,20 +92,31 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                     }
                   >
                     <td className={`px-6 py-2`}>
-                      {item.firstName ? (
-                        <div>{item.firstName}</div>
+                      {item.initiatedName ? (
+                        <div>{item.initiatedName}</div>
                       ) : (
-                        <p>null</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className={`px-6 py-2`}>
-                      {item.lastName ? <div>{item.lastName}</div> : <p>null</p>}
+                      {item.firstName ? (
+                        <div>{item.firstName}</div>
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
+                    </td>
+                    <td className={`px-6 py-2`}>
+                      {item.lastName ? (
+                        <div>{item.lastName}</div>
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className={`px-6 py-2`}>
                       {item.phoneNumber ? (
                         <div>{item.phoneNumber}</div>
                       ) : (
-                        <p>null</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className={`px-6 py-2`}>
@@ -134,7 +146,7 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                           )}
                         </div>
                       ) : (
-                        <p>null</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className={`px-6 py-2`}>
@@ -145,27 +157,47 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                               dateString={item.createdAt.toString()}
                             />
                           ) : (
-                            <p>null</p>
+                            <p className="text-gray-400">Not Available</p>
                           )}
                         </div>
                       ) : (
-                        <p>null</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className={`px-6 py-2`}>
-                      {item.email ? <div>{item.email}</div> : <p>null</p>}
+                      {item.email ? (
+                        <div>{item.email}</div>
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className={`px-6 py-2`}>
-                      {item.address ? <div>{item.address}</div> : <p>null</p>}
+                      {item.address ? (
+                        <div>{item.address}</div>
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className={`px-6 py-2`}>
-                      {item.gender ? <div>{item.gender}</div> : <p>null</p>}
+                      {item.gender ? (
+                        <div>{item.gender}</div>
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className={`px-6 py-2`}>
-                      {item.age ? <div>{item.age}</div> : <p>null</p>}
+                      {item.age ? (
+                        <div>{item.age}</div>
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className={`px-6 py-2`}>
-                      {item.address ? <div>{item.address}</div> : <p>null</p>}
+                      {item.address ? (
+                        <div>{item.address}</div>
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className={`px-6 py-2`}>
                       <div
