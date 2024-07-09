@@ -227,7 +227,9 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   return (
     <div>
       <div className="md:px-10 md:pt-20 md:pb-10 px-5 pt-10 pb-5">
-        <h1 className="text-4xl font-bold">Counselor Provider</h1>
+        <h1 className="text-3xl font-bold">
+          COUNSELOR ACCEPTANCE/CHANGE APPLICATION FORM
+        </h1>
         <p>
           This form is meant to be filled by any candidate who wish to accept a
           counselor for the first time or wish to change to a different
@@ -349,6 +351,111 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                     </p>
                   </div>
                 )}
+                <div className="flex flex-col gap-3">
+                  <label className="font-bold text-lg">
+                    Legal Name Of Spouce ( if applicable) :
+                  </label>
+                  <input
+                    type="text"
+                    className={`text-lg border px-4 py-1.5 font-normal outline-none ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+                        : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+                    }`}
+                    placeholder="Legal Name Of Spouce"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="children name/age"
+                    className="font-bold text-lg"
+                  >
+                    Children Name/Age
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="name , age"
+                    id="children name/age"
+                    className={`text-lg border px-4 py-1.5 font-normal outline-none ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+                        : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+                    }`}
+                  />
+                </div>
+                <h1 className="font-bold text-lg">Spiritual Information :</h1>
+                <div className="flex flex-col gap-3">
+                  <label
+                    htmlFor="Your Initiating or Aspired Spiritual Master"
+                    className="font-bold text-lg"
+                  >
+                    Your Initiating or Aspired Spiritual Master
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Prabhupada"
+                    id="Your Initiating or Aspired Spiritual Master"
+                    className={`text-lg border px-4 py-1.5 font-normal outline-none ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+                        : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+                    }`}
+                  />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <label
+                    htmlFor="Year of Harinam Initiation"
+                    className="font-bold text-lg"
+                  >
+                    Year of Harinam Initiation
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="2024"
+                    id="Year of Harinam Initiation"
+                    className={`text-lg border px-4 py-1.5 font-normal outline-none ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+                        : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+                    }`}
+                  />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <label
+                    htmlFor="Hariname Initiation Place"
+                    className="font-bold text-lg"
+                  >
+                    Hariname Initiation Place
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Pune"
+                    id="Hariname Initiation Place"
+                    className={`text-lg border px-4 py-1.5 font-normal outline-none ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+                        : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+                    }`}
+                  />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <label
+                    htmlFor="Your spouse’s Initiating or Aspired Spiritual master"
+                    className="font-bold text-lg"
+                  >
+                    Your spouse’s Initiating or Aspired Spiritual master
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Prabhupada"
+                    id="Your spouse’s Initiating or Aspired Spiritual master"
+                    className={`text-lg border px-4 py-1.5 font-normal outline-none ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+                        : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+                    }`}
+                  />
+                </div>
                 <div>
                   <h1 className="font-bold text-lg">
                     Select your three preferred counselor
@@ -401,7 +508,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                     htmlFor="reasonForCounselorChange"
                     className="font-bold"
                   >
-                    Write some description( not mandetory )
+                    Write some comment( not mandetory )
                   </label>
                 )}
                 <input
