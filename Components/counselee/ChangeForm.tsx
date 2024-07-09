@@ -521,7 +521,8 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                 </div>
               </div>
               <div className={`flex flex-col gap-2 `}>
-                {counseleeObject?.currentCounselor ? (
+                {currentCounselor.length > 0 ||
+                counseleeObject?.currentCounselor ? (
                   <label
                     htmlFor="reasonForCounselorChange"
                     className="font-bold"
@@ -547,6 +548,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                       : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
                   }`}
                   placeholder={
+                    currentCounselor.length > 0 ||
                     counseleeObject?.currentCounselor
                       ? "why you want to change counselor?"
                       : "any comment of your mind"
