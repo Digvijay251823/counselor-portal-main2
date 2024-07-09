@@ -30,28 +30,6 @@ interface Counselor {
 function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   const router = useRouter();
   const { state, dispatch } = useGlobalState();
-  const [formState, setFormState] = useState({
-    id: "",
-    firstName: "",
-    lastName: "",
-    initiatedName: "",
-    phoneNumber: "",
-    gender: "",
-    age: 0,
-    email: "",
-    maritalStatus: "",
-    address: "",
-    profession: "",
-    yourInitiatingSpiritualMaster: "",
-    harinamInitiationDate: "",
-    harinamInitiationPlace: "",
-    chantingRounds: "",
-    chantingStartedThisRoundsDate: "",
-    recommendedBy: "",
-    connectedToCounselorSince: "",
-    createdAt: "",
-    updatedAt: "",
-  });
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [counseleeObject, setCounseleeObject] = useState<counselee | any>({});
   const [counselorPreference1, setCounselorPreference1] = useState("");
@@ -65,8 +43,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   const [alreadyAskedToExistingCounselor, setAlreadyAskedToExistingCounselor] =
     useState(false);
   const [alreadyAttendingNewCounselor, setAlreadyAttendingNewCounselor] =
-    useState(false);
-  const [isLoadingCounseleeRequest, setIsLoadingCounseleeRequest] =
     useState(false);
 
   useEffect(() => {
@@ -103,13 +79,24 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       setOpenRegistration(false);
     }
   }, [phoneNumber]);
-
+  console.log(counseleeObject.currentCounselor);
   async function IfNotRegisteredChangeCounselor(e: FormData) {
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
     const age = e.get("age")?.toString();
     const gender = e.get("gender")?.toString();
     const address = e.get("address")?.toString();
+    const legalNameOfSpouce = e.get("Legal Name Of Spouce")?.toString();
+    const yourInitiatingSpiritualMaster = e
+      .get("Your Initiating or Aspired Spiritual Master")
+      ?.toString();
+    const harinamInitiationDate = e
+      .get("Year of Harinam Initiation")
+      ?.toString();
+    const harinamInitiationPlace = e
+      .get("Hariname Initiation Place")
+      ?.toString();
+    const children = e.get("children name/age")?.toString();
     const formDataParticipantRegistration = {
       firstName,
       lastName,
@@ -119,6 +106,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       phoneNumber,
       currentCounselor,
     };
+    console.log(formDataParticipantRegistration);
 
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
@@ -156,6 +144,15 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
         preferedCounselor1: counselorPreference1,
         preferedCounselor2: counselorPreference2,
         preferedCounselor3: counselorPreference3,
+        legalNameOfSpouce,
+        yourInitiatingSpiritualMaster,
+        harinamInitiationDate,
+        harinamInitiationPlace,
+        children: [
+          {
+            name: children,
+          },
+        ],
       };
 
       const response = await fetch("/api/counslee/changecounselorrequest", {
@@ -185,6 +182,17 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   }
 
   async function handleSubmitChangeCounselor(e: FormData) {
+    const yourInitiatingSpiritualMaster = e
+      .get("Your Initiating or Aspired Spiritual Master")
+      ?.toString();
+    const legalNameOfSpouce = e.get("Legal Name Of Spouce")?.toString();
+    const harinamInitiationDate = e
+      .get("Year of Harinam Initiation")
+      ?.toString();
+    const harinamInitiationPlace = e
+      .get("Hariname Initiation Place")
+      ?.toString();
+    const children = e.get("children name/age")?.toString();
     const formData = {
       counselee: counseleeObject?.id,
       preferedCounselor1: counselorPreference1,
@@ -193,7 +201,17 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       reasonForCounselorChange: reasonForCounselorChange,
       alreadySpokenToExistingCounselor: alreadyAskedToExistingCounselor,
       alreadySpokenToNewCounselor: alreadyAttendingNewCounselor,
+      legalNameOfSpouce,
+      yourInitiatingSpiritualMaster,
+      harinamInitiationDate,
+      harinamInitiationPlace,
+      children: [
+        {
+          name: children,
+        },
+      ],
     };
+
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     try {
@@ -322,9 +340,10 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
             {openRegistration && (
               <div>
                 <RegistrationFormForAll
-                  setCurrentCounselor={(value: string) =>
-                    setCurrentCounselor(value)
-                  }
+                  setCurrentCounselor={(value: string) => {
+                    console.log(value);
+                    setCurrentCounselor(value);
+                  }}
                 />
               </div>
             )}
@@ -352,11 +371,16 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   </div>
                 )}
                 <div className="flex flex-col gap-3">
-                  <label className="font-bold text-lg">
+                  <label
+                    htmlFor="Legal Name Of Spouce ( if applicable)"
+                    className="font-bold text-lg"
+                  >
                     Legal Name Of Spouce ( if applicable) :
                   </label>
                   <input
                     type="text"
+                    id="Legal Name Of Spouce ( if applicable)"
+                    name="Legal Name Of Spouce"
                     className={`text-lg border px-4 py-1.5 font-normal outline-none ${
                       state.theme.theme === "LIGHT"
                         ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
@@ -376,6 +400,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                     type="text"
                     placeholder="name , age"
                     id="children name/age"
+                    name="children name/age"
                     className={`text-lg border px-4 py-1.5 font-normal outline-none ${
                       state.theme.theme === "LIGHT"
                         ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
@@ -395,6 +420,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                     type="text"
                     placeholder="Prabhupada"
                     id="Your Initiating or Aspired Spiritual Master"
+                    name="Your Initiating or Aspired Spiritual Master"
                     className={`text-lg border px-4 py-1.5 font-normal outline-none ${
                       state.theme.theme === "LIGHT"
                         ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
@@ -413,6 +439,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                     type="number"
                     placeholder="2024"
                     id="Year of Harinam Initiation"
+                    name="Year of Harinam Initiation"
                     className={`text-lg border px-4 py-1.5 font-normal outline-none ${
                       state.theme.theme === "LIGHT"
                         ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
@@ -431,6 +458,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                     type="text"
                     placeholder="Pune"
                     id="Hariname Initiation Place"
+                    name="Hariname Initiation Place"
                     className={`text-lg border px-4 py-1.5 font-normal outline-none ${
                       state.theme.theme === "LIGHT"
                         ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
@@ -448,7 +476,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   <input
                     type="text"
                     placeholder="Prabhupada"
-                    id="Your spouse’s Initiating or Aspired Spiritual master"
+                    id="Your spouse's Initiating or Aspired Spiritual master"
                     className={`text-lg border px-4 py-1.5 font-normal outline-none ${
                       state.theme.theme === "LIGHT"
                         ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
@@ -524,13 +552,16 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   placeholder={
                     counseleeObject?.currentCounselor
                       ? "why you want to change counselor?"
-                      : "why you chosen these counselors?"
+                      : "any comment of your mind"
                   }
                 />
               </div>
               <div
                 className={`flex flex-col gap-2 ${
-                  counseleeObject?.currentCounselor ? "flex " : "hidden"
+                  currentCounselor.length > 0 ||
+                  counseleeObject?.currentCounselor
+                    ? "flex "
+                    : "hidden"
                 }`}
               >
                 <label
@@ -548,9 +579,13 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   }
                 />
               </div>
+
               <div
                 className={`flex flex-col gap-2 ${
-                  counseleeObject?.currentCounselor ? "flex " : "hidden"
+                  currentCounselor.length > 0 ||
+                  counseleeObject?.currentCounselor
+                    ? "flex "
+                    : "hidden"
                 }`}
               >
                 <label htmlFor="" className="font-bold">
@@ -848,7 +883,9 @@ function MenuOthersDropDown({
         <div
           className={`origin-top-left absolute font-semibold text-lg z-[10000] ${
             position === "up" ? "bottom-0 mb-12" : "mt-2 right-0"
-          } w-full rounded-lg shadow-lg bg-white border-gray-300 ring-1 ring-black ring-opacity-5 focus:outline-none py-1 px-1`}
+          } w-full rounded-lg shadow-lg ${
+            state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-950"
+          } border-gray-300 ring-1 ring-black ring-opacity-5 focus:outline-none py-1 px-1`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="options-menu"
@@ -865,7 +902,11 @@ function MenuOthersDropDown({
                 setSelected("YES");
                 toggleSelection(false);
               }}
-              className={`px-2 py-1.5 rounded-lg`}
+              className={`px-2 py-1.5 rounded-lg ${
+                state.theme.theme === "LIGHT"
+                  ? "hover:bg-gray-200"
+                  : "hover:bg-stone-900"
+              }`}
             >
               YES
             </li>
@@ -875,7 +916,11 @@ function MenuOthersDropDown({
                 setSelected("YES");
                 toggleSelection(false);
               }}
-              className={`px-2 py-1.5 rounded-lg`}
+              className={`px-2 py-1.5 rounded-lg ${
+                state.theme.theme === "LIGHT"
+                  ? "hover:bg-gray-200"
+                  : "hover:bg-stone-900"
+              }`}
             >
               NO
             </li>

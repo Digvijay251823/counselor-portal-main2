@@ -11,6 +11,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
     reasonForCounselorChange,
     alreadySpokenToExistingCounselor,
     alreadySpokenToNewCounselor,
+    legalNameOfSpouce,
+    currentCounselor,
+    yourInitiatingSpiritualMaster,
+    harinamInitiationDate,
+    harinamInitiationPlace,
+    children,
   } = await req.json();
 
   const authcookie = cookies().get("AUTH")?.value;
@@ -26,6 +32,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
     reasonForCounselorChange,
     alreadySpokenToExistingCounselor,
     alreadySpokenToNewCounselor,
+    currentCounselor,
+  };
+  const updateData = {
+    legalNameOfSpouce,
+    yourInitiatingSpiritualMaster,
+    harinamInitiationDate,
+    harinamInitiationPlace,
+    children,
   };
   const filteredFormData = Object.entries(formData)
     .filter(
@@ -35,8 +49,27 @@ export async function POST(req: NextRequest, res: NextResponse) {
       obj[key] = value;
       return obj;
     }, {});
+  const filteredUpdateData = Object.entries(updateData)
+    .filter(
+      ([key, value]) => value !== null && value !== undefined && value !== ""
+    )
+    .reduce((obj: any, [key, value]) => {
+      obj[key] = value;
+      return obj;
+    }, {});
 
   try {
+    if (Object.keys(filteredUpdateData).length !== 0) {
+      const response = await fetch(
+        `${SERVER_URL}/counselee/update/${counselee}`,
+        {
+          method: "PUT",
+          headers: header,
+          body: JSON.stringify(filteredUpdateData),
+        }
+      );
+    }
+
     const response = await fetch(`${SERVER_URL}/counselorprovider/create`, {
       method: "POST",
       headers: header,
@@ -44,7 +77,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     });
     if (response.ok) {
       const responseData = await response.json();
-
       return NextResponse.json(
         { message: "Successfully applied for Change counselor" },
         { status: response.status }
@@ -62,6 +94,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: response.status }
       );
     }
+    return NextResponse.json(
+      {
+        message: "success success",
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

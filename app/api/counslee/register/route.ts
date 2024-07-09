@@ -45,9 +45,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
       );
     } else {
       if (response.status === 409) {
-        return NextResponse.json({
-          message: "counselee already exist please try different number",
-        });
+        return NextResponse.json(
+          {
+            message: "counselee already exist please try different number",
+          },
+          { status: 409 }
+        );
       }
       const errorData = await response.json();
       return NextResponse.json(

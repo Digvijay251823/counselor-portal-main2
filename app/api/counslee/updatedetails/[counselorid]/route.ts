@@ -14,6 +14,12 @@ export async function POST(
       age,
       email,
       address,
+      legalNameOfSpouce,
+      currentCounselor,
+      yourInitiatingSpiritualMaster,
+      harinamInitiationDate,
+      harinamInitiationPlace,
+      children,
     } = await req.json();
     const formData = {
       firstName,
@@ -23,8 +29,22 @@ export async function POST(
       age,
       email,
       address,
+      legalNameOfSpouce,
+      currentCounselor,
+      yourInitiatingSpiritualMaster,
+      harinamInitiationDate,
+      harinamInitiationPlace,
+      children,
     };
-    console.log(formData);
+
+    const filteredFormData = Object.entries(formData)
+      .filter(
+        ([key, value]) => value !== null && value !== undefined && value !== ""
+      )
+      .reduce((obj: any, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      }, {});
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
 
@@ -33,7 +53,7 @@ export async function POST(
       {
         method: "PUT",
         headers: headers,
-        body: JSON.stringify(formData),
+        body: JSON.stringify(filteredFormData),
       }
     );
     if (response.ok) {

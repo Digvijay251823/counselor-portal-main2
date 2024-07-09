@@ -112,7 +112,9 @@ export default function RegistrationFormForAll({
         </label>
         <MenuIconAndDropDown
           DataArr={data}
-          setSelected={(value: string) => setCurrentCounselor(value)}
+          setSelected={(value: string) => {
+            setCurrentCounselor(value);
+          }}
         />
       </div>
     </div>
