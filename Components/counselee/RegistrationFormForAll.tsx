@@ -197,6 +197,7 @@ function MenuIconAndDropDown<T>({
 
       if (response.ok) {
         const responseData = await response.json();
+        console.log(responseData);
         const counselorId = responseData?.content?.id;
         setSelected(counselorId);
       } else {

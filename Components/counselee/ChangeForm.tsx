@@ -79,7 +79,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       setOpenRegistration(false);
     }
   }, [phoneNumber]);
-  console.log(counseleeObject.currentCounselor);
   async function IfNotRegisteredChangeCounselor(e: FormData) {
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
@@ -106,7 +105,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       phoneNumber,
       currentCounselor,
     };
-    console.log(formDataParticipantRegistration);
 
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
@@ -341,7 +339,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
               <div>
                 <RegistrationFormForAll
                   setCurrentCounselor={(value: string) => {
-                    console.log(value);
                     setCurrentCounselor(value);
                   }}
                 />

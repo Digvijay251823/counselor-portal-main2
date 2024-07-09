@@ -1,6 +1,8 @@
 import { SERVER_URL } from "@/Components/config/config";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { counselorid: string } }
