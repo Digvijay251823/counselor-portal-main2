@@ -142,6 +142,7 @@ function ApproveAndAllotCounselor({
   const [counselors, setCounselors] = useState([]);
   const { state, dispatch } = useGlobalState();
   const [selectedCounselor, setSelectedCounselor] = useState<any>({});
+  console.log(selectedCounselor);
   useEffect(() => {
     (async () => {
       try {
@@ -209,7 +210,13 @@ function ApproveAndAllotCounselor({
       >
         Approve
       </button>
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          setSelectedCounselor({});
+        }}
+      >
         <div
           className={`md:px-10 py-10 rounded-xl shadow-xl ${
             state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
@@ -227,15 +234,17 @@ function ApproveAndAllotCounselor({
                 />
               </div>
             </div>
-            <div className="flex justify-center py-10">
-              <SubmitHandlerButton
-                btnStyles={`w-[140px] py-2 focus:ring-4 text-lg font-semibold ${
-                  state.theme.theme === "LIGHT"
-                    ? "bg-purple-400 focus:ring-purple-500"
-                    : "bg-purple-400 focus:ring-purple-800"
-                }`}
-              />
-            </div>
+            {selectedCounselor?.id && (
+              <div className="flex justify-center py-10">
+                <SubmitHandlerButton
+                  btnStyles={`w-[140px] py-2 focus:ring-4 text-lg font-semibold ${
+                    state.theme.theme === "LIGHT"
+                      ? "bg-purple-400 focus:ring-purple-500"
+                      : "bg-purple-400 focus:ring-purple-800"
+                  }`}
+                />
+              </div>
+            )}
           </form>
         </div>
       </Modal>

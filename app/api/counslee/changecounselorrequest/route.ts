@@ -1,5 +1,4 @@
 import { SERVER_URL } from "@/Components/config/config";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -17,11 +16,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     harinamInitiationPlace,
     children,
   } = await req.json();
-  const authcookie = cookies().get("AUTH")?.value;
-  const authtoken = authcookie && JSON.parse(authcookie);
   const header = new Headers();
   header.append("Content-Type", "application/json");
-  header.append("Authorization", `Bearer ${authtoken.token}`);
   const formData = {
     counselee,
     preferedCounselor1,
@@ -78,7 +74,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       headers: header,
       body: JSON.stringify(filteredFormData),
     });
-    console.log(response.status);
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(

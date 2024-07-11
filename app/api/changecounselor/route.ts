@@ -13,13 +13,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
     counselorId,
     counseleeId,
   };
-
   try {
     const response = await fetch(`${SERVER_URL}/counselee/updatecounselor`, {
       method: "PUT",
       headers: header,
       body: JSON.stringify(formData),
     });
+
     if (response.ok) {
       const responseApprove = await fetch(
         `${SERVER_URL}/counselorprovider/approve/${changeRequestId}`,
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     } else {
       const responseData = await response.json();
       return NextResponse.json(
-        { message: responseData.messages },
+        { message: responseData.message },
         { status: response.status }
       );
     }
