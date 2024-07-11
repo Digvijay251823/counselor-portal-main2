@@ -53,6 +53,7 @@ function SadhanaForm({
   const { state, dispatch } = useGlobalState();
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
+  const [gender, setGender] = useState("");
   const [currentCounselor, setCurrentCounselor] = useState("");
   const [formData, setFormData] = useState<any>({});
   const [checkedItems, setCheckedItems] = useState<any[]>([]);
@@ -124,39 +125,6 @@ function SadhanaForm({
     }
     setSadhanaFormData(message);
   };
-
-  // async function handleSubmitCounselor(e: FormData) {
-  //   const phonenumber = e.get("phonenumber")?.valueOf();
-  //   if (!phonenumber) {
-  //     dispatch({
-  //       type: "SHOW_TOAST",
-  //       payload: { type: "ERROR", message: "please enter you phone number" },
-  //     });
-  //     return null;
-  //   }
-  //   try {
-  //     const response = await fetch(`/api/counslee/${phonenumber}`);
-  //     if (response.ok) {
-  //       const responseData = await response.json();
-  //       setCounseleeDetails(responseData.content.content);
-  //     } else {
-  //       if (response.status === 404) {
-  //         localStorage.setItem("PHONE_NUMBER", phonenumber.toString());
-  //         router.push("/counselee/registeration");
-  //       }
-  //       const errorData = await response.json();
-  //       dispatch({
-  //         type: "SHOW_TOAST",
-  //         payload: { type: "ERROR", message: errorData.message },
-  //       });
-  //     }
-  //   } catch (error: any) {
-  //     dispatch({
-  //       type: "SHOW_TOAST",
-  //       payload: { type: "ERROR", message: error.message },
-  //     });
-  //   }
-  // }
 
   async function handleSubmitSadhana(e: FormData) {
     const formDataObject: any = {
@@ -328,6 +296,7 @@ function SadhanaForm({
                   setCurrentCounselor={(value: string) =>
                     setCurrentCounselor(value)
                   }
+                  setSelected={(value) => setGender(value)}
                 />
               </div>
             )}

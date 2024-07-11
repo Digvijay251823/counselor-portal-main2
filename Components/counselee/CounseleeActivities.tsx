@@ -25,6 +25,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
   const [currentCounselor, setCurrentCounselor] = useState("");
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
+  const [gender, setGender] = useState("");
   const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -68,7 +69,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
     const age = e.get("age")?.toString();
-    const gender = e.get("gender")?.toString();
+
     const address = e.get("address")?.toString();
     const formDataParticipantRegistration = {
       firstName,
@@ -279,6 +280,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
                 setCurrentCounselor={(value: string) =>
                   setCurrentCounselor(value)
                 }
+                setSelected={(value) => setGender(value)}
               />
             )}
             <div className="flex flex-col gap-5 ">

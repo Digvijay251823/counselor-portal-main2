@@ -19,6 +19,7 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [openRegistration, setOpenRegistration] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [gender, setGender] = useState("");
   const [currentCounselor, setCurrentCounselor] = useState("");
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
@@ -91,7 +92,6 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
     const age = e.get("age")?.toString();
-    const gender = e.get("gender")?.toString();
     const address = e.get("address")?.toString();
     const formDataParticipantRegistration = {
       firstName,
@@ -317,6 +317,7 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
                   setCurrentCounselor={(value: string) =>
                     setCurrentCounselor(value)
                   }
+                  setSelected={(value) => setGender(value)}
                 />
               </div>
             )}
