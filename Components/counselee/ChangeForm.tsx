@@ -609,9 +609,11 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                 />
               </div>
             </div>
-            <div className="flex justify-end p-5 gap-5">
-              <SubmitHandlerButton />
-            </div>
+            {phoneNumber.length > 0 && (
+              <div className="flex justify-end p-5 gap-5">
+                <SubmitHandlerButton />
+              </div>
+            )}
           </form>
         </div>
       </div>
