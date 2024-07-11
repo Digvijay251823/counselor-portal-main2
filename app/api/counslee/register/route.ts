@@ -10,6 +10,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     address,
     phoneNumber,
     currentCounselor,
+    husband,
   } = await req.json();
 
   const formData = {

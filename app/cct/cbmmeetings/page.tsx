@@ -1,9 +1,12 @@
-import MeetingsPage from "@/Components/cct/CBMMeetings/MeetingsPage";
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
+const MeetingsPage = dynamic(
+  () => import("@/Components/cct/CBMMeetings/MeetingsPage")
+);
 
 async function getCBMMeetings(id: string) {
   unstable_noStore();

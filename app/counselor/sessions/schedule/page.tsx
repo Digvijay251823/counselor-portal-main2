@@ -1,8 +1,11 @@
 import { SERVER_URL } from "@/Components/config/config";
-import ScheduleSession from "@/Components/counselor/session/ScheduleSession";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
+const ScheduleSession = dynamic(
+  () => import("@/Components/counselor/session/ScheduleSession")
+);
 
 async function getCourses() {
   unstable_noStore();

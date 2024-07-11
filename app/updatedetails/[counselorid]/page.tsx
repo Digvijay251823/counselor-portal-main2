@@ -1,7 +1,12 @@
-import UpdateDetails from "@/Components/auth/updateDetails/UpdateDetails";
 import { SERVER_URL } from "@/Components/config/config";
-import ErrorComponent from "@/Components/utils/ErrorPage";
-import NotExistsResource from "@/Components/utils/NotFoundComponent";
+import dynamic from "next/dynamic";
+const UpdateDetails = dynamic(
+  () => import("@/Components/auth/updateDetails/UpdateDetails")
+);
+const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
+const NotExistsResource = dynamic(
+  () => import("@/Components/utils/NotFoundComponent")
+);
 
 async function getCounselorDetails(counselorid: string) {
   const response = await fetch(`${SERVER_URL}/Counselor/id/${counselorid}`);

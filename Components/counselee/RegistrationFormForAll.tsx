@@ -12,8 +12,10 @@ interface Counselor {
 
 export default function RegistrationFormForAll({
   setCurrentCounselor,
+  setSelected,
 }: {
   setCurrentCounselor: (value: string) => void;
+  setSelected: (value: string) => void;
 }) {
   const { state } = useGlobalState();
 
@@ -40,6 +42,7 @@ export default function RegistrationFormForAll({
               : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
           }`}
           placeholder="John"
+          required
         />
       </div>
       <div className="flex flex-col gap-3 px-3">
@@ -56,6 +59,7 @@ export default function RegistrationFormForAll({
               : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
           }`}
           placeholder="Doe"
+          required
         />
       </div>
       <div className="flex flex-col gap-3 px-3">
@@ -72,22 +76,15 @@ export default function RegistrationFormForAll({
               : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
           }`}
           placeholder="23"
+          required
         />
       </div>
       <div className="flex flex-col gap-3 px-3">
         <label htmlFor="gender" className="font-bold text-lg">
           gender
         </label>
-        <input
-          type="text"
-          name="gender"
-          id="gender"
-          className={`${
-            state.theme.theme === "LIGHT"
-              ? "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-              : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-          }`}
-          placeholder="MALE"
+        <MenuOthersDropDown
+          setSelected={(value: string) => setSelected(value)}
         />
       </div>
       <div className="flex flex-col gap-3 px-3">
@@ -104,12 +101,11 @@ export default function RegistrationFormForAll({
               : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
           }`}
           placeholder="Pune City"
+          required
         />
       </div>
       <div className="flex flex-col gap-3 px-3">
-        <label className="font-bold text-lg">
-          Select Current Counselor (Not Mandetory)
-        </label>
+        <label className="font-bold text-lg">Select Current Counselor</label>
         <MenuIconAndDropDown
           DataArr={data}
           setSelected={(value: string) => {
@@ -197,7 +193,6 @@ function MenuIconAndDropDown<T>({
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log(responseData);
         const counselorId = responseData?.content?.id;
         setSelected(counselorId);
       } else {
@@ -310,6 +305,130 @@ function MenuIconAndDropDown<T>({
               <p>No data to show</p>
             </ul>
           )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MenuOthersDropDown({
+  setSelected,
+  position,
+}: {
+  setSelected: (value: "MALE" | "FEMALE") => void;
+  position?: string;
+}) {
+  const [isSelectionOpen, toggleSelection] = useState(false);
+  const { state } = useGlobalState();
+  const menuRef: any = useRef();
+  const [selectedOption, setSelectedOption] = useState("");
+  const [modalStyle, setModalStyle] = useState({
+    transform: "scale(0.95)",
+    opacity: 0,
+  });
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isSelectionOpen) {
+      // Open modal animation
+      setTimeout(() => {
+        setModalStyle({
+          transform: "scale(1)",
+          opacity: 1,
+        });
+      }, 50); // Delay the transition slightly for better visual effect
+    } else {
+      // Close modal animation
+      setModalStyle({
+        transform: "scale(0.95)",
+        opacity: 0,
+      });
+      setTimeout(() => {
+        setIsClosing(false);
+      }, 3000); // Adjust this duration according to your transition duration
+    }
+  }, [isSelectionOpen]);
+
+  const closeModal = useCallback(() => {
+    setIsClosing(true);
+    toggleSelection(false);
+  }, [toggleSelection]);
+
+  // Attach click outside listener
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [toggleSelection, closeModal]);
+  return (
+    <div className="relative inline-block text-left w-full" ref={menuRef}>
+      <button
+        type="button"
+        className={`text-lg border px-4 py-1.5 font-normal outline-none w-full flex items-center justify-between ${
+          state.theme.theme === "LIGHT"
+            ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+            : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+        }`}
+        id="options-menu"
+        aria-haspopup="true"
+        aria-expanded="true"
+        onClick={() => toggleSelection(!isSelectionOpen)}
+      >
+        {selectedOption === "" ? "Select" : selectedOption}
+        <ChevronDownIcon className="h-4 w-4" />
+      </button>
+      {isSelectionOpen && (
+        <div
+          className={`origin-top-left absolute font-semibold text-lg z-[10000] ${
+            position === "up" ? "bottom-0 mb-12" : "mt-2 right-0"
+          } w-full rounded-lg shadow-lg ${
+            state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-950"
+          } border-gray-300 ring-1 ring-black ring-opacity-5 focus:outline-none py-1 px-1`}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="options-menu"
+          style={{
+            ...modalStyle,
+            transition: "transform 0.2s ease-out, opacity 0.2s ease-out",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ul className={`flex flex-col gap-3 overflow-y-auto `} role="none">
+            <li
+              onClick={() => {
+                setSelectedOption("MALE");
+                setSelected("MALE");
+                toggleSelection(false);
+              }}
+              className={`px-2 py-1.5 rounded-lg ${
+                state.theme.theme === "LIGHT"
+                  ? "hover:bg-gray-200"
+                  : "hover:bg-stone-900"
+              }`}
+            >
+              Male
+            </li>
+            <li
+              onClick={() => {
+                setSelectedOption("FEMALE");
+                setSelected("FEMALE");
+                toggleSelection(false);
+              }}
+              className={`px-2 py-1.5 rounded-lg ${
+                state.theme.theme === "LIGHT"
+                  ? "hover:bg-gray-200"
+                  : "hover:bg-stone-900"
+              }`}
+            >
+              Female
+            </li>
+          </ul>
         </div>
       )}
     </div>

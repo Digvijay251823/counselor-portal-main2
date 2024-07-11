@@ -4,6 +4,9 @@ import { useGlobalState } from "../../context/state";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import DateFormatter from "@/Components/utils/DateFormatter";
 import { GiLovers } from "react-icons/gi";
+import Modal from "@/Components/utils/Modal";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import DetailsPage from "./DetailsPage";
 
 interface Child {
   name: string;
@@ -77,7 +80,6 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                 <th className={`px-6 py-3`}>Address</th>
                 <th className={`px-6 py-3`}>Gender</th>
                 <th className={`px-6 py-3`}>Age</th>
-                <th className={`px-6 py-3`}>address</th>
                 <th className={`px-6 py-3`}>Details</th>
               </tr>
             </thead>
@@ -193,13 +195,6 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                       )}
                     </td>
                     <td className={`px-6 py-2`}>
-                      {item.address ? (
-                        <div>{item.address}</div>
-                      ) : (
-                        <p className="text-gray-400">Not Available</p>
-                      )}
-                    </td>
-                    <td className={`px-6 py-2`}>
                       <div
                         className="flex items-center"
                         onClick={() => toggleRow(index)}
@@ -220,7 +215,30 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                   {expandedRow === index && (
                     <tr>
                       <td className="border-b" colSpan={10}>
-                        <div>something</div>
+                        <Modal
+                          isOpen={expandedRow === index}
+                          onClose={() => toggleRow(index)}
+                        >
+                          <div
+                            className={`w-screen h-screen ${
+                              state.theme.theme === "LIGHT"
+                                ? "bg-white"
+                                : "bg-stone-950"
+                            }`}
+                          >
+                            <button
+                              onClick={() => toggleRow(index)}
+                              className={`absolute text-red-500 flex items-center gap-2 text-xl right-0 px-4 py-1.5 m-5 rounded-lg ${
+                                state.theme.theme === "LIGHT"
+                                  ? "bg-gray-100"
+                                  : "bg-stone-900"
+                              }`}
+                            >
+                              <XMarkIcon className="h-5 w-5" /> Close
+                            </button>
+                            <DetailsPage counseleeId={item?.id}/>
+                          </div>
+                        </Modal>
                       </td>
                     </tr>
                   )}

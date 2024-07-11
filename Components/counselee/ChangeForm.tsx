@@ -39,6 +39,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   const [counselorPreference3, setCounselorPreference3] = useState("");
   const [reasonForCounselorChange, setReasonForCounselorChange] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [gender, setGender] = useState("");
   const [currentCounselor, setCurrentCounselor] = useState("");
   const [alreadyAskedToExistingCounselor, setAlreadyAskedToExistingCounselor] =
     useState(false);
@@ -83,7 +84,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
     const age = e.get("age")?.toString();
-    const gender = e.get("gender")?.toString();
     const address = e.get("address")?.toString();
     const legalNameOfSpouce = e.get("Legal Name Of Spouce")?.toString();
     const yourInitiatingSpiritualMaster = e
@@ -125,6 +125,10 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       const responseCounselee = await fetch(`/api/counslee/${phoneNumber}`);
       if (!responseCounselee.ok) {
         if (responseCounselee.status === 404) {
+          dispatch({
+            type: "SHOW_TOAST",
+            payload: { message: "Please Register again", type: "ERROR" },
+          });
           localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
           return;
         }
@@ -152,7 +156,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
           },
         ],
       };
-
+      console.log(formData);
       const response = await fetch("/api/counslee/changecounselorrequest", {
         method: "POST",
         headers: headers,
@@ -209,7 +213,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
         },
       ],
     };
-
+    console.log(formData);
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     try {
@@ -228,7 +232,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
         const responseData = await response.json();
         dispatch({
           type: "SHOW_TOAST",
-          payload: { type: "SUCCESS", message: responseData.message },
+          payload: { type: "ERROR", message: responseData.message },
         });
       }
     } catch (error: any) {
@@ -341,6 +345,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                   setCurrentCounselor={(value: string) => {
                     setCurrentCounselor(value);
                   }}
+                  setSelected={(value) => setGender(value)}
                 />
               </div>
             )}
@@ -552,6 +557,10 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
                     counseleeObject?.currentCounselor
                       ? "why you want to change counselor?"
                       : "any comment of your mind"
+                  }
+                  required={
+                    currentCounselor.length > 0 ||
+                    counseleeObject?.currentCounselor
                   }
                 />
               </div>
@@ -911,8 +920,8 @@ function MenuOthersDropDown({
             </li>
             <li
               onClick={() => {
-                setSelectedOption("YES");
-                setSelected("YES");
+                setSelectedOption("NO");
+                setSelected("NO");
                 toggleSelection(false);
               }}
               className={`px-2 py-1.5 rounded-lg ${

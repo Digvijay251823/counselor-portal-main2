@@ -1,9 +1,12 @@
 import { SERVER_URL } from "@/Components/config/config";
-import SadhanaForm from "@/Components/counselee/Sadhana/SadhanaForm";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import NotExistsResource from "@/Components/utils/NotFoundComponent";
+const SadhanaForm = dynamic(
+  () => import("@/Components/counselee/Sadhana/SadhanaForm")
+);
 
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import React from "react";
 
 async function getSadhana(id: string) {

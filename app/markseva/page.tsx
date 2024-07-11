@@ -1,4 +1,6 @@
-import MarkCCTSeva from "@/Components/cct/MarkSeva/MarkSeva";
+import dynamic from "next/dynamic";
+
+const MarkCCTSeva = dynamic(() => import("@/Components/cct/MarkSeva/MarkSeva"));
 
 export default async function page() {
   return (

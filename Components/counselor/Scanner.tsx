@@ -22,7 +22,6 @@ interface Props {
 
 function Scanner({ response }: { response: Props }) {
   const { state } = useGlobalState();
-  const id = "f5afb0c4-25cb-412f-b8cc-941564abad32";
   return (
     <div className="px-10">
       <div className="flex flex-wrap gap-5">

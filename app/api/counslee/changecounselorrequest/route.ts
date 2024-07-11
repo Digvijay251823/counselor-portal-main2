@@ -12,13 +12,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
     alreadySpokenToExistingCounselor,
     alreadySpokenToNewCounselor,
     legalNameOfSpouce,
-    currentCounselor,
     yourInitiatingSpiritualMaster,
     harinamInitiationDate,
     harinamInitiationPlace,
     children,
   } = await req.json();
-
   const authcookie = cookies().get("AUTH")?.value;
   const authtoken = authcookie && JSON.parse(authcookie);
   const header = new Headers();
@@ -32,7 +30,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     reasonForCounselorChange,
     alreadySpokenToExistingCounselor,
     alreadySpokenToNewCounselor,
-    currentCounselor,
   };
   const updateData = {
     legalNameOfSpouce,
@@ -59,6 +56,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }, {});
 
   try {
+    if (!counselee) {
+      return NextResponse.json(
+        { message: "Please enter you phoneNumber" },
+        { status: 404 }
+      );
+    }
     if (Object.keys(filteredUpdateData).length !== 0) {
       const response = await fetch(
         `${SERVER_URL}/counselee/update/${counselee}`,
@@ -75,6 +78,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       headers: header,
       body: JSON.stringify(filteredFormData),
     });
+    console.log(response.status);
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(
@@ -90,16 +94,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
       }
       const responseData = await response.json();
       return NextResponse.json(
-        { message: responseData.messages },
+        {
+          message:
+            responseData.message ||
+            responseData.title ||
+            "unexpected error occured",
+        },
         { status: response.status }
       );
     }
-    return NextResponse.json(
-      {
-        message: "success success",
-      },
-      { status: 200 }
-    );
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

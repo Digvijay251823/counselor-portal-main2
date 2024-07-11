@@ -1,14 +1,20 @@
 import { SERVER_URL } from "@/Components/config/config";
-import Registeration from "@/Components/counselee/registeration/Registeration";
 import ErrorComponent from "@/Components/utils/ErrorPage";
+import dynamic from "next/dynamic";
 import React from "react";
+const Registeration = dynamic(
+  () => import("@/Components/counselee/registeration/Registeration")
+);
 
-async function getCounselorList() {
+async function getCounselor(counselorid: string) {
   try {
-    const counselorList = await fetch(`${SERVER_URL}/Counselor?limit=100`);
+    const counselorList = await fetch(
+      `${SERVER_URL}/Counselor/id/${counselorid}`
+    );
     if (counselorList.ok) {
       const counselorData = await counselorList.json();
-      return counselorData;
+
+      return counselorData?.content;
     } else {
       const errorData = await counselorList.json();
       return errorData;
@@ -18,9 +24,13 @@ async function getCounselorList() {
   }
 }
 
-async function page() {
+async function page({
+  params: { counselorid },
+}: {
+  params: { counselorid: string };
+}) {
   try {
-    const counselorList = await getCounselorList();
+    const counselorList = await getCounselor(counselorid);
     return (
       <div className="w-full">
         <Registeration counselorList={counselorList} />

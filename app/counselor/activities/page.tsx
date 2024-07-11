@@ -1,8 +1,13 @@
 import { SERVER_URL } from "@/Components/config/config";
-import ActivitiesPage from "@/Components/counselor/activities/ActivitiesPage";
-import ErrorComponent from "@/Components/utils/ErrorPage";
-import NotExistsResource from "@/Components/utils/NotFoundComponent";
+const ActivitiesPage = dynamic(
+  () => import("@/Components/counselor/activities/ActivitiesPage")
+);
+const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
+const NotExistsResource = dynamic(
+  () => import("@/Components/utils/NotFoundComponent")
+);
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
 async function getActivities(counselorid: string) {

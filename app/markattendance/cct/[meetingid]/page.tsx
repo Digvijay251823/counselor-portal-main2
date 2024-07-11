@@ -1,11 +1,15 @@
 import { SERVER_URL } from "@/Components/config/config";
 import { unstable_noStore } from "next/cache";
 import React from "react";
-import ErrorPage from "@/Components/utils/ErrorPage";
-import MarkCBMAttendance from "@/Components/cct/MarkAttendance/MarkAttendance";
-import NotExistsResource from "@/Components/utils/NotFoundComponent";
-import ErrorComponent from "@/Components/utils/ErrorPage";
+const MarkCBMAttendance = dynamic(
+  () => import("@/Components/cct/MarkAttendance/MarkAttendance")
+);
+const NotExistsResource = dynamic(
+  () => import("@/Components/utils/NotFoundComponent")
+);
+const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
 import data from "@/Counselors.json";
+import dynamic from "next/dynamic";
 
 async function getScheduledSessions(id: string) {
   unstable_noStore();

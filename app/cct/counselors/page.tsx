@@ -1,9 +1,12 @@
-import CounselorPage from "@/Components/cct/counselor/CounselorPage";
 import { SERVER_URL } from "@/Components/config/config";
 import Filter from "@/Components/counselor/counselee/Filter";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import React from "react";
+const CounselorPage = dynamic(
+  () => import("@/Components/cct/counselor/CounselorPage")
+);
 
 async function getCounselors() {
   unstable_noStore();

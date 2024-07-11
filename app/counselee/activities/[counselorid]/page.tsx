@@ -1,8 +1,10 @@
 import { SERVER_URL } from "@/Components/config/config";
-import CounseleeActivities from "@/Components/counselee/CounseleeActivities";
 import ErrorComponent from "@/Components/utils/ErrorPage";
-import { errorMonitor } from "events";
+import dynamic from "next/dynamic";
 import React from "react";
+const CounseleeActivities = dynamic(
+  () => import("@/Components/counselee/CounseleeActivities")
+);
 
 async function getActivities() {
   try {

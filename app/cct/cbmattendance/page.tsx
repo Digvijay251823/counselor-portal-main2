@@ -1,10 +1,12 @@
-import CBMAttendance from "@/Components/cct/AttendanceCBM/AttendanceCBM";
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
-import ErrorPage from "@/Components/utils/ErrorPage";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
+const CBMAttendance = dynamic(
+  () => import("@/Components/cct/AttendanceCBM/AttendanceCBM")
+);
 
 async function getAttendance() {
   unstable_noStore();

@@ -1,8 +1,10 @@
 import { SERVER_URL } from "@/Components/config/config";
-import SadhanaPage from "@/Components/counselor/sadhana/SadhanaPage";
-import ErrorComponent from "@/Components/utils/ErrorPage";
-import NotExistsResource from "@/Components/utils/NotFoundComponent";
+const SadhanaPage = dynamic(
+  () => import("@/Components/counselor/sadhana/SadhanaPage")
+);
+const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import React from "react";
 
 async function getSadhanaEntries() {
@@ -27,12 +29,10 @@ async function getSadhanaEntries() {
 async function page() {
   try {
     const response = await getSadhanaEntries();
-    if (!response || response.content.length === 0) {
-      return <NotExistsResource message="Nobody entered sadhana yet" />;
-    }
+
     return (
       <div className="w-screen justify-center">
-        <SadhanaPage response={response.content} />
+        <SadhanaPage response={response?.content} />
       </div>
     );
   } catch (error: any) {

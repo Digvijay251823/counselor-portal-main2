@@ -1,6 +1,9 @@
 import { SERVER_URL } from "@/Components/config/config";
-import ConfigureSadhana from "@/Components/counselor/sadhana/configure/ConfigureSadhana";
-import ErrorComponent from "@/Components/utils/ErrorPage";
+import dynamic from "next/dynamic";
+const ConfigureSadhana = dynamic(
+  () => import("@/Components/counselor/sadhana/configure/ConfigureSadhana")
+);
+const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
 import { cookies } from "next/headers";
 import React from "react";
 

@@ -1,8 +1,9 @@
-import CbmSevas from "@/Components/cct/CBMSevas/CBMSevas";
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import React from "react";
+const CbmSevas = dynamic(() => import("@/Components/cct/CBMSevas/CBMSevas"));
 
 async function cbmSevas(queryString: string) {
   unstable_noStore();

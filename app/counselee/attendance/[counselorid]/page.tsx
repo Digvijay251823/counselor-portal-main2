@@ -1,9 +1,12 @@
 import { SERVER_URL } from "@/Components/config/config";
-import CounseleeAttendance from "@/Components/counselee/attendance/CounseleeAttendance";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import NotExistsResource from "@/Components/utils/NotFoundComponent";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import React from "react";
+const CounseleeAttendance = dynamic(
+  () => import("@/Components/counselee/attendance/CounseleeAttendance")
+);
 
 async function getScheduledSessions(counselorid: string) {
   unstable_noStore();

@@ -73,8 +73,9 @@ function SadhanaForm({
             setCounseleeDetails(responseData.content.content);
           } else {
             if (response.status === 404) {
+              router.push(`/counselee/registeration/${counselorId}`);
+
               localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
-              setOpenRegistration(true);
               return;
             }
             const errorData = await response.json();
@@ -156,105 +157,6 @@ function SadhanaForm({
   //     });
   //   }
   // }
-
-  async function IfNotRegisteredSubmitAttendance(e: FormData) {
-    const firstName = e.get("firstName")?.toString();
-    const lastName = e.get("lastName")?.toString();
-    const age = e.get("age")?.toString();
-    const gender = e.get("gender")?.toString();
-    const address = e.get("address")?.toString();
-    const formDataParticipantRegistration = {
-      firstName,
-      lastName,
-      age,
-      gender,
-      address,
-      phoneNumber,
-      currentCounselor,
-    };
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    try {
-      const responseParticipant = await fetch(`/api/counslee/register`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(formDataParticipantRegistration),
-      });
-      if (!responseParticipant.ok) {
-        const responseData = await responseParticipant.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { message: responseData.message, type: "ERROR" },
-        });
-        return;
-      }
-
-      const responseCounselee = await fetch(`/api/counslee/${phoneNumber}`);
-      if (!responseCounselee.ok) {
-        if (responseCounselee.status === 404) {
-          localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
-          setOpenRegistration(false);
-          return;
-        }
-        const errorData = await responseCounselee.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "ERROR", message: errorData.message },
-        });
-        return;
-      }
-      const responseData = await responseCounselee.json();
-      setCounseleeDetails(responseData.content.content);
-      //submitting attendance
-
-      const formDataObject: any = {
-        counselorId: counselorId,
-        counseleeId: responseData?.content?.content.id,
-        sadhanaDate: new Date(),
-      };
-
-      checkedItems.forEach((value: FieldTypeFormList) => {
-        if (value.valueType === "Time") {
-          formDataObject[value.databaseField] =
-            e.get(value.databaseField)?.toString() + ":00";
-        } else if (value.valueType === "Number") {
-          formDataObject[value.databaseField] = Number(
-            e.get(value.databaseField)?.toString()
-          );
-        } else {
-          formDataObject[value.databaseField] = e
-            .get(value.databaseField)
-            ?.toString();
-        }
-      });
-
-      const response = await fetch(`/api/counslee/sadhana`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(formDataObject),
-      });
-      if (response.ok) {
-        const responseData = await response.json();
-        setFormData(formDataObject);
-        handleShare(formDataObject);
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { message: responseData.message, type: "SUCCESS" },
-        });
-      } else {
-        const responseData = await response.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { message: responseData.message, type: "ERROR" },
-        });
-      }
-    } catch (error: any) {
-      dispatch({
-        type: "SHOW_TOAST",
-        payload: { type: "ERROR", message: error.message },
-      });
-    }
-  }
 
   async function handleSubmitSadhana(e: FormData) {
     const formDataObject: any = {
@@ -398,11 +300,7 @@ function SadhanaForm({
               : "bg-stone-900 bg-opacity-40"
           }`}
         >
-          {!counseleeDetails?.currentCounselor ? (
-            <h1 className="text-lg font-bold text-red-500 text-center">
-              You are not Alloted a counselor
-            </h1>
-          ) : (
+          {counseleeDetails?.currentCounselor && (
             <div className="flex md:flex-row flex-col items-center md:gap-5">
               <div className="flex items-center gap-4">
                 <p
@@ -423,14 +321,7 @@ function SadhanaForm({
               </p>
             </div>
           )}
-          <form
-            action={
-              !openRegistration
-                ? handleSubmitSadhana
-                : IfNotRegisteredSubmitAttendance
-            }
-            className={`mt-10`}
-          >
+          <form action={handleSubmitSadhana} className={`mt-10`}>
             {openRegistration && (
               <div>
                 <RegistrationFormForAll

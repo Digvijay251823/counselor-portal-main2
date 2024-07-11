@@ -1,8 +1,11 @@
-import Counselees from "@/Components/cct/Counselees/CounseleesPage";
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import React from "react";
+const Counselees = dynamic(
+  () => import("@/Components/cct/Counselees/CounseleesPage")
+);
 
 async function getCounselee() {
   unstable_noStore();

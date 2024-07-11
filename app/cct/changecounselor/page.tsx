@@ -1,7 +1,10 @@
-import ChangeCounselor from "@/Components/cct/ChangeCounselor/ChangeCounselor";
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
+const ChangeCounselor = dynamic(
+  () => import("@/Components/cct/ChangeCounselor/ChangeCounselor")
+);
 
 async function getChangeCounselor(queryString: string) {
   unstable_noStore();

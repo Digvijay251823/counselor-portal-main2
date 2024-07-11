@@ -49,13 +49,10 @@ import { SERVER_URL } from "@/Components/config/config";
 import SuccessPage from "../SuccessPage";
 import { useFormStatus } from "react-dom";
 
-function Registeration({
-  counselorList,
-}: {
-  counselorList: { content: counselor };
-}) {
+function Registeration({ counselorList }: { counselorList: counselor }) {
   const { state, dispatch } = useGlobalState();
   const [currentStep, setCurrentStep] = useState(1);
+  const [currentCounselor, setCurrentCounselor] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [formState, setFormState] = useState<any>({
     firstName: "",
@@ -72,7 +69,7 @@ function Registeration({
     harinamInitiationDate: "",
     harinamInitiationPlace: "",
     recommendedBy: "",
-    currentCounselor: "",
+    currentCounselor: counselorList.id,
     connectedToCounselorSinceYear: "",
     husband: "",
     children: [
@@ -82,6 +79,12 @@ function Registeration({
       },
     ],
   });
+
+  useEffect(() => {
+    async () => {
+      const response = await fetch(``);
+    };
+  }, []);
 
   useEffect(() => {
     const phonenumber = localStorage.getItem("PHONE_NUMBER");
@@ -180,9 +183,19 @@ function Registeration({
   };
   return (
     <div>
-      <div className="md:px-10 md:pt-20 md:pb-10 px-5 pt-10 pb-5">
-        <h1 className="text-4xl font-bold">Registeration</h1>
+      <div className="md:px-10 md:pt-20 md:pb-10 px-5 pt-10 pb-5 relative">
+        <h1 className="text-4xl font-bold">Registration</h1>
         <p>looks like you have not registered yet please register</p>
+        <p
+          className={`text-lg border rounded-full w-max px-2 py-1.5 my-2 ${
+            state.theme.theme === "LIGHT" ? "border-black" : "border-white"
+          }`}
+        >
+          Counselor :
+          {counselorList.initiatedName
+            ? counselorList.initiatedName
+            : `${counselorList.firstName} ${counselorList.lastName}`}
+        </p>
       </div>
       <div>
         <div className="flex items-center justify-evenly gap-2 px-2">
@@ -308,7 +321,6 @@ function Registeration({
                 prevStep={prevStep}
                 formData={formState}
                 handleChange={handleChange}
-                counselorList={counselorList.content}
               />
             </>
           )}
@@ -353,7 +365,6 @@ function Step1({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="John"
             value={formData.firstName}
             onChange={handleChange}
           />
@@ -371,7 +382,6 @@ function Step1({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="Doe"
             value={formData.lastName}
             onChange={handleChange}
           />
@@ -389,7 +399,6 @@ function Step1({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="Hrinam Das"
             value={formData.initiatedName}
             onChange={handleChange}
           />
@@ -407,7 +416,6 @@ function Step1({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="7972858976"
             value={formData.phoneNumber}
             onChange={handleChange}
           />
@@ -442,7 +450,6 @@ function Step1({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="23"
             value={formData.age}
             onChange={handleChange}
           />
@@ -460,7 +467,6 @@ function Step1({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="xyz@email.com"
             value={formData.email}
             onChange={handleChange}
           />
@@ -478,7 +484,6 @@ function Step1({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="Student"
             value={formData.profession}
             onChange={handleChange}
           />
@@ -563,7 +568,6 @@ function Step2({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="Pune City"
             value={formData.address}
             onChange={handleChange}
           />
@@ -584,7 +588,6 @@ function Step2({
                     ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                     : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
                 }`}
-                placeholder="Pune City"
                 value={formData.husband}
                 onChange={handleChange}
               />
@@ -622,7 +625,6 @@ function Step2({
                   <input
                     type="text"
                     name="name"
-                    placeholder="Name"
                     value={child.name}
                     onChange={(event) =>
                       handleInputChangeChildrens(index, event)
@@ -642,7 +644,6 @@ function Step2({
                     type="number"
                     name="age"
                     id="age"
-                    placeholder="Age"
                     value={child.age}
                     onChange={(event) =>
                       handleInputChangeChildrens(index, event)
@@ -693,12 +694,10 @@ function Step3({
   prevStep,
   handleChange,
   formData,
-  counselorList,
 }: {
   prevStep: () => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   formData: FormInterface;
-  counselorList: counselor;
 }) {
   const [harinamInitiationDate, setHarinamInitiationDate] = useState<
     Date | any
@@ -730,7 +729,6 @@ function Step3({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="HG Radheshyam Pr"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -748,7 +746,7 @@ function Step3({
               handleChange(e);
               setHarinamInitiationDate(date);
             }}
-            placeholderText="enter the date of harinam initialisation"
+            placeholderText="Enter the date of harinam initialisation"
             className={`${
               state.theme.theme === "LIGHT"
                 ? "bg-purple-100 px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700 w-full"
@@ -771,27 +769,7 @@ function Step3({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="Pune City"
           />
-        </div>
-        <div className="flex flex-col gap-2 w-full">
-          <label className="font-bold" htmlFor="currentCounselor">
-            Current Counselor
-          </label>
-          <div className="w-full">
-            <MenuIconAndDropDownDevotees
-              DataArr={counselorList}
-              setSelected={(item: counselor) => {
-                const e: any = {
-                  target: {
-                    name: "currentDevotee",
-                    value: item.id,
-                  },
-                };
-                handleChange(e);
-              }}
-            />
-          </div>
         </div>
         <div className="flex flex-col gap-2">
           <label className="font-bold" htmlFor="connectedToCounselorSinceYear">
@@ -808,7 +786,7 @@ function Step3({
               handleChange(e);
               setConnectedToCounselorSinceYear(date);
             }}
-            placeholderText="enter the date of connecting to counselor"
+            placeholderText="Enter the date of connecting to counselor"
             className={`${
               state.theme.theme === "LIGHT"
                 ? "bg-purple-100 px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700 w-full"
@@ -831,7 +809,6 @@ function Step3({
                 ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
-            placeholder="Friend/Collegue/SocialMedia"
           />
         </div>
       </div>
@@ -1072,7 +1049,6 @@ function MenuIconAndDropDownDevotees({
               : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400 w-full"
           }`}
           value={selectedOption}
-          placeholder="Start typing something . . . "
         />
       </div>
       {isSelectionOpen && (

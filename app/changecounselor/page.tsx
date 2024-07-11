@@ -1,7 +1,8 @@
-import ChangeForm from "@/Components/counselee/ChangeForm";
 import React from "react";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import data from "@/Counselors.json";
+import dynamic from "next/dynamic";
+const ChangeForm = dynamic(() => import("@/Components/counselee/ChangeForm"));
 
 // async function getCounselors() {
 //   unstable_noStore();

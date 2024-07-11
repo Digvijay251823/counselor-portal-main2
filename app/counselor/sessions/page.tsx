@@ -1,8 +1,10 @@
 import { SERVER_URL } from "@/Components/config/config";
-import SessionPage from "@/Components/counselor/session/SessionPage";
-import ErrorComponent from "@/Components/utils/ErrorPage";
-import NotExistsResource from "@/Components/utils/NotFoundComponent";
+const SessionPage = dynamic(
+  () => import("@/Components/counselor/session/SessionPage")
+);
+const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
 import { unstable_noStore } from "next/cache";
+import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
 

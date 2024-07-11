@@ -186,6 +186,7 @@ function ApproveAndAllotCounselor({
           type: "SHOW_TOAST",
           payload: { message: responseData.message, type: "SUCCESS" },
         });
+        setIsOpen(false);
       } else {
         const errorData = await response.json();
         dispatch({
