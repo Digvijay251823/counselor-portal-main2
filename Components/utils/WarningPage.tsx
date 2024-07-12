@@ -27,12 +27,8 @@ export default function WarningPage({
         <div className="flex flex-col items-center py-10 ">
           <ExclamationTriangleIcon className="w-10 h-10 text-yellow-500" />
           <h1 className="text-2xl font-bold">Please Register</h1>
-          <div className="text-center">
-            Your Details Not Found In System Please Register
-          </div>
-          <p className="text-center">
-            By clicking on ok you&apos;ll be directed to the Registration page
-          </p>
+          <div className="text-center">Your Are Not Registered</div>
+          <p className="text-center">Click Ok To Proceed For Registration</p>
           <div className="flex items-center pt-10 gap-5">
             <button
               onClick={onClose}

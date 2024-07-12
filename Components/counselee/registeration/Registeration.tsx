@@ -44,8 +44,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { POST } from "@/actions/POSTREQUESTS";
-import { SERVER_URL } from "@/Components/config/config";
 import SuccessPage from "../SuccessPage";
 import { useFormStatus } from "react-dom";
 import { useRouter, useParams } from "next/navigation";
@@ -61,6 +59,7 @@ function Registeration({
   const { state, dispatch } = useGlobalState();
   const [currentStep, setCurrentStep] = useState(1);
   const [currentCounselor, setCurrentCounselor] = useState("");
+  const [errors, setErrors] = useState({});
   const [isSuccess, setIsSuccess] = useState(false);
   const [formState, setFormState] = useState<any>({
     firstName: "",
@@ -87,6 +86,28 @@ function Registeration({
       },
     ],
   });
+
+  const validateStep = () => {
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "age",
+      "phoneNumber",
+      "gender",
+      "address",
+    ];
+    const stepErrors: any = {};
+
+    requiredFields.forEach((field: any) => {
+      if (!formState[field]) {
+        stepErrors[field] = "This field is required";
+      }
+    });
+
+    setErrors(stepErrors);
+
+    return Object.keys(stepErrors).length === 0; // Return true if no errors
+  };
 
   useEffect(() => {
     const phonenumber = localStorage.getItem("PHONE_NUMBER");
@@ -136,10 +157,26 @@ function Registeration({
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setFormState({
-      ...formState,
+    if (name === "phoneNumber" && value.length !== 10) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "Contact number must be 10 digits",
+      }));
+    } else if (name === "age" && value.length < 1) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "please enter you age",
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: undefined,
+      }));
+    }
+    setFormState((prevFormState: any) => ({
+      ...prevFormState,
       [name]: value,
-    });
+    }));
   }
 
   const handleInputChangeChildrens = (
@@ -286,7 +323,13 @@ function Registeration({
           {currentStep === 1 ? (
             <>
               <Step1
-                nextStep={nextStep}
+                nextStep={() => {
+                  console.log(validateStep());
+                  if (validateStep()) {
+                    nextStep();
+                  }
+                }}
+                errors={errors}
                 formData={formState}
                 handleChange={handleChange}
               />
@@ -326,10 +369,12 @@ function Step1({
   nextStep,
   formData,
   handleChange,
+  errors,
 }: {
   nextStep: () => void;
   formData: FormInterface;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  errors: any;
 }) {
   const { state } = useGlobalState();
   return (
@@ -351,12 +396,23 @@ function Step1({
             id="firstName"
             className={`${
               state.theme.theme === "LIGHT"
-                ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-                : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                ? `${
+                    !errors.firstName
+                      ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-200 border-red-500 text-lg rounded-xl"
+                  }`
+                : `${
+                    !errors.firstName
+                      ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                  }`
             }`}
             value={formData.firstName}
             onChange={handleChange}
           />
+          {errors.firstName && (
+            <p className="text-red-500">This Field iS required</p>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <label className="font-bold" htmlFor="lastName">
@@ -368,12 +424,23 @@ function Step1({
             id="lastName"
             className={`${
               state.theme.theme === "LIGHT"
-                ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-                : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                ? `${
+                    !errors.lastName
+                      ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-200 border-red-500 text-lg rounded-xl"
+                  }`
+                : `${
+                    !errors.lastName
+                      ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                  }`
             }`}
             value={formData.lastName}
             onChange={handleChange}
           />
+          {errors.lastName && (
+            <p className="text-red-500">This Field iS required</p>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <label className="font-bold" htmlFor="initiatedName">
@@ -402,18 +469,30 @@ function Step1({
             id="phoneNumber"
             className={`${
               state.theme.theme === "LIGHT"
-                ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-                : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                ? `${
+                    !errors.phoneNumber
+                      ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-200 border-red-500 text-lg rounded-xl"
+                  }`
+                : `${
+                    !errors.phoneNumber
+                      ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                  }`
             }`}
             value={formData.phoneNumber}
             onChange={handleChange}
           />
+          {errors.phoneNumber && (
+            <p className="text-red-500">{errors.phoneNumber}</p>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <label className="font-bold" htmlFor="gender">
             Gender
           </label>
           <MenuOthersDropDown
+            errors={errors}
             dataArr={["MALE", "FEMALE"]}
             setSelected={(item: string) => {
               const e: any = {
@@ -436,8 +515,16 @@ function Step1({
             id="age"
             className={`${
               state.theme.theme === "LIGHT"
-                ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-                : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                ? `${
+                    !errors.age
+                      ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-200 border-red-500 text-lg rounded-xl"
+                  }`
+                : `${
+                    !errors.age
+                      ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                  }`
             }`}
             value={formData.age}
             onChange={handleChange}
@@ -457,6 +544,31 @@ function Step1({
                 : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
             }`}
             value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="font-bold" htmlFor="address">
+            Address
+          </label>
+          <input
+            type="text"
+            name="address"
+            id="address"
+            className={`${
+              state.theme.theme === "LIGHT"
+                ? `${
+                    !errors.address
+                      ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-200 border-red-500 text-lg rounded-xl"
+                  }`
+                : `${
+                    !errors.address
+                      ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                  }`
+            }`}
+            value={formData.address}
             onChange={handleChange}
           />
         </div>
@@ -544,23 +656,6 @@ function Step2({
               };
               handleChange(e);
             }}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label className="font-bold" htmlFor="address">
-            Address
-          </label>
-          <input
-            type="text"
-            name="address"
-            id="address"
-            className={`${
-              state.theme.theme === "LIGHT"
-                ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-                : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-            }`}
-            value={formData.address}
-            onChange={handleChange}
           />
         </div>
 
@@ -827,10 +922,12 @@ function MenuOthersDropDown({
   setSelected,
   dataArr,
   position,
+  errors,
 }: {
   setSelected: (value: string) => void;
   dataArr: string[];
   position?: string;
+  errors?: any;
 }) {
   const [isSelectionOpen, toggleSelection] = useState(false);
   const menuRef: any = useRef();
@@ -887,8 +984,16 @@ function MenuOthersDropDown({
         type="button"
         className={`flex items-center justify-between border px-2 py-2 rounded-xl gap-5 w-full focus:ring-4 outline-none focus:border font-semibold ${
           state.theme.theme === "LIGHT"
-            ? "border-gray-300 bg-white focus:ring-purple-100 focus:border-purple-600"
-            : "border-stone-800 bg-stone-950 focus:ring-purple-950 focus:border-purple-400"
+            ? `${
+                !errors?.gender
+                  ? "border-gray-300 bg-white focus:ring-purple-100 focus:border-purple-600"
+                  : "border border-red-500 ring-4 ring-red-200"
+              }`
+            : `${
+                !errors.gender
+                  ? "border-stone-800 bg-stone-950 focus:ring-purple-950 focus:border-purple-400"
+                  : "border border-red-500 ring-4 ring-red-900"
+              }`
         }`}
         id="options-menu"
         aria-haspopup="true"

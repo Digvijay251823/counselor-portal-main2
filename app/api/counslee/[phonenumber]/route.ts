@@ -11,6 +11,7 @@ export async function GET(
     const response = await fetch(
       `${SERVER_URL}/counselee/phonenumber/${params.phonenumber}`
     );
+    console.log(response.status);
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(
@@ -19,6 +20,7 @@ export async function GET(
       );
     } else {
       const errorData = await response.json();
+
       return NextResponse.json(
         { message: errorData.message },
         { status: response.status }
