@@ -3,6 +3,16 @@ import { useGlobalState } from "../context/state";
 import data from "@/Counselors.json";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+type formData = {
+  firstName: string;
+  lastName: string;
+  age: string;
+  gender: string;
+  address: string;
+  phoneNumber: string;
+  currentCounselor: string;
+};
+
 interface Counselor {
   PrabhujiName: any;
   PrabhujiPhone: any;
@@ -11,11 +21,17 @@ interface Counselor {
 }
 
 export default function RegistrationFormForAll({
+  errors,
+  formState,
   setCurrentCounselor,
   setSelected,
+  setFormData,
 }: {
+  errors: { [name: string]: string };
+  formState: formData;
   setCurrentCounselor: (value: string) => void;
   setSelected: (value: string) => void;
+  setFormData: ({ name, value }: { name: string; value: string }) => void;
 }) {
   const { state } = useGlobalState();
 
@@ -36,14 +52,27 @@ export default function RegistrationFormForAll({
           type="text"
           name="firstName"
           id="firstName"
+          value={formState.firstName}
+          onChange={(e) => setFormData(e.target)}
           className={`${
             state.theme.theme === "LIGHT"
-              ? "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-              : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+              ? `${
+                  errors.firstName
+                    ? "bg-white px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-200"
+                    : "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                }`
+              : `${
+                  errors.firstName
+                    ? "bg-stone-950 px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-900"
+                    : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                }`
           }`}
           placeholder="John"
           required
         />
+        {errors.firstName && (
+          <p className="text-red-500">{"please enter your firstName"}</p>
+        )}
       </div>
       <div className="flex flex-col gap-3 px-3">
         <label htmlFor="lastName" className="font-bold text-lg">
@@ -52,11 +81,21 @@ export default function RegistrationFormForAll({
         <input
           type="text"
           name="lastName"
+          value={formState.lastName}
+          onChange={(e) => setFormData(e.target)}
           id="lastName"
           className={`${
             state.theme.theme === "LIGHT"
-              ? "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-              : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+              ? `${
+                  errors.lastName
+                    ? "bg-white px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-200"
+                    : "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                }`
+              : `${
+                  errors.lastName
+                    ? "bg-stone-950 px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-900"
+                    : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                }`
           }`}
           placeholder="Doe"
           required
@@ -70,10 +109,20 @@ export default function RegistrationFormForAll({
           type="number"
           name="age"
           id="age"
+          value={formState.age}
+          onChange={(e) => setFormData(e.target)}
           className={`${
             state.theme.theme === "LIGHT"
-              ? "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-              : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+              ? `${
+                  errors.age
+                    ? "bg-white px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-200"
+                    : "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                }`
+              : `${
+                  errors.age
+                    ? "bg-stone-950 px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-900"
+                    : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                }`
           }`}
           placeholder="23"
           required
@@ -84,7 +133,10 @@ export default function RegistrationFormForAll({
           gender
         </label>
         <MenuOthersDropDown
-          setSelected={(value: string) => setSelected(value)}
+          setSelected={(value: string) => {
+            setSelected(value);
+            setFormData({ name: "gender", value });
+          }}
         />
       </div>
       <div className="flex flex-col gap-3 px-3">
@@ -95,10 +147,20 @@ export default function RegistrationFormForAll({
           type="text"
           name="address"
           id="address"
+          value={formState.address}
+          onChange={(e) => setFormData(e.target)}
           className={`${
             state.theme.theme === "LIGHT"
-              ? "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-              : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+              ? `${
+                  errors.address
+                    ? "bg-white px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-200"
+                    : "bg-white px-4 py-1.5 border border-purple-200 text-lg rounded focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
+                }`
+              : `${
+                  errors.address
+                    ? "bg-stone-950 px-4 py-1.5 border text-lg rounded border-red-500 ring-2 ring-red-900"
+                    : "bg-stone-950 px-4 py-1.5 border border-stone-800 text-lg rounded focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
+                }`
           }`}
           placeholder="Pune City"
           required

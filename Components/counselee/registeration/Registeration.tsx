@@ -21,10 +21,10 @@ interface FormInterface {
   yourInitiatingSpiritualMaster: string;
   harinamInitiationDate: string;
   harinamInitiationPlace: string;
-  recommendedBy: string;
+  comments: string;
   currentCounselor: string;
   connectedToCounselorSinceYear: string;
-  husband: string;
+  spouce: string;
   children: [
     {
       name: string;
@@ -48,8 +48,16 @@ import { POST } from "@/actions/POSTREQUESTS";
 import { SERVER_URL } from "@/Components/config/config";
 import SuccessPage from "../SuccessPage";
 import { useFormStatus } from "react-dom";
+import { useRouter, useParams } from "next/navigation";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
-function Registeration({ counselorList }: { counselorList: counselor }) {
+function Registeration({
+  counselorList,
+  counseleeList,
+}: {
+  counselorList: counselor;
+  counseleeList: counselee[];
+}) {
   const { state, dispatch } = useGlobalState();
   const [currentStep, setCurrentStep] = useState(1);
   const [currentCounselor, setCurrentCounselor] = useState("");
@@ -68,10 +76,10 @@ function Registeration({ counselorList }: { counselorList: counselor }) {
     yourInitiatingSpiritualMaster: "",
     harinamInitiationDate: "",
     harinamInitiationPlace: "",
-    recommendedBy: "",
+    comments: "",
     currentCounselor: counselorList.id,
     connectedToCounselorSinceYear: "",
-    husband: "",
+    spouce: "",
     children: [
       {
         name: "",
@@ -79,12 +87,6 @@ function Registeration({ counselorList }: { counselorList: counselor }) {
       },
     ],
   });
-
-  useEffect(() => {
-    async () => {
-      const response = await fetch(``);
-    };
-  }, []);
 
   useEffect(() => {
     const phonenumber = localStorage.getItem("PHONE_NUMBER");
@@ -97,41 +99,27 @@ function Registeration({ counselorList }: { counselorList: counselor }) {
     }
   }, []);
   async function handleSubmit(e: FormData) {
-    function getExistingFields(obj: any) {
-      let result: any = {};
-      for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          if (Array.isArray(obj[key])) {
-            // Include non-empty arrays
-            if (
-              obj[key].length > 0 &&
-              obj[key].some((child: any) =>
-                Object.values(child).some((value) => value)
-              )
-            ) {
-              result[key] = obj[key];
-            }
-          } else if (
-            obj[key] !== "" &&
-            obj[key] !== null &&
-            obj[key] !== undefined
-          ) {
-            result[key] = obj[key];
-          }
-        }
-      }
-      return result;
-    }
-    const formDataFiltered = getExistingFields(formState);
     try {
-      const response = await POST(
-        formDataFiltered,
-        `${SERVER_URL}/counselee/create`
-      );
-      dispatch({
-        type: "SHOW_TOAST",
-        payload: { type: "SUCCESS", message: response.message },
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      const response = await fetch("/api/counslee/create", {
+        method: "POST",
+        headers,
+        body: JSON.stringify(formState),
       });
+      if (response.ok) {
+        const responseData = await response.json();
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { type: "SUCCESS", message: responseData.message },
+        });
+      } else {
+        const responseData = await response.json();
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { type: "ERROR", message: responseData.message },
+        });
+      }
     } catch (error: any) {
       dispatch({
         type: "SHOW_TOAST",
@@ -306,6 +294,7 @@ function Registeration({ counselorList }: { counselorList: counselor }) {
           ) : currentStep === 2 ? (
             <>
               <Step2
+                counseleeList={counseleeList}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 formData={formState}
@@ -516,6 +505,7 @@ function Step2({
   addNewChild,
   handleInputChangeChildrens,
   removeChild,
+  counseleeList,
 }: {
   prevStep: () => void;
   nextStep: () => void;
@@ -527,6 +517,7 @@ function Step2({
   ) => void;
   addNewChild: () => void;
   removeChild: (index: number) => void;
+  counseleeList: counselee[];
 }) {
   const { state } = useGlobalState();
   return (
@@ -573,26 +564,32 @@ function Step2({
           />
         </div>
 
-        {formData.maritalStatus === "MARRIED" &&
-          formData.gender === "FEMALE" && (
-            <div className="flex flex-col gap-2">
-              <label className="font-bold" htmlFor="husband">
-                Husband
-              </label>
-              <input
+        {formData.maritalStatus === "MARRIED" && (
+          <div className="flex flex-col gap-2">
+            <label className="font-bold" htmlFor="spouce">
+              Search Spouce phoneNumber / name
+            </label>
+            <MenuIconAndDropDownDevotees
+              DataArr={counseleeList}
+              setSelected={(value: counselee) => {
+                const e: any = { target: { name: "spouce", value: value.id } };
+                handleChange(e);
+              }}
+            />
+            {/* <input
                 type="text"
-                name="husband"
-                id="husband"
+                name="spouce"
+                id="spouce"
                 className={`${
                   state.theme.theme === "LIGHT"
                     ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
                     : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
                 }`}
-                value={formData.husband}
+                value={formData.spouce}
                 onChange={handleChange}
-              />
-            </div>
-          )}
+              /> */}
+          </div>
+        )}
       </div>
       {formData.maritalStatus === "MARRIED" && (
         <div className="mt-8">
@@ -795,14 +792,14 @@ function Step3({
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label className="font-bold" htmlFor="recommendedBy">
-            Recommended By
+          <label className="font-bold" htmlFor="comments">
+            Comment
           </label>
           <input
             type="text"
-            name="recommendedBy"
-            id="recommendedBy"
-            value={formData.recommendedBy}
+            name="comments"
+            id="comments"
+            value={formData.comments}
             onChange={handleChange}
             className={`${
               state.theme.theme === "LIGHT"
@@ -942,7 +939,8 @@ function MenuOthersDropDown({
 
 type PropsMenu = {
   setSelected: (value: any) => void;
-  DataArr: any;
+  DataArr: any[];
+  onPhoneNumberChange?: (value: string) => void;
   defaultVal?: string;
   position?: string;
 };
@@ -950,13 +948,14 @@ type PropsMenu = {
 function MenuIconAndDropDownDevotees({
   setSelected,
   DataArr,
+  onPhoneNumberChange,
   defaultVal,
   position,
 }: PropsMenu) {
   const [isSelectionOpen, toggleSelection] = useState(false);
-  const [QueriedArr, setQueriedArr] = useState<counselor[]>([]);
+  const [onFocusPhone, setOnFocusPhone] = useState(false);
   const menuRef: any = useRef();
-  const { state } = useGlobalState();
+  const params = useParams();
   const [selectedOption, setSelectedOption] = useState("");
   const [modalStyle, setModalStyle] = useState({
     transform: "scale(0.95)",
@@ -968,6 +967,7 @@ function MenuIconAndDropDownDevotees({
     }
   }, [defaultVal]);
   const [isClosing, setIsClosing] = useState(false);
+  const { state } = useGlobalState();
 
   useEffect(() => {
     if (isSelectionOpen) {
@@ -1007,48 +1007,45 @@ function MenuIconAndDropDownDevotees({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [toggleSelection, closeModal]);
+  const router = useRouter();
 
-  function onChange(e: ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     toggleSelection(true);
     setSelectedOption(e.target.value);
-    const results: Props[] = DataArr.filter((item: any) => {
-      for (const key in item) {
-        const value = item[key];
-        if (typeof value === "string") {
-          if (
-            value
-              .toLowerCase()
-              .includes(e.target.value?.toString().toLowerCase())
-          ) {
-            return true;
-          }
-        } else if (typeof value === "number") {
-          if (
-            value
-              .toString()
-              .toLowerCase()
-              .includes(e.target.value?.toString().toLowerCase())
-          ) {
-            return true;
-          }
-        }
-      }
-      return false;
-    });
-    setQueriedArr(results.length > 0 ? results : DataArr);
+    if (isNaN(Number(e.target.value))) {
+      router.push(`?query=${e.target.value}`);
+    } else {
+      router.push(`?query=${Number(e.target.value)}`);
+    }
   }
   return (
-    <div className="relative inline-block text-left w-full" ref={menuRef}>
-      <div className={"w-full"}>
+    <div className="relative inline-block text-left" ref={menuRef}>
+      <div
+        className={`flex items-center w-full border transition-all duration-500 px-5 ${
+          onFocusPhone
+            ? `${
+                state.theme.theme === "LIGHT"
+                  ? "ring-4 border-purple-700 ring-purple-100"
+                  : "ring-4 border-purple-300 ring-purple-950"
+              }`
+            : `${
+                state.theme.theme === "LIGHT"
+                  ? "border-gray-300"
+                  : "border-stone-800"
+              }`
+        }`}
+      >
+        <FaMagnifyingGlass />
         <input
           type="text"
-          onChange={onChange}
-          className={`${
-            state.theme.theme === "LIGHT"
-              ? "bg-purple-100 px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700 w-full"
-              : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400 w-full"
+          className={`w-full px-4 py-3 outline-none ${
+            state.theme.theme === "LIGHT" ? "bg-white " : "bg-stone-950 "
           }`}
+          onFocus={() => setOnFocusPhone(true)}
+          onBlur={() => setOnFocusPhone(false)}
+          onChange={handleChange}
           value={selectedOption}
+          placeholder="Search . . . "
         />
       </div>
       {isSelectionOpen && (
@@ -1056,10 +1053,8 @@ function MenuIconAndDropDownDevotees({
           className={`origin-top-left absolute ${
             position === "up" ? "bottom-0 mb-12" : "mt-2 right-0"
           } w-full rounded-lg shadow-lg z-[1000] ${
-            state.theme.theme === "LIGHT"
-              ? "bg-white border-gray-300 ring-2 ring-purple-950"
-              : "bg-stone-950 border-stone-700 ring-2 ring-purple-950"
-          } ring-opacity-5 focus:outline-none py-1 px-1`}
+            state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
+          } border-gray-300 ring-1 ring-black ring-opacity-5 focus:outline-none py-1 px-1`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="options-menu"
@@ -1069,34 +1064,32 @@ function MenuIconAndDropDownDevotees({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {QueriedArr?.length > 0 ? (
+          {DataArr?.length > 0 ? (
             <ul
               className={`flex flex-col gap-3 overflow-y-auto ${
                 DataArr.length > 10 ? "md:h-[60vh] h-[80vh]" : "h-full"
               }`}
               role="none"
             >
-              {QueriedArr?.map((item, index) => (
+              {DataArr?.map((item, index) => (
                 <li
                   key={index}
                   onClick={() => {
                     setSelectedOption(
                       item.initiatedName
-                        ? `${item.initiatedName} `
+                        ? item.initiatedName
                         : `${item.firstName} ${item.lastName}`
                     );
                     setSelected(item);
                     toggleSelection(false);
                   }}
-                  className={`${
-                    state.theme.theme === "LIGHT"
-                      ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-                      : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-                  }`}
+                  className={`px-2 py-1.5 rounded-lg ${
+                    item.name === selectedOption && "bg-blue-300"
+                  } hover:bg-gray-100`}
                 >
                   {item.initiatedName
-                    ? `${item.initiatedName}`
-                    : `${item.firstName} ${item.lastName}`}
+                    ? `${item.initiatedName} | ${item.phoneNumber}`
+                    : `${item.firstName} ${item.lastName} | ${item.phoneNumber}`}
                 </li>
               ))}
             </ul>

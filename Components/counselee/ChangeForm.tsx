@@ -29,6 +29,14 @@ interface Counselor {
 
 function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   const router = useRouter();
+  const [formState, setFormState] = useState<any>({
+    firstName: "",
+    lastName: "",
+    age: 0,
+    gender: "",
+    city: "",
+    currentCounselor: "",
+  });
   const { state, dispatch } = useGlobalState();
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [counseleeObject, setCounseleeObject] = useState<counselee | any>({});
@@ -41,6 +49,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [gender, setGender] = useState("");
   const [currentCounselor, setCurrentCounselor] = useState("");
+  const [errors, setErrors] = useState({});
   const [alreadyAskedToExistingCounselor, setAlreadyAskedToExistingCounselor] =
     useState(false);
   const [alreadyAttendingNewCounselor, setAlreadyAttendingNewCounselor] =
@@ -80,7 +89,33 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       setOpenRegistration(false);
     }
   }, [phoneNumber]);
+
+  const validateStep = () => {
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "age",
+      "gender",
+      "city",
+      "currentCounselor",
+    ];
+    const stepErrors: any = {};
+
+    requiredFields.forEach((field: any) => {
+      if (!formState[field]) {
+        stepErrors[field] = "This field is required";
+      }
+    });
+
+    setErrors(stepErrors);
+
+    return Object.keys(stepErrors).length === 0; // Return true if no errors
+  };
+
   async function IfNotRegisteredChangeCounselor(e: FormData) {
+    if (!validateStep()) {
+      return;
+    }
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
     const age = e.get("age")?.toString();
@@ -213,7 +248,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
         },
       ],
     };
-    console.log(formData);
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     try {
@@ -342,10 +376,15 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
             {openRegistration && (
               <div>
                 <RegistrationFormForAll
+                  errors={errors}
+                  formState={formState}
                   setCurrentCounselor={(value: string) => {
                     setCurrentCounselor(value);
                   }}
                   setSelected={(value) => setGender(value)}
+                  setFormData={(target: { name: string; value: string }) =>
+                    setFormState({ ...formState, [target.name]: target.value })
+                  }
                 />
               </div>
             )}

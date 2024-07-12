@@ -19,6 +19,14 @@ import RegistrationFormForAll from "./RegistrationFormForAll";
 
 function CounseleeActivities({ activities }: { activities: Activities[] }) {
   const [activityDate, setActivityDate] = useState<any>("");
+  const [formState, setFormState] = useState<any>({
+    firstName: "",
+    lastName: "",
+    age: 0,
+    gender: "",
+    city: "",
+    currentCounselor: "",
+  });
   const [selectedActivity, setSelectedActivity] = useState("");
   const { state, dispatch } = useGlobalState();
   const { counselorid } = useParams();
@@ -26,10 +34,12 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const [gender, setGender] = useState("");
+  const [errors, setErrors] = useState({});
   const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [openRegistration, setOpenRegistration] = useState(false);
+
   useEffect(() => {
     if (phoneNumber.length === 10) {
       (async () => {
@@ -65,7 +75,32 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
     }
   }, [phoneNumber]);
 
+  const validateStep = () => {
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "age",
+      "gender",
+      "city",
+      "currentCounselor",
+    ];
+    const stepErrors: any = {};
+
+    requiredFields.forEach((field: any) => {
+      if (!formState[field]) {
+        stepErrors[field] = "This field is required";
+      }
+    });
+
+    setErrors(stepErrors);
+
+    return Object.keys(stepErrors).length === 0; // Return true if no errors
+  };
+
   async function IfNotRegisteredChangeCounselor(e: FormData) {
+    if (!validateStep()) {
+      return;
+    }
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
     const age = e.get("age")?.toString();
@@ -276,12 +311,19 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
             }
           >
             {openRegistration && (
-              <RegistrationFormForAll
-                setCurrentCounselor={(value: string) =>
-                  setCurrentCounselor(value)
-                }
-                setSelected={(value) => setGender(value)}
-              />
+              <div>
+                <RegistrationFormForAll
+                  errors={errors}
+                  formState={formState}
+                  setCurrentCounselor={(value: string) => {
+                    setCurrentCounselor(value);
+                  }}
+                  setSelected={(value) => setGender(value)}
+                  setFormData={(target: { name: string; value: string }) =>
+                    setFormState({ ...formState, [target.name]: target.value })
+                  }
+                />
+              </div>
             )}
             <div className="flex flex-col gap-5 ">
               <div className="flex flex-col gap-5">

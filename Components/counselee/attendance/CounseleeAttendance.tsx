@@ -20,6 +20,15 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
   const [openRegistration, setOpenRegistration] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [gender, setGender] = useState("");
+  const [errors, setErrors] = useState({});
+  const [formState, setFormState] = useState<any>({
+    firstName: "",
+    lastName: "",
+    age: 0,
+    gender: "",
+    city: "",
+    currentCounselor: "",
+  });
   const [currentCounselor, setCurrentCounselor] = useState("");
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
@@ -87,6 +96,27 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
       });
     }
   }
+  const validateStep = () => {
+    const requiredFields = [
+      "firstName",
+      "lastName",
+      "age",
+      "gender",
+      "city",
+      "currentCounselor",
+    ];
+    const stepErrors: any = {};
+
+    requiredFields.forEach((field: any) => {
+      if (!formState[field]) {
+        stepErrors[field] = "This field is required";
+      }
+    });
+
+    setErrors(stepErrors);
+
+    return Object.keys(stepErrors).length === 0; // Return true if no errors
+  };
 
   async function IfNotRegisteredSubmitAttendance(e: FormData) {
     const firstName = e.get("firstName")?.toString();
@@ -313,12 +343,22 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
           >
             {openRegistration && (
               <div>
-                <RegistrationFormForAll
-                  setCurrentCounselor={(value: string) =>
-                    setCurrentCounselor(value)
-                  }
-                  setSelected={(value) => setGender(value)}
-                />
+                <div>
+                  <RegistrationFormForAll
+                    errors={errors}
+                    formState={formState}
+                    setCurrentCounselor={(value: string) => {
+                      setCurrentCounselor(value);
+                    }}
+                    setSelected={(value) => setGender(value)}
+                    setFormData={(target: { name: string; value: string }) =>
+                      setFormState({
+                        ...formState,
+                        [target.name]: target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
             )}
             <div className="flex flex-col gap-5 ">
