@@ -1,5 +1,7 @@
 import { useGlobalState } from "@/Components/context/state";
 import { useEffect, useState } from "react";
+import { FaMale } from "react-icons/fa";
+import { FaFemale } from "react-icons/fa";
 
 export default function DetailsPage({ counseleeId }: { counseleeId: string }) {
   const { state, dispatch } = useGlobalState();
@@ -34,7 +36,8 @@ export default function DetailsPage({ counseleeId }: { counseleeId: string }) {
     })();
   }, []);
   return (
-    <div className="lg:p-20 md:p-10 p-5">
+    <div className="p-5">
+      <p className="text-xl px-10 font-bold py-5 border-b">Counselee Details</p>
       {isLoading ? (
         <div
           role="status"
@@ -61,7 +64,56 @@ export default function DetailsPage({ counseleeId }: { counseleeId: string }) {
           <span className="sr-only">Loading...</span>
         </div>
       ) : (
-        <div>{counseleeDetails?.firstName.toString()}</div>
+        <div className="md:p-10 p-5">
+          <div className="flex flex-col gap-3">
+            <p className="text-3xl font-bold">
+              {`${counseleeDetails?.firstName} ${counseleeDetails?.lastName}`}
+            </p>
+            <div className="font-semibold text-gray-500 text-lg flex items-center gap-2">
+              <p>Initiated Name : </p>{" "}
+              <p>
+                {counseleeDetails?.initiatedName
+                  ? counseleeDetails?.initiatedName
+                  : "Not Available"}
+              </p>
+            </div>
+            <div className="font-semibold text-gray-500 text-lg flex items-center gap-2">
+              <p>Phone Number : </p> <p>{counseleeDetails?.phoneNumber}</p>
+            </div>
+            <div className="font-semibold text-gray-500 text-lg flex items-center gap-2">
+              <p>Gender : </p>{" "}
+              {counseleeDetails?.gender === "MALE" ? (
+                <div className="flex items-center">
+                  <p className="text-orange-500">
+                    <FaMale />
+                  </p>
+                  <p>MALE</p>
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <p className="text-pink-500">
+                    <FaFemale />
+                  </p>
+                  <p>FEMALE</p>
+                </div>
+              )}
+            </div>
+            <div className="font-semibold text-gray-500 text-lg flex items-center gap-2">
+              <p>Address : </p> <p>{counseleeDetails?.address}</p>
+            </div>
+            <div className="font-semibold text-gray-500 text-lg flex items-center gap-2">
+              <p>Marital Status : </p> <p>{counseleeDetails?.maritalStatus}</p>
+            </div>
+            {counseleeDetails?.maritalStatus === "MARRIED" &&
+              counseleeDetails.spouce && (
+                <div>
+                  {counseleeDetails?.spouce?.initiatedName
+                    ? counseleeDetails.spouce.initiatedName
+                    : `${counseleeDetails.spouce.firstName} ${counseleeDetails.spouce.lastName}`}
+                </div>
+              )}
+          </div>
+        </div>
       )}
     </div>
   );

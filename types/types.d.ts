@@ -17,6 +17,7 @@ interface counselee {
   chantingStartedThisRoundsDate: string;
   recommendedBy: string;
   currentCounselor: counselee;
+  spouce: counselee;
   husband: counselee;
   connectedToCounselorSince: string;
   children: [
