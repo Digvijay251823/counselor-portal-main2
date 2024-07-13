@@ -52,7 +52,7 @@ function AutoApprove() {
     }
   }
   return (
-    <div>
+    <div className="flex flex-col">
       <div
         className={`inline-flex items-center md:gap-4 gap-2 md:px-2 px-1 py-2 font-medium text-center rounded-lg border focus:ring-4 ${
           state.theme.theme === "LIGHT"
@@ -70,6 +70,7 @@ function AutoApprove() {
         />
         <label htmlFor="AutoApprove">AutoApprove</label>
       </div>
+      <p className="text-sm text-red-500">* available For Future Entries</p>
     </div>
   );
 }

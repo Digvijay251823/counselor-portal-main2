@@ -2,6 +2,7 @@
 import { useGlobalState } from "@/Components/context/state";
 import DateFormatter from "@/Components/utils/DateFormatter";
 import React from "react";
+import Filter from "./Filter";
 
 function ActivitiesPage({ response }: { response: counseleeActivities[] }) {
   const { state } = useGlobalState();
@@ -9,7 +10,7 @@ function ActivitiesPage({ response }: { response: counseleeActivities[] }) {
     <div>
       <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
         <div>
-          <div className="relative overflow-x-auto shadow-md rounded">
+          <div className="overflow-x-auto shadow-md rounded">
             <table
               className={`w-full text-left border ${
                 state.theme.theme === "LIGHT"
@@ -31,50 +32,93 @@ function ActivitiesPage({ response }: { response: counseleeActivities[] }) {
                       : "border-b-stone-700"
                   }`}
                 >
-                  <th className={`px-6 py-3`}>ACTIVITY NAME</th>
-                  <th className={`px-6 py-3`}>INITIATED NAME</th>
-                  <th className={`px-6 py-3`}>COUNSELOR NAME</th>
-                  <th className={`px-6 py-3`}>COUNSELEE FIRSTNAME</th>
-                  <th className={`px-6 py-3`}>COUNSELEE LASTNAME</th>
-                  <th className={`px-6 py-3`}>COUNSELEE PHONE</th>
-                  <th className={`px-6 py-3`}>ACTIVITY DATE</th>
+                  <th className={`px-6 py-3`}>
+                    <div className="flex items-center">
+                      <p> ACTIVITY NAME</p> <Filter category="activityName" />
+                    </div>
+                  </th>
+                  <th className={`px-6 py-3`}>
+                    <div className="flex items-center">
+                      <p>INITIATED NAME</p>
+                      <Filter category="initiatedName" />
+                    </div>
+                  </th>
+                  <th className={`px-6 py-3`}>
+                    <div>COUNSELOR NAME </div>
+                  </th>
+                  <th className={`px-6 py-3`}>
+                    <div className="flex items-center">
+                      <p>COUNSELEE FIRSTNAME</p>
+                      <Filter category="firstName" />
+                    </div>
+                  </th>
+                  <th className={`px-6 py-3`}>
+                    <div className="flex items-center">
+                      <p>COUNSELEE LASTNAME</p>
+                      <Filter category="lastName" />
+                    </div>
+                  </th>
+                  <th className={`px-6 py-3`}>
+                    <div className="flex items-center">
+                      <p>COUNSELEE PHONE</p>
+                      <Filter category="phoneNumber" />
+                    </div>
+                  </th>
+                  <th className={`px-6 py-3`}>
+                    <div className="flex items-center">
+                      <p>ACTIVITY DATE </p>
+                      <Filter category="activityDate" />
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {response?.map((item, index) => (
-                  <tr
-                    key={index}
-                    className={
-                      state.theme.theme === "LIGHT"
-                        ? `bg-white border-b  hover:bg-stone-50`
-                        : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
-                    }
-                  >
-                    <td className={`px-6 py-4`}>{item?.activity?.name}</td>
-                    <td className={`px-6 py-4`}>
-                      {item?.counselor?.initiatedName}
-                    </td>
-                    <td className={`px-6 py-4`}>
-                      {item?.counselee?.initiatedName ? (
-                        <div>{item?.counselee?.initiatedName}</div>
-                      ) : (
-                        <div className="text-gray-400">Not Available</div>
-                      )}
-                    </td>
-                    <td className={`px-6 py-4`}>
-                      {item?.counselee?.firstName}
-                    </td>
-                    <td className={`px-6 py-4`}>{item?.counselee?.lastName}</td>
-                    <td className={`px-6 py-4`}>
-                      {item?.counselee?.phoneNumber}
-                    </td>
-                    <td className={`px-6 py-4`}>
-                      {item.activityDate && (
-                        <DateFormatter dateString={item?.activityDate} />
-                      )}
+                {response?.length > 0 ? (
+                  response?.map((item, index) => (
+                    <tr
+                      key={index}
+                      className={
+                        state.theme.theme === "LIGHT"
+                          ? `bg-white border-b  hover:bg-stone-50`
+                          : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
+                      }
+                    >
+                      <td className={`px-6 py-4`}>{item?.activity?.name}</td>
+                      <td className={`px-6 py-4`}>
+                        {item?.counselor?.initiatedName}
+                      </td>
+                      <td className={`px-6 py-4`}>
+                        {item?.counselee?.initiatedName ? (
+                          <div>{item?.counselee?.initiatedName}</div>
+                        ) : (
+                          <div className="text-gray-400">Not Available</div>
+                        )}
+                      </td>
+                      <td className={`px-6 py-4`}>
+                        {item?.counselee?.firstName}
+                      </td>
+                      <td className={`px-6 py-4`}>
+                        {item?.counselee?.lastName}
+                      </td>
+                      <td className={`px-6 py-4`}>
+                        {item?.counselee?.phoneNumber}
+                      </td>
+                      <td className={`px-6 py-4`}>
+                        {item.activityDate && (
+                          <DateFormatter dateString={item?.activityDate} />
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={10} className="text-center">
+                      <div className="py-10 text-gray-500">
+                        No Activity entries Found
+                      </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

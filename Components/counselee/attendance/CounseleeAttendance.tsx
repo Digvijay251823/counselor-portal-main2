@@ -9,13 +9,29 @@ import {
   UserIcon,
 } from "@heroicons/react/16/solid";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useFormStatus } from "react-dom";
 import { HiUsers } from "react-icons/hi";
 import RegistrationFormForAll from "../RegistrationFormForAll";
+import WarningPage from "@/Components/utils/WarningPage";
+import { FaMagnifyingGlass } from "react-icons/fa6";
 
-function CounseleeAttendance({ response }: { response: sessions[] }) {
+function CounseleeAttendance({
+  counseleeList,
+  response,
+}: {
+  counseleeList: counselee[];
+  response: sessions[];
+}) {
+  const [warning, setWarning] = useState(false);
   const [selectedSession, setSelectedSession] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [openRegistration, setOpenRegistration] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -42,11 +58,13 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
           const response = await fetch(`/api/counslee/${phoneNumber}`);
           if (response.ok) {
             const responseData = await response.json();
+            setOpenRegistration(false);
             setCounseleeDetails(responseData.content.content);
           } else {
             if (response.status === 404) {
+              setWarning(true);
               localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
-              setOpenRegistration(true);
+              return;
             }
             const errorData = await response.json();
             dispatch({
@@ -61,157 +79,10 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
           });
         }
       })();
+    } else {
+      setOpenRegistration(false);
     }
   }, [phoneNumber]);
-
-  async function handleSubmitCounselor(e: FormData) {
-    const phonenumber = e.get("phonenumber")?.valueOf();
-    if (!phonenumber) {
-      dispatch({
-        type: "SHOW_TOAST",
-        payload: { type: "ERROR", message: "please enter you phone number" },
-      });
-      return null;
-    }
-    try {
-      const response = await fetch(`/api/counslee/${phonenumber}`);
-      if (response.ok) {
-        const responseData = await response.json();
-        setCounseleeDetails(responseData.content.content);
-      } else {
-        if (response.status === 404) {
-          localStorage.setItem("PHONE_NUMBER", phonenumber.toString());
-          router.push("/counselee/registeration");
-        }
-        const errorData = await response.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "ERROR", message: errorData.message },
-        });
-      }
-    } catch (error: any) {
-      dispatch({
-        type: "SHOW_TOAST",
-        payload: { type: "ERROR", message: error.message },
-      });
-    }
-  }
-  const validateStep = () => {
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "age",
-      "gender",
-      "city",
-      "currentCounselor",
-    ];
-    const stepErrors: any = {};
-
-    requiredFields.forEach((field: any) => {
-      if (!formState[field]) {
-        stepErrors[field] = "This field is required";
-      }
-    });
-
-    setErrors(stepErrors);
-
-    return Object.keys(stepErrors).length === 0; // Return true if no errors
-  };
-
-  async function IfNotRegisteredSubmitAttendance(e: FormData) {
-    const firstName = e.get("firstName")?.toString();
-    const lastName = e.get("lastName")?.toString();
-    const age = e.get("age")?.toString();
-    const address = e.get("address")?.toString();
-    const formDataParticipantRegistration = {
-      firstName,
-      lastName,
-      age,
-      gender,
-      address,
-      phoneNumber,
-      currentCounselor,
-    };
-    // console.log(formDataParticipantRegistration)
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    try {
-      const responseParticipant = await fetch(`/api/counslee/register`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(formDataParticipantRegistration),
-      });
-      if (!responseParticipant.ok) {
-        const responseData = await responseParticipant.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { message: responseData.message, type: "ERROR" },
-        });
-        return;
-      }
-
-      const responseCounselee = await fetch(`/api/counslee/${phoneNumber}`);
-      if (!responseCounselee.ok) {
-        if (responseCounselee.status === 404) {
-          localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
-          setOpenRegistration(true);
-          return;
-        }
-        const errorData = await responseCounselee.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "ERROR", message: errorData.message },
-        });
-        return;
-      }
-      const responseData = await responseCounselee.json();
-      setCounseleeDetails(responseData.content.content);
-      //submitting attendance
-
-      const formData: any = {
-        scheduledSessionId: selectedSession,
-        counseleeId: responseData?.content?.content?.id,
-        counselorId: counselorid,
-      };
-      if (
-        !formData.scheduledSessionId ||
-        !formData.counseleeId ||
-        !formData.counselorId
-      ) {
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: {
-            type: "ERROR",
-            message: "neccessory fields are not present to mark attendance",
-          },
-        });
-        return;
-      }
-      const response = await fetch("/api/counslee/attendance", {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        const responseData = await response.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "SUCCESS", message: responseData.message },
-        });
-      } else {
-        const responseData = await response.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "ERROR", message: responseData.message },
-        });
-      }
-    } catch (error: any) {
-      dispatch({
-        type: "SHOW_TOAST",
-        payload: { type: "ERROR", message: error.message },
-      });
-    }
-  }
 
   async function handleSubmitAttendance(e: FormData) {
     const formData: any = {
@@ -245,6 +116,9 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
         type: "SHOW_TOAST",
         payload: { type: "ERROR", message: error.message },
       });
+    } finally {
+      formRef.current?.reset();
+      setSelectedSession("");
     }
   }
   return (
@@ -255,14 +129,16 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
       </div>
       <div className="w-full">
         <div className="flex items-center justify-center w-full">
-          <form
-            action={handleSubmitCounselor}
-            className="md:w-[500px] mx-2 mb-10 "
-          >
+          <form className="md:w-[500px] mx-2 mb-10 flex flex-col">
             <label htmlFor="phonenumber" className="font-bold text-xl">
-              Phone Number
+              Enter PhoneNumber / Your Name
             </label>
-            <div
+            <MenuIconAndDropDownDevotees
+              DataArr={counseleeList}
+              onPhoneNumberChange={(value: string) => setPhoneNumber(value)}
+              setSelected={(value) => setCounseleeDetails(value)}
+            />
+            {/* <div
               className={`flex items-center w-full border transition-all duration-500 ${
                 onFocusPhone
                   ? `${
@@ -290,7 +166,7 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
                   state.theme.theme === "LIGHT" ? "bg-white " : "bg-stone-950 "
                 }`}
               />
-            </div>
+            </div> */}
           </form>
         </div>
         {Object.keys(counseleeDetails).length > 0 && (
@@ -334,40 +210,10 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
             state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
           }`}
         >
-          <form
-            action={
-              openRegistration
-                ? handleSubmitAttendance
-                : IfNotRegisteredSubmitAttendance
-            }
-          >
-            {openRegistration && (
-              <div>
-                <div>
-                  <RegistrationFormForAll
-                    errors={errors}
-                    formState={formState}
-                    setCurrentCounselor={(value: string) => {
-                      setCurrentCounselor(value);
-                    }}
-                    setSelected={(value) => setGender(value)}
-                    setFormData={(target: { name: string; value: string }) =>
-                      setFormState({
-                        ...formState,
-                        [target.name]: target.value,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-            )}
+          <form action={handleSubmitAttendance} ref={formRef}>
             <div className="flex flex-col gap-5 ">
               <div className="flex flex-col gap-5">
-                {!counseleeDetails?.currentCounselor ? (
-                  <h1 className="text-lg font-bold text-red-500 text-center">
-                    You Have Not Been Alloted a counselor
-                  </h1>
-                ) : (
+                {counseleeDetails?.currentCounselor && (
                   <div className="flex md:flex-row flex-col items-center md:gap-5">
                     <div className="flex items-center gap-4">
                       <p
@@ -430,84 +276,16 @@ function CounseleeAttendance({ response }: { response: sessions[] }) {
           </form>
         </div>
       </div>
+      <WarningPage
+        isOpen={warning}
+        onClose={() => setWarning(false)}
+        counselorId={counselorid.toString()}
+      />
     </div>
   );
 }
 
 export default CounseleeAttendance;
-
-function SubmitHandlerButtonCounselor() {
-  const { state } = useGlobalState();
-  const { pending } = useFormStatus();
-  return (
-    <div>
-      {pending ? (
-        <div className="flex justify-end">
-          {state.theme.theme === "LIGHT" ? (
-            <button
-              disabled
-              type="button"
-              className="w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center justify-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800 inline-flex items-center"
-            >
-              <svg
-                aria-hidden="true"
-                role="status"
-                className="inline w-4 h-4 me-3 text-white animate-spin"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="#E5E7EB"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentColor"
-                />
-              </svg>
-              Loading...
-            </button>
-          ) : (
-            <button
-              disabled
-              type="button"
-              className="w-full py-2.5 px-5 justify-center text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-purple-700 focus:z-10 focus:ring-2 focus:ring-purple-700 focus:text-purple-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
-            >
-              <svg
-                aria-hidden="true"
-                role="status"
-                className="inline w-4 h-4 me-3 text-gray-200 animate-spin dark:text-gray-600"
-                viewBox="0 0 100 101"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="#1C64F2"
-                />
-              </svg>
-              Loading...
-            </button>
-          )}
-        </div>
-      ) : (
-        <button
-          className="bg-purple-600 rounded font-bold text-lg px-4 py-1.5 mr-1 text-white flex items-center gap-2"
-          type="submit"
-          disabled={pending}
-        >
-          <MagnifyingGlassIcon className="h-5 w-5" />
-          Search
-        </button>
-      )}
-    </div>
-  );
-}
 
 function SubmitHandlerButton() {
   const { state } = useGlobalState();
@@ -579,6 +357,180 @@ function SubmitHandlerButton() {
         >
           Submit
         </button>
+      )}
+    </div>
+  );
+}
+
+type PropsMenu = {
+  setSelected: (value: any) => void;
+  DataArr: any[];
+  onPhoneNumberChange: (value: string) => void;
+  defaultVal?: string;
+  position?: string;
+};
+
+function MenuIconAndDropDownDevotees({
+  setSelected,
+  DataArr,
+  onPhoneNumberChange,
+  defaultVal,
+  position,
+}: PropsMenu) {
+  const [isSelectionOpen, toggleSelection] = useState(false);
+  const [onFocusPhone, setOnFocusPhone] = useState(false);
+  const menuRef: any = useRef();
+  const params = useParams();
+  const [selectedOption, setSelectedOption] = useState("");
+  const [modalStyle, setModalStyle] = useState({
+    transform: "scale(0.95)",
+    opacity: 0,
+  });
+  useEffect(() => {
+    if (defaultVal) {
+      setSelectedOption(defaultVal);
+    }
+  }, [defaultVal]);
+  const [isClosing, setIsClosing] = useState(false);
+  const { state } = useGlobalState();
+
+  useEffect(() => {
+    if (isSelectionOpen) {
+      // Open modal animation
+      setTimeout(() => {
+        setModalStyle({
+          transform: "scale(1)",
+          opacity: 1,
+        });
+      }, 50); // Delay the transition slightly for better visual effect
+    } else {
+      // Close modal animation
+      setModalStyle({
+        transform: "scale(0.95)",
+        opacity: 0,
+      });
+      setTimeout(() => {
+        setIsClosing(false);
+      }, 3000); // Adjust this duration according to your transition duration
+    }
+  }, [isSelectionOpen]);
+
+  const closeModal = useCallback(() => {
+    setIsClosing(true);
+    toggleSelection(false);
+  }, [toggleSelection]);
+
+  // Attach click outside listener
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [toggleSelection, closeModal]);
+  const router = useRouter();
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    toggleSelection(true);
+    setSelectedOption(e.target.value);
+    if (isNaN(Number(e.target.value))) {
+      router.push(
+        `/counselee/attendance/${params.counselorid}?query=${e.target.value}`
+      );
+    } else {
+      onPhoneNumberChange(e.target.value);
+      router.push(
+        `/counselee/attendance/${params.counselorid}?query=${Number(
+          e.target.value
+        )}`
+      );
+    }
+  }
+  return (
+    <div className="relative inline-block text-left" ref={menuRef}>
+      <div
+        className={`flex items-center w-full border transition-all duration-500 px-5 ${
+          onFocusPhone
+            ? `${
+                state.theme.theme === "LIGHT"
+                  ? "ring-4 border-purple-700 ring-purple-100"
+                  : "ring-4 border-purple-300 ring-purple-950"
+              }`
+            : `${
+                state.theme.theme === "LIGHT"
+                  ? "border-gray-300"
+                  : "border-stone-800"
+              }`
+        }`}
+      >
+        <FaMagnifyingGlass />
+        <input
+          type="text"
+          className={`w-full px-4 py-3 outline-none ${
+            state.theme.theme === "LIGHT" ? "bg-white " : "bg-stone-950 "
+          }`}
+          onFocus={() => setOnFocusPhone(true)}
+          onBlur={() => setOnFocusPhone(false)}
+          onChange={handleChange}
+          value={selectedOption}
+          placeholder="Search . . . "
+        />
+      </div>
+      {isSelectionOpen && (
+        <div
+          className={`origin-top-left absolute ${
+            position === "up" ? "bottom-0 mb-12" : "mt-2 right-0"
+          } w-full rounded-lg shadow-lg z-[1000] ${
+            state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
+          } border-gray-300 ring-1 ring-black ring-opacity-5 focus:outline-none py-1 px-1`}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="options-menu"
+          style={{
+            ...modalStyle,
+            transition: "transform 0.2s ease-out, opacity 0.2s ease-out",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {DataArr?.length > 0 ? (
+            <ul
+              className={`flex flex-col gap-3 overflow-y-auto ${
+                DataArr.length > 10 ? "md:h-[60vh] h-[80vh]" : "h-full"
+              }`}
+              role="none"
+            >
+              {DataArr?.map((item, index) => (
+                <li
+                  key={index}
+                  onClick={() => {
+                    setSelectedOption(
+                      item.initiatedName
+                        ? item.initiatedName
+                        : `${item.firstName} ${item.lastName}`
+                    );
+                    setSelected(item);
+                    toggleSelection(false);
+                  }}
+                  className={`px-2 py-1.5 rounded-lg ${
+                    item.name === selectedOption && "bg-blue-300"
+                  } hover:bg-gray-100`}
+                >
+                  {item.initiatedName
+                    ? `${item.initiatedName} | ${item.phoneNumber}`
+                    : `${item.firstName} ${item.lastName} | ${item.phoneNumber}`}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul>
+              <p>No data to show</p>
+            </ul>
+          )}
+        </div>
       )}
     </div>
   );

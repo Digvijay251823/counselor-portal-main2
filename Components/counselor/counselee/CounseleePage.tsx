@@ -7,6 +7,7 @@ import { GiLovers } from "react-icons/gi";
 import Modal from "@/Components/utils/Modal";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import DetailsPage from "./DetailsPage";
+import Filter from "./Filter";
 
 interface Child {
   name: string;
@@ -54,9 +55,9 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
   };
 
   return (
-    <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
+    <div className="w-full">
       <div>
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="overflow-x-auto shadow-md sm:rounded-lg">
           <table
             className={`w-full text-left rtl:text-right ${
               state.theme.theme === "LIGHT" ? `text-black` : `text-stone-200`
@@ -70,17 +71,57 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
               }`}
             >
               <tr className="border-b border-b-stone-400">
-                <th className={`px-6 py-3`}>initiatedName</th>
-                <th className={`px-6 py-3`}>firstName</th>
-                <th className={`px-6 py-3`}>lastName</th>
-                <th className={`px-6 py-3`}>Contact Number</th>
-                <th className={`px-6 py-3`}>Marital Status</th>
-                <th className={`px-6 py-3`}>Joining Date</th>
-                <th className={`px-6 py-3`}>Email</th>
-                <th className={`px-6 py-3`}>Address</th>
-                <th className={`px-6 py-3`}>Gender</th>
-                <th className={`px-6 py-3`}>Age</th>
-                <th className={`px-6 py-3`}>Details</th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center">
+                    <p>initiated Name</p>
+                    <Filter category="initiatedName" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center">
+                    <p>firstName</p>
+                    <Filter category="firstName" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center">
+                    <p>lastName</p>
+                    <Filter category="lastName" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center">
+                    <p>Contact Number</p>
+                    <Filter category="phoneNumber" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center">
+                    <p>Marital Status</p>
+                    <Filter category="maritalStatus" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div>Joining Date</div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div>Email</div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div>Address</div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center">
+                    <p>Gender</p>
+                    <Filter category="gender" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div>Age</div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div>Details</div>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -175,7 +216,7 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                     </td>
                     <td className={`px-6 py-2`}>
                       {item.address ? (
-                        <div>{item.address}</div>
+                        <div className=" truncate">{item.address}</div>
                       ) : (
                         <p className="text-gray-400">Not Available</p>
                       )}
@@ -220,7 +261,7 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                           onClose={() => toggleRow(index)}
                         >
                           <div
-                            className={`w-screen h-screen ${
+                            className={`lg:w-[60vw] md:w-[80vw] w-[95vw] lg:h-[80vh] md:h-[85vh] h-[90vh] shadow-xl ${
                               state.theme.theme === "LIGHT"
                                 ? "bg-white"
                                 : "bg-stone-950"
@@ -236,7 +277,10 @@ const CounseleePage: React.FC<DataTableProps> = ({ data }) => {
                             >
                               <XMarkIcon className="h-5 w-5" /> Close
                             </button>
-                            <DetailsPage counseleeId={item?.id}/>
+                            <p className="text-xl md:px-10 px-5 font-bold py-5 border-b">
+                              Counselee Details
+                            </p>
+                            <DetailsPage counseleeId={item?.id} />
                           </div>
                         </Modal>
                       </td>

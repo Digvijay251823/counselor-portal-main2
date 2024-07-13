@@ -31,8 +31,13 @@ async function getActivities(counselorid: string) {
     return new Error(error.message || error.title);
   }
 }
-async function page() {
+async function page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string };
+}) {
   try {
+    const queryString = new URLSearchParams(searchParams).toString();
     const authcontent = cookies().get("AUTH")?.value;
     const authparsed = authcontent && JSON.parse(authcontent);
     if (!authparsed) {
@@ -44,7 +49,7 @@ async function page() {
       return <NotExistsResource message="No Activities to show" />;
     }
     return (
-      <div className="w-screen justify-center">
+      <div className="w-screen justify-center pt-10">
         <ActivitiesPage response={response.content} />
       </div>
     );

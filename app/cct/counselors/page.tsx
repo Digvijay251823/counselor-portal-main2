@@ -29,7 +29,6 @@ async function page() {
     const response = await getCounselors();
     return (
       <div className="w-screen">
-        <Filter />
         <CounselorPage data={response.content} />
       </div>
     );

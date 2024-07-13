@@ -1,5 +1,11 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useGlobalState } from "../context/state";
 import {
   ChevronDownIcon,
@@ -16,8 +22,16 @@ import { SERVER_URL } from "../config/config";
 import { useFormStatus } from "react-dom";
 import SuccessPage from "./SuccessPage";
 import RegistrationFormForAll from "./RegistrationFormForAll";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { revalidatePath } from "next/cache";
 
-function CounseleeActivities({ activities }: { activities: Activities[] }) {
+function CounseleeActivities({
+  counseleeList,
+  activities,
+}: {
+  counseleeList: counselee[];
+  activities: Activities[];
+}) {
   const [activityDate, setActivityDate] = useState<any>("");
   const [formState, setFormState] = useState<any>({
     firstName: "",
@@ -28,6 +42,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
     currentCounselor: "",
   });
   const [selectedActivity, setSelectedActivity] = useState("");
+  const formRef = useRef<HTMLFormElement>(null); //to reset the form
   const { state, dispatch } = useGlobalState();
   const { counselorid } = useParams();
   const [currentCounselor, setCurrentCounselor] = useState("");
@@ -97,83 +112,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
     return Object.keys(stepErrors).length === 0; // Return true if no errors
   };
 
-  async function IfNotRegisteredChangeCounselor(e: FormData) {
-    if (!validateStep()) {
-      return;
-    }
-    const firstName = e.get("firstName")?.toString();
-    const lastName = e.get("lastName")?.toString();
-    const age = e.get("age")?.toString();
-
-    const address = e.get("address")?.toString();
-    const formDataParticipantRegistration = {
-      firstName,
-      lastName,
-      age,
-      gender,
-      address,
-      phoneNumber,
-      currentCounselor,
-    };
-
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    try {
-      const responseParticipant = await fetch(`/api/counslee/register`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(formDataParticipantRegistration),
-      });
-      if (!responseParticipant.ok) {
-        const responseData = await responseParticipant.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { message: responseData.message, type: "ERROR" },
-        });
-        return;
-      }
-      const description = e.get("description")?.toString();
-      if (!description || activityDate === "" || selectedActivity === "") {
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "ERROR", message: "please fill all the details" },
-        });
-        return;
-      }
-      const formData: any = {
-        counseleeId: counseleeDetails.id,
-        description: description,
-        counselorId: counselorid,
-        activityId: selectedActivity,
-        activityDate,
-      };
-      const response = await fetch(`/api/counslee/markactivity`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        const responseData = await response.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "SUCCESS", message: responseData.message },
-        });
-      } else {
-        const responseData = await response.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { type: "ERROR", message: responseData.message },
-        });
-      }
-    } catch (error: any) {
-      dispatch({
-        type: "SHOW_TOAST",
-        payload: { type: "ERROR", message: error.message },
-      });
-    }
-  }
-
-  async function handleSubmitChangeCounselor(e: FormData) {
+  async function handleSubmitActivity(e: FormData) {
     const description = e.get("description")?.toString();
     if (!description || activityDate === "" || selectedActivity === "") {
       dispatch({
@@ -199,6 +138,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
       });
       if (response.ok) {
         const responseData = await response.json();
+
         dispatch({
           type: "SHOW_TOAST",
           payload: { type: "SUCCESS", message: responseData.message },
@@ -217,6 +157,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
       });
     } finally {
       setCounseleeDetails({});
+      formRef.current?.reset();
     }
   }
   return (
@@ -227,11 +168,16 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
       </div>
       <div>
         <div className="flex items-center justify-center">
-          <form className="md:w-[500px] mx-2 mb-10 ">
+          <form className="md:w-[500px] mx-2 mb-10 flex flex-col">
             <label htmlFor="phonenumber" className="font-bold text-xl">
-              Phone Number
+              Enter PhoneNumber / Your Name
             </label>
-            <div
+            <MenuIconAndDropDownDevotees
+              DataArr={counseleeList}
+              onPhoneNumberChange={(value: string) => setPhoneNumber(value)}
+              setSelected={(value) => setCounseleeDetails(value)}
+            />
+            {/* <div
               className={`flex items-center w-full border transition-all duration-500 ${
                 onFocusPhone
                   ? `${
@@ -259,7 +205,7 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
                   state.theme.theme === "LIGHT" ? "bg-white " : "bg-stone-950 "
                 }`}
               />
-            </div>
+            </div> */}
           </form>
         </div>
         {Object.keys(counseleeDetails).length > 0 && (
@@ -303,36 +249,10 @@ function CounseleeActivities({ activities }: { activities: Activities[] }) {
             state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
           }`}
         >
-          <form
-            action={
-              openRegistration
-                ? IfNotRegisteredChangeCounselor
-                : handleSubmitChangeCounselor
-            }
-          >
-            {openRegistration && (
-              <div>
-                <RegistrationFormForAll
-                  errors={errors}
-                  formState={formState}
-                  setCurrentCounselor={(value: string) => {
-                    setCurrentCounselor(value);
-                  }}
-                  setSelected={(value) => setGender(value)}
-                  setFormData={(target: { name: string; value: string }) =>
-                    setFormState({ ...formState, [target.name]: target.value })
-                  }
-                />
-              </div>
-            )}
+          <form action={handleSubmitActivity} ref={formRef}>
             <div className="flex flex-col gap-5 ">
               <div className="flex flex-col gap-5">
-                {!counseleeDetails?.currentCounselor ? (
-                  <h1 className="text-lg font-bold text-red-500 text-center">
-                    Note : Since You have not been allotted a counselor you are
-                    not allowed to fill the activities
-                  </h1>
-                ) : (
+                {counseleeDetails?.currentCounselor && (
                   <div className="flex md:flex-row flex-col items-center md:gap-5">
                     <div className="flex items-center gap-4">
                       <p
@@ -675,6 +595,180 @@ function SubmitHandlerButton() {
         >
           Submit
         </button>
+      )}
+    </div>
+  );
+}
+
+type PropsMenu = {
+  setSelected: (value: any) => void;
+  DataArr: any[];
+  onPhoneNumberChange: (value: string) => void;
+  defaultVal?: string;
+  position?: string;
+};
+
+function MenuIconAndDropDownDevotees({
+  setSelected,
+  DataArr,
+  onPhoneNumberChange,
+  defaultVal,
+  position,
+}: PropsMenu) {
+  const [isSelectionOpen, toggleSelection] = useState(false);
+  const [onFocusPhone, setOnFocusPhone] = useState(false);
+  const menuRef: any = useRef();
+  const params = useParams();
+  const [selectedOption, setSelectedOption] = useState("");
+  const [modalStyle, setModalStyle] = useState({
+    transform: "scale(0.95)",
+    opacity: 0,
+  });
+  useEffect(() => {
+    if (defaultVal) {
+      setSelectedOption(defaultVal);
+    }
+  }, [defaultVal]);
+  const [isClosing, setIsClosing] = useState(false);
+  const { state } = useGlobalState();
+
+  useEffect(() => {
+    if (isSelectionOpen) {
+      // Open modal animation
+      setTimeout(() => {
+        setModalStyle({
+          transform: "scale(1)",
+          opacity: 1,
+        });
+      }, 50); // Delay the transition slightly for better visual effect
+    } else {
+      // Close modal animation
+      setModalStyle({
+        transform: "scale(0.95)",
+        opacity: 0,
+      });
+      setTimeout(() => {
+        setIsClosing(false);
+      }, 3000); // Adjust this duration according to your transition duration
+    }
+  }, [isSelectionOpen]);
+
+  const closeModal = useCallback(() => {
+    setIsClosing(true);
+    toggleSelection(false);
+  }, [toggleSelection]);
+
+  // Attach click outside listener
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [toggleSelection, closeModal]);
+  const router = useRouter();
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    toggleSelection(true);
+    setSelectedOption(e.target.value);
+    if (isNaN(Number(e.target.value))) {
+      router.push(
+        `/counselee/activities/${params.counselorid}?query=${e.target.value}`
+      );
+    } else {
+      onPhoneNumberChange(e.target.value);
+      router.push(
+        `/counselee/activities/${params.counselorid}?query=${Number(
+          e.target.value
+        )}`
+      );
+    }
+  }
+  return (
+    <div className="relative inline-block text-left" ref={menuRef}>
+      <div
+        className={`flex items-center w-full border transition-all duration-500 px-5 ${
+          onFocusPhone
+            ? `${
+                state.theme.theme === "LIGHT"
+                  ? "ring-4 border-purple-700 ring-purple-100"
+                  : "ring-4 border-purple-300 ring-purple-950"
+              }`
+            : `${
+                state.theme.theme === "LIGHT"
+                  ? "border-gray-300"
+                  : "border-stone-800"
+              }`
+        }`}
+      >
+        <FaMagnifyingGlass />
+        <input
+          type="text"
+          className={`w-full px-4 py-3 outline-none ${
+            state.theme.theme === "LIGHT" ? "bg-white " : "bg-stone-950 "
+          }`}
+          onFocus={() => setOnFocusPhone(true)}
+          onBlur={() => setOnFocusPhone(false)}
+          onChange={handleChange}
+          value={selectedOption}
+          placeholder="Search . . . "
+        />
+      </div>
+      {isSelectionOpen && (
+        <div
+          className={`origin-top-left absolute ${
+            position === "up" ? "bottom-0 mb-12" : "mt-2 right-0"
+          } w-full rounded-lg shadow-lg z-[1000] ${
+            state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
+          } border-gray-300 ring-1 ring-black ring-opacity-5 focus:outline-none py-1 px-1`}
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="options-menu"
+          style={{
+            ...modalStyle,
+            transition: "transform 0.2s ease-out, opacity 0.2s ease-out",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {DataArr?.length > 0 ? (
+            <ul
+              className={`flex flex-col gap-3 overflow-y-auto ${
+                DataArr.length > 10 ? "md:h-[60vh] h-[80vh]" : "h-full"
+              }`}
+              role="none"
+            >
+              {DataArr?.map((item, index) => (
+                <li
+                  key={index}
+                  onClick={() => {
+                    setSelectedOption(
+                      item.initiatedName
+                        ? item.initiatedName
+                        : `${item.firstName} ${item.lastName}`
+                    );
+                    setSelected(item);
+                    toggleSelection(false);
+                  }}
+                  className={`px-2 py-1.5 rounded-lg ${
+                    item.name === selectedOption && "bg-blue-300"
+                  } hover:bg-gray-100`}
+                >
+                  {item.initiatedName
+                    ? `${item.initiatedName} | ${item.phoneNumber}`
+                    : `${item.firstName} ${item.lastName} | ${item.phoneNumber}`}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul>
+              <p>No data to show</p>
+            </ul>
+          )}
+        </div>
       )}
     </div>
   );

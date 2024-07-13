@@ -13,9 +13,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     });
 
     if (response.ok) {
-      const responseData = await response.json();
       return NextResponse.json(
-        { message: responseData.message },
+        { message: "Submitted Sadhana SuccessFully" },
         { status: response.status }
       );
     } else {

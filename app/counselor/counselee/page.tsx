@@ -1,4 +1,5 @@
 import { SERVER_URL } from "@/Components/config/config";
+import Pagination from "@/Components/utils/Pagination";
 const CounseleePage = dynamic(
   () => import("@/Components/counselor/counselee/CounseleePage")
 );
@@ -39,8 +40,9 @@ async function page() {
       return <NotExistsResource message="No counselee to show" />;
     }
     return (
-      <div className="w-screen justify-center">
+      <div className="w-screen justify-center md:px-10 px-5 mt-10">
         <CounseleePage data={response.content} />
+        <Pagination totalElements={response.totalElements} />
       </div>
     );
   } catch (error: any) {

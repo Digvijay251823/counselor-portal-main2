@@ -6,10 +6,13 @@ function ApproveAttendance({ item }: { item: Attendance }) {
   const [isApproved, setIsApproved] = useState(item?.approved);
   const { state, dispatch } = useGlobalState();
   async function handleApprove() {
+    const headers = new Headers();
     try {
       const response = await fetch(
-        `/api/counselee/approveattendance/${item.id}`
+        `/api/counselor/approveattendance/${item.id}`,
+        { method: "POST", headers: headers }
       );
+
       if (response.ok) {
         const responseData = await response.json();
         setIsApproved(true);
@@ -36,13 +39,13 @@ function ApproveAttendance({ item }: { item: Attendance }) {
       {item?.scheduledSession?.startTime ? (
         <div>
           {isApproved ? (
-            <div className="bg-purple-600 text-white px-3 py-1 rounded-lg flex items-center gap-2">
+            <div className="border text-white px-3 py-1 rounded-lg flex items-center gap-2">
               <CheckCircleIcon className="h-5 w-5" />
               APPROVED
             </div>
           ) : (
             <div
-              className="bg-red-600 text-white px-3 py-1 rounded-lg flex items-center gap-2"
+              className="text-white px-3 py-1 rounded-lg flex items-center gap-2 bg-green-500"
               onClick={handleApprove}
             >
               <ClockIcon className="h-5 w-5" />

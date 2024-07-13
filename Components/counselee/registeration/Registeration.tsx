@@ -56,6 +56,7 @@ function Registeration({
   counselorList: counselor;
   counseleeList: counselee[];
 }) {
+  const router = useRouter()
   const { state, dispatch } = useGlobalState();
   const [currentStep, setCurrentStep] = useState(1);
   const [currentCounselor, setCurrentCounselor] = useState("");
@@ -130,6 +131,7 @@ function Registeration({
       });
       if (response.ok) {
         const responseData = await response.json();
+        router.back()
         dispatch({
           type: "SHOW_TOAST",
           payload: { type: "SUCCESS", message: responseData.message },
@@ -492,6 +494,7 @@ function Step1({
             Gender
           </label>
           <MenuOthersDropDown
+            value={formData?.gender}
             errors={errors}
             dataArr={["MALE", "FEMALE"]}
             setSelected={(item: string) => {
@@ -923,15 +926,17 @@ function MenuOthersDropDown({
   dataArr,
   position,
   errors,
+  value,
 }: {
   setSelected: (value: string) => void;
   dataArr: string[];
   position?: string;
   errors?: any;
+  value?: string;
 }) {
   const [isSelectionOpen, toggleSelection] = useState(false);
   const menuRef: any = useRef();
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(value ? value : "");
   const [modalStyle, setModalStyle] = useState({
     transform: "scale(0.95)",
     opacity: 0,
@@ -990,7 +995,7 @@ function MenuOthersDropDown({
                   : "border border-red-500 ring-4 ring-red-200"
               }`
             : `${
-                !errors.gender
+                !errors?.gender
                   ? "border-stone-800 bg-stone-950 focus:ring-purple-950 focus:border-purple-400"
                   : "border border-red-500 ring-4 ring-red-900"
               }`
