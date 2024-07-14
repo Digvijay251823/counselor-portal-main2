@@ -11,7 +11,9 @@ const CounseleeAttendance = dynamic(
 async function getCounselees(id: string) {
   unstable_noStore();
   try {
-    const response = await fetch(`${SERVER_URL}/Counselor/counselees/${id}`);
+    const response = await fetch(
+      `${SERVER_URL}/Counselor/dropdown/counselees/${id}`
+    );
     if (response.ok) {
       const responseData = await response.json();
       return responseData;

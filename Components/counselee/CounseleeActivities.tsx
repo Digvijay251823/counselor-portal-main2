@@ -757,7 +757,12 @@ function MenuIconAndDropDownDevotees({
                     item.name === selectedOption && "bg-blue-300"
                   } hover:bg-gray-100`}
                 >
-                  {item.initiatedName
+                  {item?.initiatedName &&
+                  item?.initiatedName !== "NA" &&
+                  item?.initiatedName !== "Na" &&
+                  item?.initiatedName !== "na" &&
+                  item?.initiatedName !== "No" &&
+                  item?.initiatedName !== "no"
                     ? `${item.initiatedName} | ${item.phoneNumber}`
                     : `${item.firstName} ${item.lastName} | ${item.phoneNumber}`}
                 </li>

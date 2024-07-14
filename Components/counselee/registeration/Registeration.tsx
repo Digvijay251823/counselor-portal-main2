@@ -56,7 +56,7 @@ function Registeration({
   counselorList: counselor;
   counseleeList: counselee[];
 }) {
-  const router = useRouter()
+  const router = useRouter();
   const { state, dispatch } = useGlobalState();
   const [currentStep, setCurrentStep] = useState(1);
   const [currentCounselor, setCurrentCounselor] = useState("");
@@ -131,7 +131,7 @@ function Registeration({
       });
       if (response.ok) {
         const responseData = await response.json();
-        router.back()
+        router.back();
         dispatch({
           type: "SHOW_TOAST",
           payload: { type: "SUCCESS", message: responseData.message },
@@ -1186,7 +1186,12 @@ function MenuIconAndDropDownDevotees({
                   key={index}
                   onClick={() => {
                     setSelectedOption(
-                      item.initiatedName
+                      item?.initiatedName &&
+                        item?.initiatedName !== "NA" &&
+                        item?.initiatedName !== "Na" &&
+                        item?.initiatedName !== "na" &&
+                        item?.initiatedName !== "No" &&
+                        item?.initiatedName !== "no"
                         ? item.initiatedName
                         : `${item.firstName} ${item.lastName}`
                     );
@@ -1197,7 +1202,12 @@ function MenuIconAndDropDownDevotees({
                     item.name === selectedOption && "bg-blue-300"
                   } hover:bg-gray-100`}
                 >
-                  {item.initiatedName
+                  {item?.initiatedName &&
+                  item?.initiatedName !== "NA" &&
+                  item?.initiatedName !== "Na" &&
+                  item?.initiatedName !== "na" &&
+                  item?.initiatedName !== "No" &&
+                  item?.initiatedName !== "no"
                     ? `${item.initiatedName} | ${item.phoneNumber}`
                     : `${item.firstName} ${item.lastName} | ${item.phoneNumber}`}
                 </li>

@@ -99,6 +99,39 @@ function SadhanaForm({
   }, []);
 
   useEffect(() => {
+    if (phoneNumber.length === 10) {
+      (async () => {
+        try {
+          const response = await fetch(`/api/counslee/${phoneNumber}`);
+          if (response.ok) {
+            const responseData = await response.json();
+            setOpenRegistration(false);
+            setCounseleeDetails(responseData.content.content);
+          } else {
+            if (response.status === 404) {
+              setWarning(true);
+              localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
+              return;
+            }
+            const errorData = await response.json();
+            dispatch({
+              type: "SHOW_TOAST",
+              payload: { type: "ERROR", message: errorData.message },
+            });
+          }
+        } catch (error: any) {
+          dispatch({
+            type: "SHOW_TOAST",
+            payload: { type: "ERROR", message: error.message },
+          });
+        }
+      })();
+    } else {
+      setOpenRegistration(false);
+    }
+  }, [phoneNumber]);
+
+  useEffect(() => {
     if (!sadhanaForm) {
       dispatch({
         type: "SHOW_TOAST",
@@ -692,7 +725,10 @@ function MenuIconAndDropDownDevotees({
                   key={index}
                   onClick={() => {
                     setSelectedOption(
-                      item.initiatedName
+                      item?.initiatedName &&
+                        item?.initiatedName !== "NA" &&
+                        item?.initiatedName !== "Na" &&
+                        item?.initiatedName !== "na"
                         ? item.initiatedName
                         : `${item.firstName} ${item.lastName}`
                     );
@@ -710,7 +746,9 @@ function MenuIconAndDropDownDevotees({
                   {item?.initiatedName &&
                   item?.initiatedName !== "NA" &&
                   item?.initiatedName !== "Na" &&
-                  item?.initiatedName !== "na"
+                  item?.initiatedName !== "na" &&
+                  item?.initiatedName !== "No" &&
+                  item?.initiatedName !== "no"
                     ? `${item.initiatedName} | ${item.phoneNumber}`
                     : `${item.firstName} ${item.lastName} | ${item.phoneNumber}`}
                 </li>
