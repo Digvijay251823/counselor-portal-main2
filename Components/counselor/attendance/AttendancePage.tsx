@@ -131,13 +131,12 @@ function AttendancePage({
                     }
                   >
                     <td className={`px-6 py-4`}>
-                      {item?.scheduledSession?.modeOfAttendance === "ONLINE" ? (
-                        <div className="text-red-500">ONLINE</div>
-                      ) : item?.scheduledSession?.modeOfAttendance ==
-                        "OFFLINE" ? (
+                      {item?.modeOfAttendance === "OFFLINE" ? (
                         <div className="text-green-600 border border-green-600 rounded-lg w-max px-3 py-1">
                           OFFLINE
                         </div>
+                      ) : item?.modeOfAttendance == "ONLINE" ? (
+                        <div className="text-red-500">ONLINE</div>
                       ) : (
                         <div className="text-yellow-600 border border-yellow-600 rounded-lg w-max px-3 py-1">
                           HYBRID

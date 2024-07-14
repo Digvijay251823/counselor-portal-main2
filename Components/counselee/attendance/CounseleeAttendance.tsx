@@ -30,21 +30,11 @@ function CounseleeAttendance({
   response: sessions[];
 }) {
   const [warning, setWarning] = useState(false);
-  const [selectedSession, setSelectedSession] = useState("");
+  const [selectedSession, setSelectedSession] = useState(response[0].id);
+  const [ModeOfAttendance, setModeOfAttendance] = useState("OFFLINE");
   const formRef = useRef<HTMLFormElement>(null);
-  const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [openRegistration, setOpenRegistration] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [gender, setGender] = useState("");
-  const [errors, setErrors] = useState({});
-  const [formState, setFormState] = useState<any>({
-    firstName: "",
-    lastName: "",
-    age: 0,
-    gender: "",
-    city: "",
-    currentCounselor: "",
-  });
   const [currentCounselor, setCurrentCounselor] = useState("");
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
@@ -83,12 +73,12 @@ function CounseleeAttendance({
       setOpenRegistration(false);
     }
   }, [phoneNumber]);
-
   async function handleSubmitAttendance(e: FormData) {
     const formData: any = {
       scheduledSessionId: selectedSession,
       counseleeId: counseleeDetails.id,
       counselorId: counselorid,
+      ModeOfAttendance,
     };
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
@@ -105,6 +95,16 @@ function CounseleeAttendance({
           payload: { type: "SUCCESS", message: responseData.message },
         });
       } else {
+        if (response.status === 409) {
+          dispatch({
+            type: "SHOW_TOAST",
+            payload: {
+              type: "ERROR",
+              message: "You Have Already Submitted attendance ",
+            },
+          });
+          return;
+        }
         const responseData = await response.json();
         dispatch({
           type: "SHOW_TOAST",
@@ -183,7 +183,10 @@ function CounseleeAttendance({
                 >
                   <UserIcon className="h-5 w-5" />
                 </p>
-                {counseleeDetails?.initiatedName ? (
+                {counseleeDetails?.initiatedName &&
+                counseleeDetails?.initiatedName !== "NA" &&
+                counseleeDetails?.initiatedName !== "Na" &&
+                counseleeDetails?.initiatedName !== "na" ? (
                   <p className="text-gray-500 text-xl font-bold">
                     {counseleeDetails?.initiatedName}
                   </p>
@@ -225,10 +228,15 @@ function CounseleeAttendance({
                       >
                         <HiUsers />
                       </p>
-                      <p className="font-bold text-xl">Current Counselor:</p>
+                      <p className="font-bold text-xl">Counselor:</p>
                     </div>
                     <p className="font-semibold text-lg">
-                      {counseleeDetails?.currentCounselor?.initiatedName
+                      {counseleeDetails?.currentCounselor.initiatedName &&
+                      counseleeDetails?.currentCounselor.initiatedName !==
+                        "NA" &&
+                      counseleeDetails?.currentCounselor.initiatedName !==
+                        "Na" &&
+                      counseleeDetails?.currentCounselor.initiatedName !== "na"
                         ? counseleeDetails?.currentCounselor?.initiatedName
                         : `${counseleeDetails?.currentCounselor?.firstName} ${counseleeDetails?.currentCounselor?.lastName}`}
                     </p>
@@ -246,14 +254,6 @@ function CounseleeAttendance({
                             : "bg-stone-950"
                         } w-full p-2 flex items-center gap-3`}
                       >
-                        <input
-                          type="checkbox"
-                          name={item.name}
-                          onChange={(e) => setSelectedSession(item.id)}
-                          checked={item.id === selectedSession}
-                          id={item.name}
-                          className="h-5 w-5"
-                        />
                         <label
                           htmlFor={item.name}
                           className="font-bold text-lg"
@@ -267,6 +267,37 @@ function CounseleeAttendance({
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="md:w-[400px] w-full">
+                  <p className="font-bold text-xl">Mode Of Attendance</p>
+                  <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="online"
+                        id="ONLINE"
+                        onChange={() => setModeOfAttendance("ONLINE")}
+                        checked={"ONLINE" === ModeOfAttendance}
+                        className="w-5 h-5"
+                      />
+                      <label htmlFor="ONLINE" className="font-semibold">
+                        ONLINE
+                      </label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="online"
+                        id="OFFLINE"
+                        onChange={() => setModeOfAttendance("OFFLINE")}
+                        checked={"OFFLINE" === ModeOfAttendance}
+                        className="w-5 h-5"
+                      />
+                      <label htmlFor="OFFLINE" className="font-semibold">
+                        OFFLINE
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

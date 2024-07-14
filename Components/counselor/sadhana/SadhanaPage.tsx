@@ -35,25 +35,24 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
               }`}
             >
               <tr className="border-b border-b-stone-400">
-                <th className={`px-4 py-2`}>COUNSELEE FIRST NAME</th>
-                <th className={`px-4 py-2`}>COUNSELEE LAST NAME</th>
-                <th className={`px-4 py-2`}>COUNSELEE PHONE NUMBER</th>
-                <th className={`px-4 py-2`}>numberOfRounds</th>
-                <th className={`px-4 py-2`}>earlyJapaRoundsBefore8AM</th>
-                <th className={`px-4 py-2`}>earlyJapaRoundsAfter8AM</th>
-                <th className={`px-4 py-2`}>first8RoundsCompletedTime</th>
-                <th className={`px-4 py-2`}>next8RoundsCompletedTime</th>
-                <th className={`px-4 py-2`}>wakeUpTime</th>
-                <th className={`px-4 py-2`}>sleepTime</th>
-                <th className={`px-4 py-2`}>prabhupadaBookReading</th>
-                <th className={`px-4 py-2`}>nonPrabhupadaBookReading</th>
-                <th className={`px-4 py-2`}>prabhupadaClassHearing</th>
-                <th className={`px-4 py-2`}>guruClassHearing</th>
-                <th className={`px-4 py-2`}>otherClassHearing</th>
+                <th className={`px-4 py-2`}>Sadhana Date</th>
+                <th className={`px-4 py-2`}>Counselee Initiated Name</th>
+                <th className={`px-4 py-2`}>Counselee First Name</th>
+                <th className={`px-4 py-2`}>Counselee Last Name</th>
+                <th className={`px-4 py-2`}>Counselee Contact Number</th>
+                <th className={`px-4 py-2`}>Number Of Rounds</th>
+                <th className={`px-4 py-2`}>First 8 Rounds Completed Time</th>
+                <th className={`px-4 py-2`}>Next 8Rounds Completed Time</th>
+                <th className={`px-4 py-2`}>Wake Up Time</th>
+                <th className={`px-4 py-2`}>Sleep Time</th>
+                <th className={`px-4 py-2`}>Prabhupada Book Reading</th>
+                <th className={`px-4 py-2`}> Book Name</th>
+                <th className={`px-4 py-2`}>Prabhupada Class Hearing</th>
+                <th className={`px-4 py-2`}>Guru Class Hearing</th>
+                <th className={`px-4 py-2`}>Other Class Hearing</th>
                 <th className={`px-4 py-2`}>speaker</th>
-                <th className={`px-4 py-2`}>attendedArti</th>
-                <th className={`px-4 py-2`}>mobileInternetUsage</th>
-                <th className={`px-4 py-2`}>sadhanaDate</th>
+                <th className={`px-4 py-2`}>Attended Arti</th>
+                <th className={`px-4 py-2`}>Mobile Internet Usage</th>
               </tr>
             </thead>
             <tbody>
@@ -66,12 +65,48 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
                       : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
                   }
                 >
-                  <td className="px-4 py-1.5">{item.counselee.firstName}</td>
-                  <td className="px-4 py-1.5">{item.counselee.lastName}</td>
-                  <td className="px-4 py-1.5">{item.counselee.phoneNumber}</td>
+                  <td className="px-4 py-1.5">
+                    {item.sadhanaDate ? (
+                      <DateFormatter dateString={item.sadhanaDate} />
+                    ) : (
+                      <p className="text-gray-500">null</p>
+                    )}
+                  </td>
+                  <td className="px-4 py-1.5">
+                    {item.counselee?.initiatedName ? (
+                      item.counselee?.initiatedName
+                    ) : (
+                      <p>Not Available</p>
+                    )}
+                  </td>
+                  <td className="px-4 py-1.5">
+                    {item.counselee?.firstName ? (
+                      item.counselee?.firstName
+                    ) : (
+                      <p>Not Available</p>
+                    )}
+                  </td>
+                  <td className="px-4 py-1.5">
+                    {item.counselee?.lastName ? (
+                      item.counselee?.lastName
+                    ) : (
+                      <p>Not Available</p>
+                    )}
+                  </td>
+                  <td className="px-4 py-1.5">
+                    {item.counselee?.phoneNumber ? (
+                      item.counselee?.phoneNumber
+                    ) : (
+                      <p>Not Available</p>
+                    )}
+                  </td>
                   <td className="px-4 py-1.5">{item.numberOfRounds}</td>
                   <td className="px-4 py-1.5">
-                    {item.earlyJapaRoundsBefore8AM}
+                    {item?.earlyJapaRoundsBefore8AM ? (
+                      item?.earlyJapaRoundsBefore8AM
+                    ) : (
+                      <p>Not Available</p>
+                    )}
                   </td>
                   <td className="px-4 py-1.5">
                     {item.earlyJapaRoundsAfter8AM}
@@ -106,13 +141,6 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
                   <td className="px-4 py-1.5">{item.speaker}</td>
                   <td className="px-4 py-1.5">{item.attendedArti}</td>
                   <td className="px-4 py-1.5">{item.mobileInternetUsage}</td>
-                  <td className="px-4 py-1.5">
-                    {item.sadhanaDate ? (
-                      <DateFormatter dateString={item.sadhanaDate} />
-                    ) : (
-                      <p className="text-gray-500">null</p>
-                    )}
-                  </td>
                 </tr>
               ))}
             </tbody>

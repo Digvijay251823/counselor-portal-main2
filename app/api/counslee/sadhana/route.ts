@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     } else {
       if (response.status === 409) {
         return NextResponse.json(
-          { message: "You Have Already Registered Todays Sadhana" },
+          { message: "You Have Already Submitted Sadhana For Selected Date" },
           { status: response.status }
         );
       }

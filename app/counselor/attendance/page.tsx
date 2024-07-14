@@ -44,7 +44,7 @@ async function page({
     if (!response) {
       return <NotExistsResource message="Nobody marked their attendance yet" />;
     }
-
+    console.log(response.content);
     return (
       <div className="w-screen justify-center">
         <AttendancePage

@@ -2,12 +2,15 @@ import { SERVER_URL } from "@/Components/config/config";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const { scheduledSessionId, counseleeId, counselorId } = await req.json();
+  const { scheduledSessionId, counseleeId, counselorId, ModeOfAttendance } =
+    await req.json();
   const formData = {
     scheduledSessionId,
     counseleeId,
     counselorId,
+    ModeOfAttendance,
   };
+  console.log(formData);
   const header = new Headers();
   header.append("Content-Type", "application/json");
   try {
@@ -16,6 +19,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       headers: header,
       body: JSON.stringify(formData),
     });
+
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(
@@ -25,7 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     } else {
       if (response.status === 409) {
         return NextResponse.json(
-          { message: "devotee already exists" },
+          { message: "Already Submitted Attendance" },
           { status: 409 }
         );
       }

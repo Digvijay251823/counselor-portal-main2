@@ -303,7 +303,7 @@ function SadhanaForm({
                 >
                   <HiUsers />
                 </p>
-                <p className="font-bold text-xl">Current Counselor:</p>
+                <p className="font-bold text-xl">Counselor:</p>
               </div>
               <p className="font-semibold text-lg">
                 {counseleeDetails?.currentCounselor.initiatedName &&
