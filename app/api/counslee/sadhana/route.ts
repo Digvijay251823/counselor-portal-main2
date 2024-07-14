@@ -11,7 +11,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       headers: header,
       body: JSON.stringify(formData),
     });
-
     if (response.ok) {
       return NextResponse.json(
         { message: "Submitted Sadhana SuccessFully" },
