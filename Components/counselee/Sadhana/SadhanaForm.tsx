@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/16/solid";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import React, {
   ChangeEvent,
   FormEvent,
@@ -45,6 +45,7 @@ import {
   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 import Modal from "@/Components/utils/Modal";
+import { LinksActivator } from "@/Components/utils/LinksActivator";
 interface FieldTypeFormList {
   id: number;
   type: string;
@@ -55,9 +56,10 @@ interface FieldTypeFormList {
 
 function formatDate(date: Date) {
   // Extract day, month, and year components
-  const day = date.getDate().toString().padStart(2, "0"); // Ensure two-digit day
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
-  const year = date.getFullYear().toString().slice(2); // Get last two digits of the year
+  const dateObject = new Date(date);
+  const day = dateObject.getDate().toString().padStart(2, "0"); // Ensure two-digit day
+  const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based
+  const year = dateObject.getFullYear().toString().slice(2); // Get last two digits of the year
 
   // Format the date as DD-MM-YY
   return `${day}-${month}-${year}`;
@@ -75,8 +77,10 @@ function SadhanaForm({
   const [isSuccess, setIsSuccess] = useState(false);
   const [SubmittedSuccess, setSubmittedSuccess] = useState(false);
   const [openRegistration, setOpenRegistration] = useState(false);
-  const [sadhanaDate, setSadhanaDate] = useState<any>("");
+  const [sadhanaDate, setSadhanaDate] = useState<any>(new Date());
+  const [sadhanaDateToShow, setSadhanaDateToShow] = useState<any>();
   const { state, dispatch } = useGlobalState();
+  const pathname = usePathname();
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const [warning, setWarning] = useState(false);
   const [formData, setFormData] = useState<any>({});
@@ -85,41 +89,14 @@ function SadhanaForm({
   const [sadhanaFormData, setSadhanaFormData] = useState("");
   const [visibleSadhana, setvisibleSadhana] = useState<any>("");
   const [attendedArthi, setAttendedArthi] = useState<any>("");
-
+  const linksActivator = LinksActivator();
   const formRef = useRef<HTMLFormElement>(null);
-
   useEffect(() => {
-    if (phoneNumber.length === 10) {
-      (async () => {
-        try {
-          const response = await fetch(`/api/counslee/${phoneNumber}`);
-          if (response.ok) {
-            const responseData = await response.json();
-            setOpenRegistration(false);
-            setCounseleeDetails(responseData.content.content);
-          } else {
-            if (response.status === 404) {
-              setWarning(true);
-              localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
-              return;
-            }
-            const errorData = await response.json();
-            dispatch({
-              type: "SHOW_TOAST",
-              payload: { type: "ERROR", message: errorData.message },
-            });
-          }
-        } catch (error: any) {
-          dispatch({
-            type: "SHOW_TOAST",
-            payload: { type: "ERROR", message: error.message },
-          });
-        }
-      })();
-    } else {
-      setOpenRegistration(false);
+    const phoneNumber = localStorage.getItem("PHONE_NUMBER");
+    if (phoneNumber) {
+      setPhoneNumber(phoneNumber);
     }
-  }, [phoneNumber]);
+  }, []);
 
   useEffect(() => {
     if (!sadhanaForm) {
@@ -149,13 +126,15 @@ function SadhanaForm({
     }
     setSadhanaFormData(message);
   };
-  const params = useParams();
 
   async function handleSubmitSadhana(e: FormData) {
+    if (Object.keys(counseleeDetails).length === 0) {
+      return;
+    }
     const formDataObject: any = {
       counselorId: counselorId,
       counseleeId: counseleeDetails.id,
-      sadhanaDate: sadhanaDate ? sadhanaDate : new Date(),
+      sadhanaDate: sadhanaDate,
     };
 
     checkedItems.forEach((value: FieldTypeFormList) => {
@@ -174,13 +153,16 @@ function SadhanaForm({
     });
     const formDataObjectShare: any = {
       ...formDataObject,
-      sadhanaDate: formDataObject.sadhanaDate,
+      sadhanaDate: sadhanaDateToShow
+        ? formatDate(sadhanaDateToShow)
+        : formatDate(new Date()),
+      sadhanaLink: `${linksActivator}/${pathname}`,
     };
+    delete formDataObjectShare.counseleeId;
+    delete formDataObjectShare.counselorId;
+
     const header = new Headers();
     header.append("Content-Type", "application/json");
-    setSubmittedSuccess(true);
-    setFormData(formDataObjectShare);
-    handleShare(formDataObjectShare);
     try {
       const response = await fetch(`/api/counslee/sadhana`, {
         method: "POST",
@@ -278,7 +260,10 @@ function SadhanaForm({
               >
                 <UserIcon className="h-5 w-5" />
               </p>
-              {counseleeDetails?.initiatedName ? (
+              {counseleeDetails?.initiatedName &&
+              counseleeDetails?.initiatedName !== "NA" &&
+              counseleeDetails?.initiatedName !== "Na" &&
+              counseleeDetails?.initiatedName !== "na" ? (
                 <p className="text-gray-500 text-xl font-bold">
                   {counseleeDetails?.initiatedName}
                 </p>
@@ -321,13 +306,34 @@ function SadhanaForm({
                 <p className="font-bold text-xl">Current Counselor:</p>
               </div>
               <p className="font-semibold text-lg">
-                {counseleeDetails?.currentCounselor?.initiatedName
+                {counseleeDetails?.currentCounselor.initiatedName &&
+                counseleeDetails?.currentCounselor.initiatedName !== "NA" &&
+                counseleeDetails?.currentCounselor.initiatedName !== "Na" &&
+                counseleeDetails?.currentCounselor.initiatedName !== "na"
                   ? counseleeDetails?.currentCounselor?.initiatedName
                   : `${counseleeDetails?.currentCounselor?.firstName} ${counseleeDetails?.currentCounselor?.lastName}`}
               </p>
             </div>
           )}
           <form action={handleSubmitSadhana} className={`mt-10`} ref={formRef}>
+            <div className="flex flex-col py-5 gap-2">
+              <label htmlFor="sadhanaDate" className="font-bold text-lg">
+                Sadhana Date
+              </label>
+              <DatePicker
+                selected={sadhanaDate}
+                onChange={(date) => {
+                  setSadhanaDateToShow(date?.toISOString().toString());
+                  setSadhanaDate(date);
+                }}
+                placeholderText="enter the date of sadhana"
+                className={`text-lg border px-4 py-1.5 font-normal outline-none w-full flex items-center justify-between ${
+                  state.theme.theme === "LIGHT"
+                    ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
+                    : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
+                }`}
+              />
+            </div>
             <div className="flex flex-col gap-5">
               {checkedItems.map((item, index) => {
                 switch (item.functionName) {
@@ -376,7 +382,10 @@ function SadhanaForm({
                     );
                   case "BNR":
                     return (
-                      <BNRComponent key={index} label={"Book Name Reading"} />
+                      <BNRComponent
+                        key={index}
+                        label={"Which book are you reading?"}
+                      />
                     );
                   case "PCH":
                     return (
@@ -436,23 +445,7 @@ function SadhanaForm({
                 }
               })}
             </div>
-            <div className="flex flex-col py-5 gap-2">
-              <label htmlFor="sadhanaDate" className="font-bold text-lg">
-                Sadhana Date
-              </label>
-              <DatePicker
-                selected={sadhanaDate}
-                onChange={(date) =>
-                  setSadhanaDate(date?.toISOString().toString())
-                }
-                placeholderText="enter the date of connecting to counselor"
-                className={`text-lg border px-4 py-1.5 font-normal outline-none w-full flex items-center justify-between ${
-                  state.theme.theme === "LIGHT"
-                    ? "border-gray-300 bg-white focus:border-purple-600 focus:ring-4 focus:ring-purple-100"
-                    : "border-stone-700 bg-stone-900 focus:border-purple-300 focus:ring-4 focus:ring-purple-950"
-                }`}
-              />
-            </div>
+
             <div className="mt-10">
               <SubmitHandlerButton btnStyles="font-medium rounded-lg px-5 py-1.5 text-center me-2 bg-purple-600 hover:bg-purple-700 focus:ring-purple-800 inline-flex items-center text-white text-lg" />
             </div>
@@ -464,12 +457,12 @@ function SadhanaForm({
         onClose={() => setSubmittedSuccess(false)}
       >
         <div
-          className={`flex flex-col items-center p-5 rounded-[40px] ${
+          className={`flex flex-col items-center p-5 rounded-[40px]  ${
             state.theme.theme === "LIGHT" ? "bg-gray-50" : "bg-stone-900"
           }`}
         >
           <p className="text-red-600 font-bold text-xl">Preview Message</p>
-          <div className="p-5 flex flex-col gap-2">
+          <div className="p-5 flex flex-col gap-2 md:max-w-[40vw] max-w-[80vw]">
             <p className="font-bold">Sadhana Submitted</p>
             <p className="font-semibold w-full">{`Name : ${counseleeDetails.firstName}${counseleeDetails.lastName}`}</p>
             <div>
@@ -708,9 +701,16 @@ function MenuIconAndDropDownDevotees({
                   }}
                   className={`px-2 py-1.5 rounded-lg ${
                     item.name === selectedOption && "bg-blue-300"
-                  } hover:bg-gray-100`}
+                  } ${
+                    state.theme.theme === "LIGHT"
+                      ? "hover:bg-gray-200"
+                      : "hover:bg-stone-700"
+                  }`}
                 >
-                  {item.initiatedName
+                  {item?.initiatedName &&
+                  item?.initiatedName !== "NA" &&
+                  item?.initiatedName !== "Na" &&
+                  item?.initiatedName !== "na"
                     ? `${item.initiatedName} | ${item.phoneNumber}`
                     : `${item.firstName} ${item.lastName} | ${item.phoneNumber}`}
                 </li>

@@ -198,14 +198,13 @@ export function BNR({ label }: { label: string }) {
     <div className="flex flex-col gap-1 w-full">
       <label className="font-bold text-lg" htmlFor="BNR">
         {label}
-        <i className="text-gray-500 font-normal">in minutes</i>
         <i className="text-red-400">*</i>
       </label>
       <input
-        type="number"
+        type="text"
         id="BNR"
         name="nonPrabhupadaBookReading"
-        placeholder="Non Prabhupada Book Reading name"
+        placeholder="Other Than Prabhupada Book Reading name"
         className={`rounded px-4 py-2 text-lg border transition-all duration-500 ${
           state.theme.theme === "LIGHT"
             ? "focus:border-purple-600 outline-none focus:ring-4 focus:ring-purple-100 bg-white border-gray-300"
