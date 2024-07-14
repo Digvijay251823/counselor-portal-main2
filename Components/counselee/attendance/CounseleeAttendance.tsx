@@ -118,7 +118,6 @@ function CounseleeAttendance({
       });
     } finally {
       formRef.current?.reset();
-      setSelectedSession("");
     }
   }
   return (

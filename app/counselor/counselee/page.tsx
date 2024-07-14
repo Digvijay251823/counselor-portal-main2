@@ -12,10 +12,10 @@ import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
 
-async function getCounselees(counselorid: string) {
+async function getCounselees(counselorid: string, queryString: string) {
   unstable_noStore();
   const response = await fetch(
-    `${SERVER_URL}/Counselor/counselees/${counselorid}`
+    `${SERVER_URL}/Counselor/counselees/${counselorid}?${queryString}`
   );
   if (response.ok) {
     const responseData = await response.json();
@@ -26,8 +26,13 @@ async function getCounselees(counselorid: string) {
   }
 }
 
-async function page() {
+async function page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string };
+}) {
   try {
+    const queryString = new URLSearchParams(searchParams).toString();
     const authcontent = cookies().get("AUTH")?.value;
     const authparsed = authcontent && JSON.parse(authcontent);
     if (!authparsed) {
@@ -35,14 +40,14 @@ async function page() {
         <ErrorComponent message="Pleas Authenticate to access the resource" />
       );
     }
-    const response = await getCounselees(authparsed.counselor.id);
+    const response = await getCounselees(authparsed.counselor.id, queryString);
     if (!response || response.content.length === 0) {
       return <NotExistsResource message="No counselee to show" />;
     }
     return (
       <div className="w-screen justify-center md:px-10 px-5 mt-10">
         <CounseleePage data={response.content} />
-        <Pagination totalElements={response.totalElements} />
+        <Pagination totalElements={response.total} />
       </div>
     );
   } catch (error: any) {

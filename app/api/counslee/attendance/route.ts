@@ -10,7 +10,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     counselorId,
     ModeOfAttendance,
   };
-  console.log(formData);
   const header = new Headers();
   header.append("Content-Type", "application/json");
   try {
