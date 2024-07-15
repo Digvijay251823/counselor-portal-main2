@@ -83,6 +83,7 @@ async function page({
         <CounseleeActivities
           activities={response.content}
           counseleeList={results}
+          currentCounselor={counselees.currentCounselor}
         />
       </div>
     );

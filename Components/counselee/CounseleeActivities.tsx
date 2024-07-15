@@ -28,9 +28,11 @@ import { revalidatePath } from "next/cache";
 function CounseleeActivities({
   counseleeList,
   activities,
+  currentCounselor,
 }: {
   counseleeList: counselee[];
   activities: Activities[];
+  currentCounselor: counselor;
 }) {
   const [activityDate, setActivityDate] = useState<any>("");
   const [formState, setFormState] = useState<any>({
@@ -45,7 +47,7 @@ function CounseleeActivities({
   const formRef = useRef<HTMLFormElement>(null); //to reset the form
   const { state, dispatch } = useGlobalState();
   const { counselorid } = useParams();
-  const [currentCounselor, setCurrentCounselor] = useState("");
+  // const [currentCounselor, setCurrentCounselor] = useState("");
   const [onFocusPhone, setOnFocusPhone] = useState(false);
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const [gender, setGender] = useState("");
@@ -89,28 +91,6 @@ function CounseleeActivities({
       setOpenRegistration(false);
     }
   }, [phoneNumber]);
-
-  const validateStep = () => {
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "age",
-      "gender",
-      "city",
-      "currentCounselor",
-    ];
-    const stepErrors: any = {};
-
-    requiredFields.forEach((field: any) => {
-      if (!formState[field]) {
-        stepErrors[field] = "This field is required";
-      }
-    });
-
-    setErrors(stepErrors);
-
-    return Object.keys(stepErrors).length === 0; // Return true if no errors
-  };
 
   async function handleSubmitActivity(e: FormData) {
     const description = e.get("description")?.toString();
@@ -172,6 +152,9 @@ function CounseleeActivities({
             <label htmlFor="phonenumber" className="font-bold text-xl">
               Enter PhoneNumber / Your Name
             </label>
+            <p className="mb-5">
+              If You Dont Find Your Name Try Entering Your Full Contact Number
+            </p>
             <MenuIconAndDropDownDevotees
               DataArr={counseleeList}
               onPhoneNumberChange={(value: string) => setPhoneNumber(value)}
@@ -252,7 +235,7 @@ function CounseleeActivities({
           <form action={handleSubmitActivity} ref={formRef}>
             <div className="flex flex-col gap-5 ">
               <div className="flex flex-col gap-5">
-                {counseleeDetails?.currentCounselor && (
+                {currentCounselor && (
                   <div className="flex md:flex-row flex-col items-center md:gap-5">
                     <div className="flex items-center gap-4">
                       <p
@@ -264,12 +247,10 @@ function CounseleeActivities({
                       >
                         <HiUsers />
                       </p>
-                      <p className="font-bold text-xl">Current Counselor:</p>
+                      <p className="font-bold text-xl">Counselor:</p>
                     </div>
                     <p className="font-semibold text-lg">
-                      {counseleeDetails?.currentCounselor?.initiatedName
-                        ? counseleeDetails?.currentCounselor?.initiatedName
-                        : `${counseleeDetails?.currentCounselor?.firstName} ${counseleeDetails?.currentCounselor?.lastName}`}
+                      {currentCounselor.initiatedName}
                     </p>
                   </div>
                 )}

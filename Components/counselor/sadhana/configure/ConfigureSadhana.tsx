@@ -236,7 +236,7 @@ function ConfigureSadhana({
           text="Generate Form"
         />
       </form>
-      <div className="pt-20 w-[45vw] ml-auto h-screen overflow-y-scroll md:block hidden">
+      <div className="pt-20 w-[45vw] ml-auto  md:block hidden">
         <div
           className={`px-5 rounded drop-shadow-lg  ml-auto mx-10 ${
             state.theme.theme === "LIGHT"

@@ -41,7 +41,7 @@ function QRCodeOverlay({ url, content }: { url: string; content: string }) {
             <div className="bg-white rounded-2xl w-max p-5">
               <div ref={qrCodeRef}>
                 <QRCode
-                  value="https://reactjs.org/"
+                  value={url}
                   renderAs="canvas"
                   className="h-[400px] w-[400px]"
                 />

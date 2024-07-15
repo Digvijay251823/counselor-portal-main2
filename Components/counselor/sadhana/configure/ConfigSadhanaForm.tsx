@@ -81,7 +81,6 @@ export function F8RCT({ label }: { label: string }) {
         {label}
         <i className="text-red-400">*</i>
       </label>
-
       <input
         type="time"
         id="F8RCT"
@@ -603,7 +602,7 @@ export const FormListItems = [
   {
     id: 5,
     type: "First 8 rounds completed time ",
-    valueType: "Number",
+    valueType: "Time",
     functionName: "F8RCT",
     databaseField: "first8RoundsCompletedTime",
   },
@@ -624,7 +623,7 @@ export const FormListItems = [
   {
     id: 8,
     type: "Next 8 rounds completed time ",
-    valueType: "Number",
+    valueType: "Time",
     functionName: "N8RCT",
     databaseField: "next8RoundsCompletedTime",
   },

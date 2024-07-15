@@ -5,12 +5,13 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { phonenumber: string } }
+  { params }: { params: { counselorid: string } }
 ) {
   try {
     const response = await fetch(
-      `${SERVER_URL}/counselee/phonenumber/${params.phonenumber}`
+      `${SERVER_URL}/Counselor/dropdown/counselees/${params.counselorid}`
     );
+    console.log(response.status);
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(

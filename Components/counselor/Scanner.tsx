@@ -22,6 +22,8 @@ interface Props {
 
 function Scanner({ response }: { response: Props }) {
   const { state } = useGlobalState();
+  const linksActivator = LinksActivator().toString();
+
   return (
     <div className="px-10">
       <div className="flex flex-wrap gap-5">
@@ -35,9 +37,7 @@ function Scanner({ response }: { response: Props }) {
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-1">
                 <CopyClipBoard
-                  url={`${LinksActivator().toString()}/activities/${
-                    response.id
-                  }`}
+                  url={`${linksActivator}/counselee/activities/${response.id}`}
                   whenCopied={
                     <div className="flex items-center">
                       <i>Copy</i>
@@ -65,7 +65,7 @@ function Scanner({ response }: { response: Props }) {
             </div>
           </div>
           <QRCodeOverlay
-            url={`${LinksActivator().toString()}/activities/${response.id}`}
+            url={`${linksActivator}/counselee/activities/${response.id}`}
             content="ActivitiesQrCode"
           />
         </div>
@@ -79,7 +79,7 @@ function Scanner({ response }: { response: Props }) {
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-1">
                 <CopyClipBoard
-                  url={`${LinksActivator().toString()}/sadhana/${response.id}`}
+                  url={`${linksActivator}/counselee/sadhana/${response.id}`}
                   whenCopied={
                     <div className="flex items-center">
                       <i>Copy</i>
@@ -107,7 +107,7 @@ function Scanner({ response }: { response: Props }) {
             </div>
           </div>
           <QRCodeOverlay
-            url={`${LinksActivator().toString()}/sadhana/${response.id}`}
+            url={`${linksActivator}/counselee/sadhana/${response.id}`}
             content="SadhanaQrCode"
           />
         </div>
@@ -121,9 +121,7 @@ function Scanner({ response }: { response: Props }) {
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-1">
                 <CopyClipBoard
-                  url={`${LinksActivator().toString()}/attendance/${
-                    response.id
-                  }`}
+                  url={`${linksActivator}/counselee/attendance/${response.id}`}
                   whenCopied={
                     <div className="flex items-center">
                       <i>Copy</i>
@@ -151,7 +149,7 @@ function Scanner({ response }: { response: Props }) {
             </div>
           </div>
           <QRCodeOverlay
-            url={`${LinksActivator().toString()}/attendance/${response.id}`}
+            url={`${linksActivator}/counselee/attendance/${response.id}`}
             content="AttendanceQrCode"
           />
         </div>
@@ -166,9 +164,7 @@ function Scanner({ response }: { response: Props }) {
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-1">
                 <CopyClipBoard
-                  url={`${LinksActivator().toString()}/changecounselor/${
-                    response.id
-                  }`}
+                  url={`${linksActivator}/counselee/changecounselor/${response.id}`}
                   whenCopied={
                     <div className="flex items-center">
                       <i>Copy</i>
@@ -196,9 +192,7 @@ function Scanner({ response }: { response: Props }) {
             </div>
           </div>
           <QRCodeOverlay
-            url={`${LinksActivator().toString()}/changecounselor/${
-              response.id
-            }`}
+            url={`${linksActivator}/counselee/changecounselor/${response.id}`}
             content="ChangeCounselorQrCode"
           />
         </div>

@@ -66,14 +66,17 @@ function formatDate(date: Date) {
 }
 
 function SadhanaForm({
+  currentCounselor,
   counselorId,
   sadhanaForm,
   counseleeList,
 }: {
+  currentCounselor?: counselor;
   counseleeList: counselee[];
   counselorId: string;
   sadhanaForm?: any;
 }) {
+  console.log(currentCounselor);
   const [isSuccess, setIsSuccess] = useState(false);
   const [SubmittedSuccess, setSubmittedSuccess] = useState(false);
   const [openRegistration, setOpenRegistration] = useState(false);
@@ -91,12 +94,8 @@ function SadhanaForm({
   const [attendedArthi, setAttendedArthi] = useState<any>("");
   const linksActivator = LinksActivator();
   const formRef = useRef<HTMLFormElement>(null);
-  useEffect(() => {
-    const phoneNumber = localStorage.getItem("PHONE_NUMBER");
-    if (phoneNumber) {
-      setPhoneNumber(phoneNumber);
-    }
-  }, []);
+
+  console.log(counseleeDetails);
 
   useEffect(() => {
     if (phoneNumber.length === 10) {
@@ -144,10 +143,19 @@ function SadhanaForm({
     );
     setCheckedItems(filteredArrForChecked);
   }, [sadhanaForm]);
+  const name =
+    counseleeDetails?.initiatedName &&
+    counseleeDetails?.initiatedName !== "NA" &&
+    counseleeDetails?.initiatedName !== "Na" &&
+    counseleeDetails?.initiatedName !== "No" &&
+    counseleeDetails?.initiatedName !== "no" &&
+    counseleeDetails?.initiatedName !== "na"
+      ? counseleeDetails?.initiatedName
+      : `${counseleeDetails.firstName} ${counseleeDetails.lastName}`;
 
   const handleShare = (text: any) => {
     // Encode the message for URL
-    let message = `*!!Sadhana Submitted* \n \n *${counseleeDetails.firstName} ${counseleeDetails.lastName}* \n \n`;
+    let message = `*!!Sadhana Submitted* \n \n *${name}* \n \n`;
     for (const key in text) {
       if (
         Object.hasOwnProperty.call(text, key) &&
@@ -171,6 +179,7 @@ function SadhanaForm({
     };
 
     checkedItems.forEach((value: FieldTypeFormList) => {
+      console.log(value);
       if (value.valueType === "Time") {
         formDataObject[value.databaseField] =
           e.get(value.databaseField)?.toString() + ":00";
@@ -184,6 +193,7 @@ function SadhanaForm({
           ?.toString();
       }
     });
+
     const formDataObjectShare: any = {
       ...formDataObject,
       sadhanaDate: sadhanaDateToShow
@@ -194,30 +204,31 @@ function SadhanaForm({
     delete formDataObjectShare.counseleeId;
     delete formDataObjectShare.counselorId;
 
+    setSubmittedSuccess(true);
+    setFormData(formDataObjectShare);
+    handleShare(formDataObjectShare);
+
     const header = new Headers();
     header.append("Content-Type", "application/json");
     try {
-      const response = await fetch(`/api/counslee/sadhana`, {
-        method: "POST",
-        headers: header,
-        body: JSON.stringify(formDataObject),
-      });
-      if (response.ok) {
-        const responseData = await response.json();
-        setSubmittedSuccess(true);
-        setFormData(formDataObjectShare);
-        handleShare(formDataObjectShare);
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { message: responseData.message, type: "SUCCESS" },
-        });
-      } else {
-        const responseData = await response.json();
-        dispatch({
-          type: "SHOW_TOAST",
-          payload: { message: responseData.message, type: "ERROR" },
-        });
-      }
+      // const response = await fetch(`/api/counslee/sadhana`, {
+      //   method: "POST",
+      //   headers: header,
+      //   body: JSON.stringify(formDataObject),
+      // });
+      // if (response.ok) {
+      //   const responseData = await response.json();
+      //   dispatch({
+      //     type: "SHOW_TOAST",
+      //     payload: { message: responseData.message, type: "SUCCESS" },
+      //   });
+      // } else {
+      //   const responseData = await response.json();
+      //   dispatch({
+      //     type: "SHOW_TOAST",
+      //     payload: { message: responseData.message, type: "ERROR" },
+      //   });
+      // }
     } catch (error: any) {
       dispatch({
         type: "SHOW_TOAST",
@@ -227,7 +238,7 @@ function SadhanaForm({
         },
       });
     } finally {
-      formRef.current?.reset();
+      // formRef.current?.reset();
     }
   }
   return (
@@ -242,6 +253,9 @@ function SadhanaForm({
             <label htmlFor="phonenumber" className="font-bold text-xl">
               Enter PhoneNumber / Your Name
             </label>
+            <p className="mb-5">
+              If You Dont Find Your Name Try Entering Your Full Contact Number
+            </p>
             <MenuIconAndDropDownDevotees
               DataArr={counseleeList}
               onPhoneNumberChange={(value: string) => setPhoneNumber(value)}
@@ -324,7 +338,7 @@ function SadhanaForm({
               : "bg-stone-900 bg-opacity-40"
           }`}
         >
-          {counseleeDetails?.currentCounselor && (
+          {currentCounselor && (
             <div className="flex md:flex-row flex-col items-center md:gap-5">
               <div className="flex items-center gap-4">
                 <p
@@ -339,12 +353,7 @@ function SadhanaForm({
                 <p className="font-bold text-xl">Counselor:</p>
               </div>
               <p className="font-semibold text-lg">
-                {counseleeDetails?.currentCounselor.initiatedName &&
-                counseleeDetails?.currentCounselor.initiatedName !== "NA" &&
-                counseleeDetails?.currentCounselor.initiatedName !== "Na" &&
-                counseleeDetails?.currentCounselor.initiatedName !== "na"
-                  ? counseleeDetails?.currentCounselor?.initiatedName
-                  : `${counseleeDetails?.currentCounselor?.firstName} ${counseleeDetails?.currentCounselor?.lastName}`}
+                {currentCounselor.initiatedName}
               </p>
             </div>
           )}
@@ -497,7 +506,7 @@ function SadhanaForm({
           <p className="text-red-600 font-bold text-xl">Preview Message</p>
           <div className="p-5 flex flex-col gap-2 md:max-w-[40vw] max-w-[80vw]">
             <p className="font-bold">Sadhana Submitted</p>
-            <p className="font-semibold w-full">{`Name : ${counseleeDetails.firstName}${counseleeDetails.lastName}`}</p>
+            <p className="font-semibold w-full">{`Name : ${name}`}</p>
             <div>
               {Object.keys(formData).map((key) => (
                 <p key={key} className="mb-2">
@@ -695,6 +704,8 @@ function MenuIconAndDropDownDevotees({
           onChange={handleChange}
           value={selectedOption}
           placeholder="Search . . . "
+          maxLength={10}
+          minLength={3}
         />
       </div>
       {isSelectionOpen && (

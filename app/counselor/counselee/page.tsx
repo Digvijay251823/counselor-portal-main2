@@ -13,12 +13,17 @@ import { cookies } from "next/headers";
 import React from "react";
 
 async function getCounselees(counselorid: string, queryString: string) {
+  console.log(
+    `${SERVER_URL}/Counselor/counselees/${counselorid}?${queryString}`
+  );
   unstable_noStore();
   const response = await fetch(
     `${SERVER_URL}/Counselor/counselees/${counselorid}?${queryString}`
   );
   if (response.ok) {
     const responseData = await response.json();
+    console.log(responseData.skiped);
+
     return responseData;
   } else {
     const errorData = await response.json();
@@ -33,6 +38,7 @@ async function page({
 }) {
   try {
     const queryString = new URLSearchParams(searchParams).toString();
+
     const authcontent = cookies().get("AUTH")?.value;
     const authparsed = authcontent && JSON.parse(authcontent);
     if (!authparsed) {

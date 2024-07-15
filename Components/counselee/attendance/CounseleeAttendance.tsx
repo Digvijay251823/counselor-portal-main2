@@ -1,13 +1,9 @@
 "use client";
-import { SERVER_URL } from "@/Components/config/config";
+
 import { useGlobalState } from "@/Components/context/state";
 import DateFormatter from "@/Components/utils/DateFormatter";
-import { POST } from "@/actions/POSTREQUESTS";
-import {
-  MagnifyingGlassIcon,
-  PencilSquareIcon,
-  UserIcon,
-} from "@heroicons/react/16/solid";
+
+import { PencilSquareIcon, UserIcon } from "@heroicons/react/16/solid";
 import { useParams, useRouter } from "next/navigation";
 import React, {
   ChangeEvent,
@@ -25,9 +21,11 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 function CounseleeAttendance({
   counseleeList,
   response,
+  currentCounselor,
 }: {
   counseleeList: counselee[];
   response: sessions[];
+  currentCounselor: counselor;
 }) {
   const [warning, setWarning] = useState(false);
   const [selectedSession, setSelectedSession] = useState(response[0].id);
@@ -35,7 +33,7 @@ function CounseleeAttendance({
   const formRef = useRef<HTMLFormElement>(null);
   const [openRegistration, setOpenRegistration] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [currentCounselor, setCurrentCounselor] = useState("");
+
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
   const { state, dispatch } = useGlobalState();
@@ -74,6 +72,9 @@ function CounseleeAttendance({
     }
   }, [phoneNumber]);
   async function handleSubmitAttendance(e: FormData) {
+    if (!counseleeDetails?.id) {
+      return;
+    }
     const formData: any = {
       scheduledSessionId: selectedSession,
       counseleeId: counseleeDetails.id,
@@ -132,6 +133,9 @@ function CounseleeAttendance({
             <label htmlFor="phonenumber" className="font-bold text-xl">
               Enter PhoneNumber / Your Name
             </label>
+            <p className="mb-5">
+              If You Dont Find Your Name Try Entering Your Full Contact Number
+            </p>
             <MenuIconAndDropDownDevotees
               DataArr={counseleeList}
               onPhoneNumberChange={(value: string) => setPhoneNumber(value)}
@@ -215,7 +219,7 @@ function CounseleeAttendance({
           <form action={handleSubmitAttendance} ref={formRef}>
             <div className="flex flex-col gap-5 ">
               <div className="flex flex-col gap-5">
-                {counseleeDetails?.currentCounselor && (
+                {currentCounselor && (
                   <div className="flex md:flex-row flex-col items-center md:gap-5">
                     <div className="flex items-center gap-4">
                       <p
@@ -230,14 +234,7 @@ function CounseleeAttendance({
                       <p className="font-bold text-xl">Counselor:</p>
                     </div>
                     <p className="font-semibold text-lg">
-                      {counseleeDetails?.currentCounselor.initiatedName &&
-                      counseleeDetails?.currentCounselor.initiatedName !==
-                        "NA" &&
-                      counseleeDetails?.currentCounselor.initiatedName !==
-                        "Na" &&
-                      counseleeDetails?.currentCounselor.initiatedName !== "na"
-                        ? counseleeDetails?.currentCounselor?.initiatedName
-                        : `${counseleeDetails?.currentCounselor?.firstName} ${counseleeDetails?.currentCounselor?.lastName}`}
+                      {currentCounselor.initiatedName}
                     </p>
                   </div>
                 )}
@@ -550,7 +547,11 @@ function MenuIconAndDropDownDevotees({
                   }}
                   className={`px-2 py-1.5 rounded-lg ${
                     item.name === selectedOption && "bg-blue-300"
-                  } hover:bg-gray-100`}
+                  } ${
+                    state.theme.theme === "LIGHT"
+                      ? "hover:bg-gray-100"
+                      : "hover:bg-stone-800"
+                  }`}
                 >
                   {item?.initiatedName &&
                   item?.initiatedName !== "NA" &&

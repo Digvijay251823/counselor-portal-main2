@@ -406,7 +406,7 @@ function Step1({
                 : `${
                     !errors.firstName
                       ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                      : "bg-stone-950 px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
                   }`
             }`}
             value={formData.firstName}
@@ -434,7 +434,7 @@ function Step1({
                 : `${
                     !errors.lastName
                       ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                      : "bg-stone-950 px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
                   }`
             }`}
             value={formData.lastName}
@@ -466,7 +466,7 @@ function Step1({
             Contact Number
           </label>
           <input
-            type="text"
+            type="tel"
             name="phoneNumber"
             id="phoneNumber"
             className={`${
@@ -479,11 +479,15 @@ function Step1({
                 : `${
                     !errors.phoneNumber
                       ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                      : "bg-stone-950 px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
                   }`
             }`}
             value={formData.phoneNumber}
-            onChange={handleChange}
+            onChange={(e) => {
+              if (!isNaN(Number(e.target.value))) {
+                handleChange(e);
+              }
+            }}
           />
           {errors.phoneNumber && (
             <p className="text-red-500">{errors.phoneNumber}</p>
@@ -526,7 +530,7 @@ function Step1({
                 : `${
                     !errors.age
                       ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                      : "bg-stone-950 px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
                   }`
             }`}
             value={formData.age}
@@ -568,7 +572,7 @@ function Step1({
                 : `${
                     !errors.address
                       ? "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-                      : "bg-white px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
+                      : "bg-stone-950 px-4 py-2 border ring-4 ring-red-950 border-red-500 text-lg rounded-xl"
                   }`
             }`}
             value={formData.address}
@@ -811,7 +815,7 @@ function Step3({
       <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 ">
         <div className="flex flex-col gap-2">
           <label className="font-bold" htmlFor="yourInitiatingSpiritualMaster">
-            Your Initiating Spiritual Master
+            Your Initiating / Aspiring Spiritual Master
           </label>
           <input
             type="text"
