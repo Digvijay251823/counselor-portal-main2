@@ -211,24 +211,24 @@ function SadhanaForm({
     const header = new Headers();
     header.append("Content-Type", "application/json");
     try {
-      // const response = await fetch(`/api/counslee/sadhana`, {
-      //   method: "POST",
-      //   headers: header,
-      //   body: JSON.stringify(formDataObject),
-      // });
-      // if (response.ok) {
-      //   const responseData = await response.json();
-      //   dispatch({
-      //     type: "SHOW_TOAST",
-      //     payload: { message: responseData.message, type: "SUCCESS" },
-      //   });
-      // } else {
-      //   const responseData = await response.json();
-      //   dispatch({
-      //     type: "SHOW_TOAST",
-      //     payload: { message: responseData.message, type: "ERROR" },
-      //   });
-      // }
+      const response = await fetch(`/api/counslee/sadhana`, {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(formDataObject),
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { message: responseData.message, type: "SUCCESS" },
+        });
+      } else {
+        const responseData = await response.json();
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { message: responseData.message, type: "ERROR" },
+        });
+      }
     } catch (error: any) {
       dispatch({
         type: "SHOW_TOAST",
@@ -261,35 +261,6 @@ function SadhanaForm({
               onPhoneNumberChange={(value: string) => setPhoneNumber(value)}
               setSelected={(value) => setCounseleeDetails(value)}
             />
-            {/* <div
-              className={`flex items-center )w-full border transition-all duration-500 ${
-                onFocusPhone
-                  ? `${
-                      state.theme.theme === "LIGHT"
-                        ? "ring-4 border-purple-700 ring-purple-100"
-                        : "ring-4 border-purple-300 ring-purple-950"
-                    }`
-                  : `${
-                      state.theme.theme === "LIGHT"
-                        ? "border-gray-300"
-                        : "border-stone-800"
-                    }`
-              }`}
-              onFocus={() => setOnFocusPhone(true)}
-              onBlur={() => setOnFocusPhone(false)}
-            >
-              <input
-                type="tel"
-                id="phonenumber"
-                name="phonenumber"
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                value={phoneNumber}
-                placeholder="7879859267"
-                className={`w-full px-4 py-3 outline-none ${
-                  state.theme.theme === "LIGHT" ? "bg-white " : "bg-stone-950 "
-                }`}
-              />
-            </div> */}
           </form>
         </div>
       </div>
