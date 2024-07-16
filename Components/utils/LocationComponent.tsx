@@ -23,7 +23,7 @@ function LocationComponent({ response }: { response: Props }) {
   return (
     <div className="flex flex-col md:px-10 md:py-6 p-6 ">
       <div className="flex items-center justify-between">
-        <p className="text-3xl font-bold">{actualPathname}</p>{" "}
+        <p className="text-3xl font-bold uppercase">{actualPathname}</p>{" "}
         <MenuCBM response={response} />
       </div>
       <div className="flex w-full justify-start">
@@ -70,14 +70,14 @@ const PathWithIcons = ({ pathname }: { pathname: string }) => {
 
   return (
     <nav
-      className={`flex px-5 py-0.5 rounded-lg ${
+      className={`flex pr-5 py-0.5 rounded-lg ${
         state.theme.theme === "LIGHT"
           ? "bg-gray-50 text-gray-700 "
           : "bg-gray-800 "
       }`}
       aria-label="Breadcrumb"
     >
-      <ol className="inline-flex items-center ">{formattedPath}</ol>
+      <ol className="inline-flex items-center uppercase">{formattedPath}</ol>
     </nav>
   );
 };

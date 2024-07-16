@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import ApproveAttendance from "./ApproveAttendance";
 import AutoApprove from "./AutoApprove";
 import { useRouter, useSearchParams } from "next/navigation";
+import Filter from "./Filter";
 
 function AttendancePage({
   pendingRecordsCount,
@@ -88,7 +89,7 @@ function AttendancePage({
         <AutoApprove />
       </div>
       <div>
-        <div className="relative overflow-x-auto shadow-md rounded">
+        <div className="overflow-x-auto shadow-md rounded">
           <table
             className={`w-full text-left border  ${
               state.theme.theme === "LIGHT"
@@ -110,13 +111,49 @@ function AttendancePage({
                     : "border-b-stone-700"
                 }`}
               >
-                <th className={`px-6 py-3`}>MODE OF ATTENDANCE</th>
-                <th className={`px-6 py-3`}>STATUS</th>
-                <th className={`px-6 py-3`}>NAME</th>
-                <th className={`px-6 py-3`}>CONTACT NUMBER</th>
-                <th className={`px-6 py-3`}>SESSION NAME</th>
-                <th className={`px-6 py-3`}>DESCRIPTION</th>
-                <th className={`px-6 py-3`}>START TIME</th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>Session Name</p>
+                    <Filter category="sessionName" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div>Description</div>
+                </th>
+
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>Initiated Name</p>
+                    <Filter category="firstName" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>Name</p>
+                    <Filter category="firstName" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>Contact Number</p>
+                    <Filter category="phoneNumber" />
+                  </div>
+                </th>
+
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>Start Time</p>
+                    <Filter category="startTime" />
+                  </div>
+                </th>
+
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>Status</p>
+                    <Filter category="approved" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>Mode Of Attendance</th>
               </tr>
             </thead>
             <tbody>
@@ -130,6 +167,35 @@ function AttendancePage({
                         : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
                     }
                   >
+                    <td className={`px-6 py-4`}>
+                      {item?.scheduledSession?.name}
+                    </td>
+                    <td className={`px-6 py-4`}>
+                      {item?.scheduledSession?.description}
+                    </td>
+                    <td className={`px-6 py-4`}>
+                      {item.counselee.initiatedName
+                        ? item.counselee.initiatedName
+                        : "Not Available"}
+                    </td>
+                    <td
+                      className={`px-6 py-4`}
+                    >{`${item?.counselee.firstName} ${item?.counselee.lastName}`}</td>
+                    <td className={`px-6 py-4`}>
+                      {item?.counselee?.phoneNumber}
+                    </td>
+
+                    <td className={`px-6 py-4`}>
+                      {item?.scheduledSession?.startTime ? (
+                        <div>
+                          <DateFormatter
+                            dateString={item?.scheduledSession?.startTime}
+                          />
+                        </div>
+                      ) : (
+                        <p>null</p>
+                      )}
+                    </td>
                     <td className={`px-6 py-4`}>
                       {item?.modeOfAttendance === "OFFLINE" ? (
                         <div className="text-green-600 border border-green-600 rounded-lg w-max px-3 py-1">
@@ -145,29 +211,6 @@ function AttendancePage({
                     </td>
                     <td className={`px-6 py-4`}>
                       <ApproveAttendance item={item} />
-                    </td>
-                    <td
-                      className={`px-6 py-4`}
-                    >{`${item?.counselee.firstName} ${item?.counselee.lastName}`}</td>
-                    <td className={`px-6 py-4`}>
-                      {item?.counselee?.phoneNumber}
-                    </td>
-                    <td className={`px-6 py-4`}>
-                      {item?.scheduledSession?.name}
-                    </td>
-                    <td className={`px-6 py-4`}>
-                      {item?.scheduledSession?.description}
-                    </td>
-                    <td className={`px-6 py-4`}>
-                      {item?.scheduledSession?.startTime ? (
-                        <div>
-                          <DateFormatter
-                            dateString={item?.scheduledSession?.startTime}
-                          />
-                        </div>
-                      ) : (
-                        <p>null</p>
-                      )}
                     </td>
                   </tr>
                 ))

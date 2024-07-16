@@ -13,17 +13,12 @@ import { cookies } from "next/headers";
 import React from "react";
 
 async function getCounselees(counselorid: string, queryString: string) {
-  console.log(
-    `${SERVER_URL}/Counselor/counselees/${counselorid}?${queryString}`
-  );
   unstable_noStore();
   const response = await fetch(
     `${SERVER_URL}/Counselor/counselees/${counselorid}?${queryString}`
   );
   if (response.ok) {
     const responseData = await response.json();
-    console.log(responseData.skiped);
-
     return responseData;
   } else {
     const errorData = await response.json();
@@ -47,7 +42,7 @@ async function page({
       );
     }
     const response = await getCounselees(authparsed.counselor.id, queryString);
-    if (!response || response.content.length === 0) {
+    if (!response) {
       return <NotExistsResource message="No counselee to show" />;
     }
     return (

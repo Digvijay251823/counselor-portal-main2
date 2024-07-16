@@ -204,10 +204,6 @@ function SadhanaForm({
     delete formDataObjectShare.counseleeId;
     delete formDataObjectShare.counselorId;
 
-    setSubmittedSuccess(true);
-    setFormData(formDataObjectShare);
-    handleShare(formDataObjectShare);
-
     const header = new Headers();
     header.append("Content-Type", "application/json");
     try {
@@ -218,6 +214,9 @@ function SadhanaForm({
       });
       if (response.ok) {
         const responseData = await response.json();
+        setSubmittedSuccess(true);
+        setFormData(formDataObjectShare);
+        handleShare(formDataObjectShare);
         dispatch({
           type: "SHOW_TOAST",
           payload: { message: responseData.message, type: "SUCCESS" },

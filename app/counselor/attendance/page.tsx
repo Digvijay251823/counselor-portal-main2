@@ -1,4 +1,5 @@
 import { SERVER_URL } from "@/Components/config/config";
+import Pagination from "@/Components/utils/Pagination";
 const AttendancePage = dynamic(
   () => import("@/Components/counselor/attendance/AttendancePage")
 );
@@ -44,7 +45,6 @@ async function page({
     if (!response) {
       return <NotExistsResource message="Nobody marked their attendance yet" />;
     }
-    console.log(response.content);
     return (
       <div className="w-screen justify-center">
         <AttendancePage
@@ -52,6 +52,7 @@ async function page({
           pendingRecordsCount={response.pendingRecordsCount}
           approvedRecordsCount={response.approvedRecordsCount}
         />
+        <Pagination totalElements={response.total} />
       </div>
     );
   } catch (error: any) {

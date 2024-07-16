@@ -49,13 +49,7 @@ import { useFormStatus } from "react-dom";
 import { useRouter, useParams } from "next/navigation";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 
-function Registeration({
-  counselorList,
-  counseleeList,
-}: {
-  counselorList: counselor;
-  counseleeList: counselee[];
-}) {
+function Registeration({ counselorList }: { counselorList: counselor }) {
   const router = useRouter();
   const { state, dispatch } = useGlobalState();
   const [currentStep, setCurrentStep] = useState(1);
@@ -339,7 +333,6 @@ function Registeration({
           ) : currentStep === 2 ? (
             <>
               <Step2
-                counseleeList={counseleeList}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 formData={formState}
@@ -624,7 +617,6 @@ function Step2({
   addNewChild,
   handleInputChangeChildrens,
   removeChild,
-  counseleeList,
 }: {
   prevStep: () => void;
   nextStep: () => void;
@@ -636,9 +628,37 @@ function Step2({
   ) => void;
   addNewChild: () => void;
   removeChild: (index: number) => void;
-  counseleeList: counselee[];
 }) {
-  const { state } = useGlobalState();
+  const [counseleeList, setCounseleeList] = useState<counselee[]>([]);
+  const { state, dispatch } = useGlobalState();
+  const params = useParams();
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch(
+          `/api/counslee/spoucelist/${params.counselorid}`
+        );
+        if (response.ok) {
+          const responseData = await response?.json();
+
+          setCounseleeList(responseData?.content?.content);
+        } else {
+          const responseData = await response.json();
+          console.log(
+            responseData.message ||
+              responseData.title ||
+              "unexpected error occured"
+          );
+        }
+      } catch (error: any) {
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { message: error.message, type: "ERROR" },
+        });
+      }
+    })();
+  }, []);
+
   return (
     <div
       className={`${
@@ -678,18 +698,6 @@ function Step2({
                 handleChange(e);
               }}
             />
-            {/* <input
-                type="text"
-                name="spouce"
-                id="spouce"
-                className={`${
-                  state.theme.theme === "LIGHT"
-                    ? "bg-white px-4 py-2 border border-purple-200 text-lg rounded-xl focus:ring-4 focus:ring-purple-200 outline-none focus:border-purple-700"
-                    : "bg-stone-950 px-4 py-2 border border-stone-800 text-lg rounded-xl focus:ring-4 focus:ring-purple-950 outline-none focus:border-purple-400"
-                }`}
-                value={formData.spouce}
-                onChange={handleChange}
-              /> */}
           </div>
         )}
       </div>
@@ -1068,8 +1076,10 @@ function MenuIconAndDropDownDevotees({
 }: PropsMenu) {
   const [isSelectionOpen, toggleSelection] = useState(false);
   const [onFocusPhone, setOnFocusPhone] = useState(false);
+  const [queryStr, setQueryString] = useState("");
   const menuRef: any = useRef();
   const params = useParams();
+  const [counseleeList, setCounseleeList] = useState(DataArr);
   const [selectedOption, setSelectedOption] = useState("");
   const [modalStyle, setModalStyle] = useState({
     transform: "scale(0.95)",
@@ -1109,6 +1119,8 @@ function MenuIconAndDropDownDevotees({
     toggleSelection(false);
   }, [toggleSelection]);
 
+  useEffect;
+
   // Attach click outside listener
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -1121,16 +1133,41 @@ function MenuIconAndDropDownDevotees({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [toggleSelection, closeModal]);
+
   const router = useRouter();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const queryStr = e.target.value;
+    if (e.target.value.length > 0) {
+      setQueryString(e.target.value);
+    } else {
+      setQueryString(e.target.value);
+    }
+    const results = DataArr?.filter((item: any) => {
+      for (const key in item) {
+        const value = item[key];
+        if (typeof value === "string") {
+          if (
+            value.toLowerCase().includes(queryStr?.toString().toLowerCase())
+          ) {
+            return true;
+          }
+        } else if (typeof value === "number") {
+          if (
+            value
+              .toString()
+              .toLowerCase()
+              .includes(queryStr?.toString().toLowerCase())
+          ) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+    setCounseleeList(results);
     toggleSelection(true);
     setSelectedOption(e.target.value);
-    if (isNaN(Number(e.target.value))) {
-      router.push(`?query=${e.target.value}`);
-    } else {
-      router.push(`?query=${Number(e.target.value)}`);
-    }
   }
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
@@ -1178,14 +1215,14 @@ function MenuIconAndDropDownDevotees({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {DataArr?.length > 0 ? (
+          {counseleeList?.length > 0 ? (
             <ul
               className={`flex flex-col gap-3 overflow-y-auto ${
-                DataArr.length > 10 ? "md:h-[60vh] h-[80vh]" : "h-full"
+                counseleeList.length > 10 ? "md:h-[60vh] h-[80vh]" : "h-full"
               }`}
               role="none"
             >
-              {DataArr?.map((item, index) => (
+              {counseleeList?.map((item, index) => (
                 <li
                   key={index}
                   onClick={() => {

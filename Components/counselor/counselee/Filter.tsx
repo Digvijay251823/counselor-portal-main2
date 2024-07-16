@@ -528,7 +528,7 @@ function InitiatedName() {
   };
   const queryStr: any = {
     ...searchUrlParams,
-    InitiatedName: value,
+    initiatedName: value,
   };
   const prevQueryString = Object.keys(prevQry)
     .map(

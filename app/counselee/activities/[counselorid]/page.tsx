@@ -53,7 +53,6 @@ async function page({
   try {
     const response = await getActivities();
     const counselees = await getCounselees(params.counselorid);
-
     const results = counselees.content.filter((item: any) => {
       for (const key in item) {
         const value = item[key];

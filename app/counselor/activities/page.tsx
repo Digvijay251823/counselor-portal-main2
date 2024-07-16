@@ -1,4 +1,5 @@
 import { SERVER_URL } from "@/Components/config/config";
+import Pagination from "@/Components/utils/Pagination";
 const ActivitiesPage = dynamic(
   () => import("@/Components/counselor/activities/ActivitiesPage")
 );
@@ -10,11 +11,11 @@ import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
-async function getActivities(counselorid: string) {
+async function getActivities(counselorid: string, queryString: string) {
   unstable_noStore();
   try {
     const response = await fetch(
-      `${SERVER_URL}/counselee-activity/counselor/${counselorid}`
+      `${SERVER_URL}/counselee-activity/counselor/${counselorid}?${queryString}`
     );
     if (response.ok) {
       const responseData = await response.json();
@@ -43,7 +44,7 @@ async function page({
     if (!authparsed) {
       throw new Error("Sign in to access the resource");
     }
-    const response = await getActivities(authparsed.counselor.id);
+    const response = await getActivities(authparsed.counselor.id, queryString);
 
     if (!response || response.length === 0) {
       return <NotExistsResource message="No Activities to show" />;
@@ -51,6 +52,7 @@ async function page({
     return (
       <div className="w-screen justify-center pt-10">
         <ActivitiesPage response={response.content} />
+        <Pagination totalElements={response.total} />
       </div>
     );
   } catch (error: any) {

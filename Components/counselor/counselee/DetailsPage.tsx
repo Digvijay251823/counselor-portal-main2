@@ -37,14 +37,16 @@ export default function DetailsPage({ counseleeId }: { counseleeId: string }) {
     })();
   }, []);
   return (
-    <div className="p-5 flex md:flex-row flex-col justify-center items-center md:px-10 gap-5">
-      <div
-        className={`p-5 rounded-full ${
-          state.theme.theme === "LIGHT" ? "bg-gray-100" : "bg-stone-900"
-        }`}
-      >
-        <UserIcon className=" h-40 w-40 text-gray-500" />
-      </div>
+    <div className="flex md:flex-row flex-col justify-center items-center md:px-10 gap-5">
+      {!isLoading && (
+        <div
+          className={`p-5 rounded-full  md:mt-0 mt-5 ${
+            state.theme.theme === "LIGHT" ? "bg-gray-100" : "bg-stone-900"
+          }`}
+        >
+          <UserIcon className=" lg:h-40 lg:w-40 w-12 h-12 text-gray-500" />
+        </div>
+      )}
       <div>
         {isLoading ? (
           <div
@@ -74,7 +76,7 @@ export default function DetailsPage({ counseleeId }: { counseleeId: string }) {
             <span className="sr-only">Loading...</span>
           </div>
         ) : (
-          <div className="md:p-10 p-5">
+          <div className="md:px-10 p-5">
             <div className="flex flex-col gap-3">
               <p className="text-3xl font-bold">
                 {`${counseleeDetails?.firstName} ${counseleeDetails?.lastName}`}
@@ -126,6 +128,11 @@ export default function DetailsPage({ counseleeId }: { counseleeId: string }) {
                     </p>
                   </div>
                 )}
+            </div>
+            <div className="flex justify-end">
+              <button className="bg-orange-600 text-white mt-5 px-5 py-1.5 rounded">
+                Change Counselee
+              </button>
             </div>
           </div>
         )}

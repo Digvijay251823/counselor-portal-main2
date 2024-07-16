@@ -1,3 +1,4 @@
+"use client";
 import { useGlobalState } from "@/Components/context/state";
 import {
   ChevronDownIcon,
@@ -16,9 +17,10 @@ function Filter({
     | "firstName"
     | "lastName"
     | "initiatedName"
-    | "activityName"
     | "phoneNumber"
-    | "activityDate";
+    | "approved"
+    | "startTime"
+    | "sessionName";
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const componentRef = useRef<HTMLDivElement>(null);
@@ -68,9 +70,10 @@ function ActionFilter({
     | "firstName"
     | "lastName"
     | "initiatedName"
-    | "activityName"
     | "phoneNumber"
-    | "activityDate";
+    | "approved"
+    | "startTime"
+    | "sessionName";
 }) {
   const searchParams = useSearchParams();
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
@@ -84,10 +87,12 @@ function ActionFilter({
     return <InitiatedName />;
   } else if (category === "phoneNumber") {
     return <PhoneNumber />;
-  } else if (category === "activityName") {
-    return <ActivityNameSelect />;
-  } else if (category === "activityDate") {
-    return <DateInput />;
+  } else if (category === "approved") {
+    return <GenderSelect />;
+  } else if (category === "startTime") {
+    return <SadhanaDate />;
+  } else if (category === "sessionName") {
+    return <SessionName />;
   }
 }
 
@@ -181,9 +186,9 @@ function FirstName() {
   );
 }
 
-function ActivityNameSelect() {
+function GenderSelect() {
   const [isSelectionOpen, toggleSelection] = useState(false);
-  const [activityArr, setActivityArr] = useState([]);
+  const [activityArr, setActivityArr] = useState(["YES", "NO"]);
   const { state } = useGlobalState();
   const menuRef: any = useRef();
   const [selectedOption, setSelectedOption] = useState("");
@@ -203,7 +208,7 @@ function ActivityNameSelect() {
   };
   const queryStr: any = {
     ...searchUrlParams,
-    activityName: value,
+    approved: value === "YES" ? true : false,
   };
   const prevQueryString = Object.keys(prevQry)
     .map(
@@ -228,23 +233,6 @@ function ActivityNameSelect() {
     }
   }, [value, router, pathname, queryString, prevQueryString]);
   const [isClosing, setIsClosing] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await fetch(`/api/admin/information/mactivity`);
-        if (response.ok) {
-          const responseData = await response.json();
-          setActivityArr(responseData.content.content);
-        } else {
-          const errorData = await response.json();
-          console.log(errorData);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     if (isSelectionOpen) {
@@ -318,23 +306,23 @@ function ActivityNameSelect() {
           onClick={(e) => e.stopPropagation()}
         >
           {activityArr?.length > 0 ? (
-            <ul className={`flex flex-col gap-3 overflow-y-auto `} role="none">
-              {activityArr?.map((item: Activities, index: number) => (
+            <ul className={`flex flex-col gap-3 overflow-y-auto`} role="none">
+              {activityArr?.map((item: string, index: number) => (
                 <div
                   key={index}
                   onClick={() => {
-                    setSelectedOption(item.name);
+                    setSelectedOption(item);
                     toggleSelection(false);
                   }}
                   className={`px-2 py-1.5 rounded-lg ${
-                    item.name === selectedOption && "bg-blue-300"
+                    item === selectedOption && "bg-blue-300"
                   } ${
                     state.theme.theme === "LIGHT"
                       ? "hover:bg-gray-100 "
                       : "hover:bg-stone-700"
                   }`}
                 >
-                  {item.name}
+                  {item}
                 </div>
               ))}
             </ul>
@@ -544,7 +532,7 @@ function InitiatedName() {
   };
   const queryStr: any = {
     ...searchUrlParams,
-    initiatedname: value,
+    initiatedName: value,
   };
   const prevQueryString = Object.keys(prevQry)
     .map(
@@ -613,7 +601,7 @@ function InitiatedName() {
     </div>
   );
 }
-function DateInput() {
+function SadhanaDate() {
   const { state } = useGlobalState();
   const [onFocusFilterInput, setOnFocusFilterInput] = useState(false);
   const [searchParamsInput, setSearchParamsInput] = useState("");
@@ -623,22 +611,13 @@ function DateInput() {
   const searchParams = useSearchParams();
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
-  function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const formattedDay = day < 10 ? `0${day}` : day;
-    const formattedMonth = month < 10 ? `0${month}` : month;
-    return `${formattedDay}-${formattedMonth}-${year}`;
-  }
 
   const prevQry: any = {
     ...searchUrlParams,
   };
   const queryStr: any = {
     ...searchUrlParams,
-    activityDate: formatDate(value),
+    sadhanaDate: value,
   };
   const prevQueryString = Object.keys(prevQry)
     .map(
@@ -688,7 +667,92 @@ function DateInput() {
       <input
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
-        type={"datetime-local"}
+        type={"date"}
+        placeholder={`write query for course code`}
+        className={`outline-none w-full ${
+          state.theme.theme === "LIGHT"
+            ? `transition-all duration-500  ${
+                onFocusFilterInput
+                  ? "placeholder:text-gray-400 bg-white"
+                  : "bg-white placeholder:text-blue-500 "
+              }`
+            : `transition-all duration-500  ${
+                onFocusFilterInput
+                  ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
+                  : "placeholder:text-blue-500 bg-stone-950"
+              }`
+        }`}
+      />
+    </div>
+  );
+}
+function SessionName() {
+  const { state } = useGlobalState();
+  const [onFocusFilterInput, setOnFocusFilterInput] = useState(false);
+  const [searchParamsInput, setSearchParamsInput] = useState("");
+  const initialRef = useRef(true);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
+  const [value] = useDebounce(searchParamsInput, 500);
+
+  const prevQry: any = {
+    ...searchUrlParams,
+  };
+  const queryStr: any = {
+    ...searchUrlParams,
+    sessionName: value,
+  };
+  const prevQueryString = Object.keys(prevQry)
+    .map(
+      (key) => encodeURIComponent(key) + "=" + encodeURIComponent(queryStr[key])
+    )
+    .join("&");
+  const queryString = Object.keys(queryStr)
+    .map(
+      (key) => encodeURIComponent(key) + "=" + encodeURIComponent(queryStr[key])
+    )
+    .join("&");
+
+  useEffect(() => {
+    if (initialRef.current) {
+      initialRef.current = false;
+      return;
+    }
+    if (!value) {
+      router.push(`${pathname}?${prevQueryString}`);
+    } else {
+      router.push(`${pathname}?${queryString}`);
+    }
+  }, [value, router, pathname, queryString, prevQueryString]);
+
+  return (
+    <div
+      onFocus={() => setOnFocusFilterInput(true)}
+      onBlur={() => setOnFocusFilterInput(false)}
+      className={`rounded-xl pr-4 py-2 text-lg border transition-all duration-500 w-full flex items-center ${
+        state.theme.theme === "LIGHT"
+          ? `${
+              onFocusFilterInput
+                ? "border-blue-600 ring-4 ring-blue-100 "
+                : "bg-white border-gray-300"
+            }`
+          : `${
+              onFocusFilterInput
+                ? "border-blue-600 ring-4 ring-blue-950 bg-stone-950"
+                : "bg-stone-950 border-stone-800"
+            }`
+      }`}
+    >
+      <p className="px-2">
+        <MagnifyingGlassIcon className="h5 w-5" />
+      </p>
+
+      <input
+        onChange={(e) => setSearchParamsInput(e.target.value)}
+        value={searchParamsInput}
+        type={"text"}
         placeholder={`write query for course code`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"

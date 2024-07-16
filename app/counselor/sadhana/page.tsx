@@ -1,4 +1,5 @@
 import { SERVER_URL } from "@/Components/config/config";
+import Pagination from "@/Components/utils/Pagination";
 const SadhanaPage = dynamic(
   () => import("@/Components/counselor/sadhana/SadhanaPage")
 );
@@ -8,14 +9,15 @@ import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
 
-async function getSadhanaEntries(counselorid: string) {
+async function getSadhanaEntries(counselorid: string, queryString: string) {
   unstable_noStore();
   try {
     const response = await fetch(
-      `${SERVER_URL}/counselee-sadhana/counselor/${counselorid}`
+      `${SERVER_URL}/counselee-sadhana/counselor/${counselorid}?${queryString}`
     );
     if (response.ok) {
       const responseData = await response.json();
+
       return responseData;
     } else {
       if (response.status === 404) {
@@ -29,8 +31,13 @@ async function getSadhanaEntries(counselorid: string) {
   }
 }
 
-async function page() {
+async function page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string };
+}) {
   try {
+    const queryString = new URLSearchParams(searchParams).toString();
     const authcontent = cookies().get("AUTH")?.value;
     const authparsed = authcontent && JSON.parse(authcontent);
     if (!authparsed) {
@@ -38,10 +45,14 @@ async function page() {
         <ErrorComponent message="Pleas Authenticate to access the resource" />
       );
     }
-    const response = await getSadhanaEntries(authparsed.counselor.id);
+    const response = await getSadhanaEntries(
+      authparsed.counselor.id,
+      queryString
+    );
     return (
       <div className="w-screen justify-center">
         <SadhanaPage response={response?.content} />
+        <Pagination totalElements={response.total} />
       </div>
     );
   } catch (error: any) {

@@ -1,4 +1,5 @@
 import { useGlobalState } from "@/Components/context/state";
+import WarningPage from "@/Components/utils/WarningPageApproveAttendance";
 import React, { useEffect, useState } from "react";
 
 interface Props {
@@ -60,15 +61,20 @@ function AutoApprove() {
             : "border-stone-800 "
         }`}
       >
-        <input
-          type="checkbox"
-          name="AutoApprove"
-          id="AutoApprove"
-          onChange={handleAutoApprove}
-          className="h-5 w-5"
-          checked={autoApprove}
-        />
-        <label htmlFor="AutoApprove">AutoApprove</label>
+        <label
+          htmlFor="AutoApprove "
+          className="cursor-pointer flex items-center gap-2"
+        >
+          <input
+            type="checkbox"
+            name="AutoApprove"
+            id="AutoApprove"
+            onChange={handleAutoApprove}
+            className="h-5 w-5 cursor-pointer"
+            checked={autoApprove}
+          />
+          <p className="">AutoApprove</p>
+        </label>
       </div>
       <p className="text-sm text-red-500">* available For Future Entries</p>
     </div>
