@@ -168,12 +168,12 @@ function FirstName() {
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -426,12 +426,12 @@ function PhoneNumber() {
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -515,12 +515,12 @@ function LastName() {
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -601,12 +601,12 @@ function InitiatedName() {
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -695,12 +695,12 @@ function DateInput() {
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
