@@ -1,13 +1,22 @@
 import { useGlobalState } from "@/Components/context/state";
 import WarningPage from "@/Components/utils/WarningPageApproveAttendance";
 import { CheckCircleIcon, ClockIcon } from "@heroicons/react/16/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function ApproveAttendance({ item }: { item: Attendance }) {
   const [isApproved, setIsApproved] = useState(item?.approved);
   const [isOpen, setIsOpen] = useState(false);
   const { state, dispatch } = useGlobalState();
-  async function onClose() {
+  useEffect(() => {
+    if (item) {
+      setIsApproved(item.approved);
+    }
+  }, [item]);
+  async function onClose(answer: string) {
+    if (answer !== "YES") {
+      setIsOpen(false);
+      return;
+    }
     try {
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
@@ -18,6 +27,7 @@ function ApproveAttendance({ item }: { item: Attendance }) {
 
       if (response.ok) {
         const responseData = await response.json();
+        setIsOpen(false);
         setIsApproved(true);
         dispatch({
           type: "SHOW_TOAST",

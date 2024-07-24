@@ -46,10 +46,10 @@ function Filter({
       <div
         ref={componentRef}
         className={`absolute w-full lg:right-32 right-0 left-0 transition-all duration-500 z-[2500] ${
-          isOpen ? " -translate-y-24 " : " -translate-y-96"
+          isOpen ? " -translate-y-24 " : " -translate-y-[500px]"
         }`}
       >
-        <div className="md:w-[400px] lg:ml-20 ">
+        <div className="md:w-[400px] lg:ml-10 ">
           <div className="mx-5">
             <ActionFilter category={category} />
           </div>
@@ -144,7 +144,7 @@ function FirstName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -228,14 +228,14 @@ function ActivityNameSelect() {
     }
   }, [value, router, pathname, queryString, prevQueryString]);
   const [isClosing, setIsClosing] = useState(false);
-
   useEffect(() => {
     (async () => {
       try {
-        const response = await fetch(`/api/admin/information/mactivity`);
+        const response = await fetch(`/api/counselor/activities`);
         if (response.ok) {
           const responseData = await response.json();
-          setActivityArr(responseData.content.content);
+          console.log(responseData);
+          setActivityArr(responseData.content);
         } else {
           const errorData = await response.json();
           console.log(errorData);
@@ -244,7 +244,7 @@ function ActivityNameSelect() {
         console.log(error);
       }
     })();
-  }, []);
+  }, [isSelectionOpen]);
 
   useEffect(() => {
     if (isSelectionOpen) {
@@ -402,7 +402,7 @@ function PhoneNumber() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -491,7 +491,7 @@ function LastName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -544,7 +544,7 @@ function InitiatedName() {
   };
   const queryStr: any = {
     ...searchUrlParams,
-    initiatedname: value,
+    initiatedName: value,
   };
   const prevQueryString = Object.keys(prevQry)
     .map(
@@ -577,7 +577,7 @@ function InitiatedName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -671,7 +671,7 @@ function DateInput() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${

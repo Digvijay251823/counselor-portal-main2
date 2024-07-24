@@ -4,9 +4,7 @@ const AttendancePage = dynamic(
   () => import("@/Components/counselor/attendance/AttendancePage")
 );
 const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
-const NotExistsResource = dynamic(
-  () => import("@/Components/utils/NotFoundComponent")
-);
+
 import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
@@ -40,19 +38,16 @@ async function page({
     if (!authparsed) {
       throw new Error("Sign in to access the resource");
     }
-
     const response = await getAttendance(authparsed?.counselor.id, queryString);
-    if (!response) {
-      return <NotExistsResource message="Nobody marked their attendance yet" />;
-    }
+
     return (
-      <div className="w-screen justify-center">
+      <div className="flex flex-col items-center">
         <AttendancePage
           response={response.content}
           pendingRecordsCount={response.pendingRecordsCount}
           approvedRecordsCount={response.approvedRecordsCount}
         />
-        <Pagination totalElements={response.total} />
+        <Pagination totalElements={response.total} skipped={response.skip} />
       </div>
     );
   } catch (error: any) {

@@ -6,12 +6,14 @@ import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";
 import React from "react";
 import Filter from "./Filter";
+import DateFilter from "./DateFilter";
 
 function SadhanaPage({ response }: { response: Sadhana[] }) {
   const { state } = useGlobalState();
   return (
     <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
-      <div className="w-full flex justify-end mb-5">
+      <div className="w-full flex justify-between mb-5">
+        <DateFilter />
         <Link href={"/counselor/sadhana/configure"}>
           <button
             className={`px-3 py-1.5 rounded text-white bg-purple-600 flex items-center gap-1 font-semibold`}
@@ -39,7 +41,6 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
                 <th className={`px-4 py-2`}>
                   <div className="flex items-center gap-2">
                     <p>Sadhana Date</p>
-                    <Filter category="sadhanaDate" />
                   </div>
                 </th>
                 <th className={`px-4 py-2`}>

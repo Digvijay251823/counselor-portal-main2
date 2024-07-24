@@ -6,7 +6,6 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { counselorid: string } }
 ) {
-  console.log(params.counselorid);
   const {
     numberOfRounds,
     first8RoundsCompletedTime,

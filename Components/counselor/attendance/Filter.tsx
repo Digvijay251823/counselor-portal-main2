@@ -48,10 +48,10 @@ function Filter({
       <div
         ref={componentRef}
         className={`absolute w-full lg:right-32 right-0 left-0 transition-all duration-500 z-[2500] ${
-          isOpen ? " -translate-y-24 " : " -translate-y-96"
+          isOpen ? " -translate-y-28 " : " -translate-y-[500px]"
         }`}
       >
-        <div className="md:w-[400px] lg:ml-20 ">
+        <div className="md:w-[400px] lg:ml-10 ">
           <div className="mx-5">
             <ActionFilter category={category} />
           </div>
@@ -88,9 +88,7 @@ function ActionFilter({
   } else if (category === "phoneNumber") {
     return <PhoneNumber />;
   } else if (category === "approved") {
-    return <GenderSelect />;
-  } else if (category === "startTime") {
-    return <SadhanaDate />;
+    return <ApproveStatus />;
   } else if (category === "sessionName") {
     return <SessionName />;
   }
@@ -149,7 +147,7 @@ function FirstName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -167,18 +165,18 @@ function FirstName() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for participantcontactNumber`}
+        placeholder={`Search First Name`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -186,9 +184,9 @@ function FirstName() {
   );
 }
 
-function GenderSelect() {
+function ApproveStatus() {
   const [isSelectionOpen, toggleSelection] = useState(false);
-  const [activityArr, setActivityArr] = useState(["YES", "NO"]);
+  const [activityArr, setActivityArr] = useState(["Approved", "Pending"]);
   const { state } = useGlobalState();
   const menuRef: any = useRef();
   const [selectedOption, setSelectedOption] = useState("");
@@ -208,7 +206,7 @@ function GenderSelect() {
   };
   const queryStr: any = {
     ...searchUrlParams,
-    approved: value === "YES" ? true : false,
+    approved: value === "Approved" ? true : false,
   };
   const prevQueryString = Object.keys(prevQry)
     .map(
@@ -286,7 +284,7 @@ function GenderSelect() {
         aria-expanded="true"
         onClick={() => toggleSelection(!isSelectionOpen)}
       >
-        {selectedOption === "" ? "Select" : selectedOption}
+        {selectedOption === "" ? "Select Status" : selectedOption}
         <ChevronDownIcon className="h-4 w-4" />
       </button>
       {isSelectionOpen && (
@@ -390,7 +388,7 @@ function PhoneNumber() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -408,18 +406,18 @@ function PhoneNumber() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for phoneNumber`}
+        placeholder={`Search Contact Number`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -479,7 +477,7 @@ function LastName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -497,18 +495,18 @@ function LastName() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for level name`}
+        placeholder={`Search Last Name`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -565,7 +563,7 @@ function InitiatedName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -583,109 +581,25 @@ function InitiatedName() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for course code`}
+        placeholder={`Search Initiated Name`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
     </div>
   );
 }
-function SadhanaDate() {
-  const { state } = useGlobalState();
-  const [onFocusFilterInput, setOnFocusFilterInput] = useState(false);
-  const [searchParamsInput, setSearchParamsInput] = useState("");
-  const initialRef = useRef(true);
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
-  const [value] = useDebounce(searchParamsInput, 500);
 
-  const prevQry: any = {
-    ...searchUrlParams,
-  };
-  const queryStr: any = {
-    ...searchUrlParams,
-    sadhanaDate: value,
-  };
-  const prevQueryString = Object.keys(prevQry)
-    .map(
-      (key) => encodeURIComponent(key) + "=" + encodeURIComponent(queryStr[key])
-    )
-    .join("&");
-  const queryString = Object.keys(queryStr)
-    .map(
-      (key) => encodeURIComponent(key) + "=" + encodeURIComponent(queryStr[key])
-    )
-    .join("&");
-
-  useEffect(() => {
-    if (initialRef.current) {
-      initialRef.current = false;
-      return;
-    }
-    if (!value) {
-      router.push(`${pathname}?${prevQueryString}`);
-    } else {
-      router.push(`${pathname}?${queryString}`);
-    }
-  }, [value, router, pathname, queryString, prevQueryString]);
-
-  return (
-    <div
-      onFocus={() => setOnFocusFilterInput(true)}
-      onBlur={() => setOnFocusFilterInput(false)}
-      className={`rounded-xl pr-4 py-2 text-lg border transition-all duration-500 w-full flex items-center ${
-        state.theme.theme === "LIGHT"
-          ? `${
-              onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
-                : "bg-white border-gray-300"
-            }`
-          : `${
-              onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-950 bg-stone-950"
-                : "bg-stone-950 border-stone-800"
-            }`
-      }`}
-    >
-      <p className="px-2">
-        <MagnifyingGlassIcon className="h5 w-5" />
-      </p>
-
-      <input
-        onChange={(e) => setSearchParamsInput(e.target.value)}
-        value={searchParamsInput}
-        type={"date"}
-        placeholder={`write query for course code`}
-        className={`outline-none w-full ${
-          state.theme.theme === "LIGHT"
-            ? `transition-all duration-500  ${
-                onFocusFilterInput
-                  ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
-              }`
-            : `transition-all duration-500  ${
-                onFocusFilterInput
-                  ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
-              }`
-        }`}
-      />
-    </div>
-  );
-}
 function SessionName() {
   const { state } = useGlobalState();
   const [onFocusFilterInput, setOnFocusFilterInput] = useState(false);
@@ -735,7 +649,7 @@ function SessionName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -753,18 +667,18 @@ function SessionName() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for course code`}
+        placeholder={`Search Session Name`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />

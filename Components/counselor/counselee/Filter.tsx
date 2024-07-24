@@ -46,11 +46,11 @@ function Filter({
       </button>
       <div
         ref={componentRef}
-        className={`absolute w-full lg:right-32 right-0 left-0 transition-all duration-500 z-[2500] ${
-          isOpen ? " -translate-y-24 " : " -translate-y-96"
+        className={`absolute w-full lg:right-40 right-0 left-0 transition-all duration-500 z-[2500] ${
+          isOpen ? " -translate-y-28 " : " -translate-y-[500px]"
         }`}
       >
-        <div className="md:w-[400px] lg:ml-20 ">
+        <div className="md:w-[400px] lg:ml-10 ">
           <div className="mx-5">
             <ActionFilter category={category} />
           </div>
@@ -145,8 +145,8 @@ function FirstName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
-                : "bg-white border-gray-300"
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
+                : "bg-white border-gray-300 "
             }`
           : `${
               onFocusFilterInput
@@ -163,18 +163,18 @@ function FirstName() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for participantcontactNumber`}
-        className={`outline-none w-full ${
+        placeholder={`Search First Name`}
+        className={`outline-none w-full  ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -282,7 +282,7 @@ function GenderSelect() {
         aria-expanded="true"
         onClick={() => toggleSelection(!isSelectionOpen)}
       >
-        {selectedOption === "" ? "Select" : selectedOption}
+        {selectedOption === "" ? "Select Gender" : selectedOption}
         <ChevronDownIcon className="h-4 w-4" />
       </button>
       {isSelectionOpen && (
@@ -386,12 +386,12 @@ function PhoneNumber() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-gray-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-950 bg-stone-950"
+                ? "border-gray-600 ring-4 ring-blue-950 bg-stone-950"
                 : "bg-stone-950 border-stone-800"
             }`
       }`}
@@ -410,12 +410,12 @@ function PhoneNumber() {
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -475,7 +475,7 @@ function LastName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -493,18 +493,18 @@ function LastName() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for level name`}
+        placeholder={`Search Last Name`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -561,7 +561,7 @@ function InitiatedName() {
         state.theme.theme === "LIGHT"
           ? `${
               onFocusFilterInput
-                ? "border-blue-600 ring-4 ring-blue-100 "
+                ? "border-blue-600 ring-4 ring-blue-100 bg-white"
                 : "bg-white border-gray-300"
             }`
           : `${
@@ -579,18 +579,18 @@ function InitiatedName() {
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
-        placeholder={`write query for course code`}
+        placeholder={`Search Initiated Name`}
         className={`outline-none w-full ${
           state.theme.theme === "LIGHT"
             ? `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:text-gray-400 bg-white"
-                  : "bg-white placeholder:text-blue-500 "
+                  : "bg-white "
               }`
             : `transition-all duration-500  ${
                 onFocusFilterInput
                   ? "placeholder:hidden placeholder:text-gray-400 bg-stone-950"
-                  : "placeholder:text-blue-500 bg-stone-950"
+                  : "bg-stone-950"
               }`
         }`}
       />
@@ -697,7 +697,7 @@ function MaritalStatus() {
         aria-expanded="true"
         onClick={() => toggleSelection(!isSelectionOpen)}
       >
-        {selectedOption === "" ? "Select" : selectedOption}
+        {selectedOption === "" ? "Select Marital Status" : selectedOption}
         <ChevronDownIcon className="h-4 w-4" />
       </button>
       {isSelectionOpen && (

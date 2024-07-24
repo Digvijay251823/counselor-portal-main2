@@ -21,9 +21,15 @@ function LocationComponent({ response }: { response: Props }) {
   var parts = pathname.split("/");
   var actualPathname = parts[parts.length - 1];
   return (
-    <div className="flex flex-col md:px-10 md:py-6 p-6 ">
+    <div
+      className={`flex flex-col md:px-10 justify-center w-full py-5 px-5 ${
+        state.theme.theme === "LIGHT"
+          ? " bg-gradient-to-r from-blue-100 via-purple-300 to-red-100"
+          : " bg-gradient-to-r from-blue-950 via-stone-900 to-red-950"
+      }`}
+    >
       <div className="flex items-center justify-between">
-        <p className="text-3xl font-bold uppercase">{actualPathname}</p>{" "}
+        <p className="text-2xl font-bold uppercase">{actualPathname}</p>{" "}
         <MenuCBM response={response} />
       </div>
       <div className="flex w-full justify-start">
@@ -45,7 +51,7 @@ const PathWithIcons = ({ pathname }: { pathname: string }) => {
         {index > 0 && (
           <div className="flex items-center">
             <svg
-              className="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400"
+              className="rtl:rotate-180  w-2 h-2 mx-1"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -61,9 +67,7 @@ const PathWithIcons = ({ pathname }: { pathname: string }) => {
             </svg>
           </div>
         )}
-        <span className="ms-1 font-medium text-gray-500 md:ms-2 dark:text-gray-400">
-          {part}
-        </span>
+        <span className="ms-1 font-[400] text-gray-500 md:ms-2">{part}</span>
       </div>
     </React.Fragment>
   ));
@@ -71,9 +75,7 @@ const PathWithIcons = ({ pathname }: { pathname: string }) => {
   return (
     <nav
       className={`flex pr-5 py-0.5 rounded-lg ${
-        state.theme.theme === "LIGHT"
-          ? "bg-gray-50 text-gray-700 "
-          : "bg-gray-800 "
+        state.theme.theme === "LIGHT" ? " text-gray-700 " : ""
       }`}
       aria-label="Breadcrumb"
     >
@@ -128,16 +130,16 @@ function MenuCBM({ response }: { response: Props }) {
         onMouseEnter={handleMouseEnter}
         ref={menuRef}
       >
-        <div className=" flex items-center gap-2">
+        <div className=" flex md:hidden items-center gap-2 border rounded-xl p-1">
           <p
             className={`p-3 rounded-full ${
               state.theme.theme === "LIGHT" ? "bg-gray-100" : "bg-stone-900"
             }`}
           >
-            <LuUser2 className="h-6 w-6" />
+            <LuUser2 className="h-4 w-4" />
           </p>
           <div>
-            <p className="font-bold text-xl ">{response?.initiatedName}</p>
+            <p className="font-bold text">{response?.initiatedName}</p>
             <p
               className={`font-semibold ${
                 state.theme.theme === "LIGHT"

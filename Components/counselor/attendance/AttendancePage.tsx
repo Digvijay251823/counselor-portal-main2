@@ -1,12 +1,11 @@
 "use client";
 import { useGlobalState } from "@/Components/context/state";
 import DateFormatter from "@/Components/utils/DateFormatter";
-import { CheckCircleIcon, ClockIcon } from "@heroicons/react/16/solid";
 import React, { useEffect, useState } from "react";
 import ApproveAttendance from "./ApproveAttendance";
-import AutoApprove from "./AutoApprove";
 import { useRouter, useSearchParams } from "next/navigation";
 import Filter from "./Filter";
+import Tabs from "./Tabs";
 
 function AttendancePage({
   pendingRecordsCount,
@@ -21,72 +20,29 @@ function AttendancePage({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [ApprovedState, setApprovedState] = useState<boolean>();
+  const [rowData, setRowData] = useState<Attendance[]>([]);
+  const approvedState = searchParams.get("approved");
 
   useEffect(() => {
     if (searchParams.size !== 0) {
-      const approvedState = searchParams.get("approved");
       if (approvedState?.valueOf() === "true") {
         setApprovedState(true);
       } else {
         setApprovedState(true);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, response]);
+
+  useEffect(() => {
+    if (response.length > 0) {
+      setRowData(response);
+    }
+  }, [response.length, approvedState]);
 
   return (
     <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
       <div className="flex justify-between mb-5 ">
-        <div
-          className={`flex items-center gap-2 px-2 md:px-1 rounded-lg ${
-            state.theme.theme === "LIGHT" ? "bg-gray-100" : "bg-stone-900"
-          }`}
-        >
-          <div
-            className={`w-[90px] text-center py-1.5 rounded-lg font-semibold flex items-center justify-center px-0.5 ${
-              ApprovedState === true
-                ? ` shadow ${
-                    state.theme.theme === "LIGHT"
-                      ? "text-purple-500 bg-white"
-                      : "bg-purple-900 bg-opacity-30 text-purple-500"
-                  }`
-                : `${
-                    state.theme.theme === "LIGHT"
-                      ? "text-black"
-                      : "text-gray-400"
-                  }`
-            }`}
-            onClick={() => {
-              setApprovedState(true);
-              router.push("/counselor/attendance?approved=true");
-            }}
-          >
-            <p>{approvedRecordsCount?.toString()}</p>
-            Approved
-          </div>
-          <div
-            className={`w-[90px] text-center py-1.5 rounded-lg font-semibold flex items-center justify-center px-0.5 ${
-              ApprovedState === false
-                ? `${
-                    state.theme.theme === "LIGHT"
-                      ? "text-purple-500 bg-white shadow "
-                      : "text-purple-400 bg-purple-900 bg-opacity-30"
-                  }`
-                : `${
-                    state.theme.theme === "LIGHT"
-                      ? "text-black"
-                      : "text-gray-400"
-                  }`
-            }`}
-            onClick={() => {
-              setApprovedState(false);
-              router.push("/counselor/attendance?approved=false");
-            }}
-          >
-            <p>{pendingRecordsCount?.toString()}</p>
-            Pending
-          </div>
-        </div>
-        <AutoApprove />
+        <Tabs />
       </div>
       <div>
         <div className="overflow-x-auto shadow-md rounded">
@@ -124,13 +80,19 @@ function AttendancePage({
                 <th className={`px-6 py-3`}>
                   <div className="flex items-center gap-2">
                     <p>Initiated Name</p>
+                    <Filter category="initiatedName" />
+                  </div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>First Name</p>
                     <Filter category="firstName" />
                   </div>
                 </th>
                 <th className={`px-6 py-3`}>
                   <div className="flex items-center gap-2">
-                    <p>Name</p>
-                    <Filter category="firstName" />
+                    <p>Last Name</p>
+                    <Filter category="lastName" />
                   </div>
                 </th>
                 <th className={`px-6 py-3`}>
@@ -157,8 +119,8 @@ function AttendancePage({
               </tr>
             </thead>
             <tbody>
-              {response && response.length > 0 ? (
-                response?.map((item, index) => (
+              {rowData.length > 0 ? (
+                rowData?.map((item, index) => (
                   <tr
                     key={index}
                     className={
@@ -180,7 +142,10 @@ function AttendancePage({
                     </td>
                     <td
                       className={`px-6 py-4`}
-                    >{`${item?.counselee.firstName} ${item?.counselee.lastName}`}</td>
+                    >{`${item?.counselee.firstName}`}</td>
+                    <td
+                      className={`px-6 py-4`}
+                    >{`${item?.counselee.lastName}`}</td>
                     <td className={`px-6 py-4`}>
                       {item?.counselee?.phoneNumber}
                     </td>

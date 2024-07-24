@@ -20,7 +20,7 @@ function SessionPage({ response }: { response: sessions[] }) {
   return (
     <div>
       <div>
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-5">
           <Link href={"sessions/schedule"}>
             <button className="text-white bg-[#FF9119] hover:bg-[#FF9119]/80 focus:ring-4 focus:outline-none focus:ring-[#FF9119]/50 font-medium rounded-lg text px-3 py-2 text-center inline-flex items-center dark:hover:bg-[#FF9119]/80 dark:focus:ring-[#FF9119]/40 me-2 mb-2 gap-2 md:mx-10">
               <p>
@@ -32,7 +32,13 @@ function SessionPage({ response }: { response: sessions[] }) {
         </div>
         <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
           <div>
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div
+              className={`overflow-x-auto shadow-md sm:rounded-lg border ${
+                state.theme.theme === "LIGHT"
+                  ? "border-gray-400"
+                  : "border-stone-700"
+              }`}
+            >
               <table
                 className={`w-full text-left rtl:text-right ${
                   state.theme.theme === "LIGHT"

@@ -6,7 +6,13 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useGlobalState } from "../context/state";
 
-function Pagination({ totalElements }: { totalElements: number }) {
+function Pagination({
+  totalElements,
+  skipped,
+}: {
+  totalElements: number;
+  skipped?: number;
+}) {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -14,11 +20,9 @@ function Pagination({ totalElements }: { totalElements: number }) {
   const [VisibleElements, setVisibleElement] = useState<number>(10);
 
   useEffect(() => {
-    const searchParamsUrl = Object.fromEntries(
-      new URLSearchParams(searchParams)
-    );
+    const searchParamsUrl = new URLSearchParams(searchParams).get("page");
 
-    const page = searchParamsUrl?.page ? Number(searchParamsUrl?.page) : 0;
+    const page = searchParamsUrl ? Number(searchParamsUrl) : 0;
     const pageNumber = currentPage + 1;
     setVisibleElement(pageNumber * 10);
     setCurrentPage(page);
@@ -58,13 +62,44 @@ function Pagination({ totalElements }: { totalElements: number }) {
           <ChevronLeftIcon className="h-8 w-8" />
         </p>
       )}
-      <p className="px-2 py-1 text-xl">{`${
-        totalElements < 10
-          ? totalElements
-          : VisibleElements > totalElements
-          ? totalElements
-          : VisibleElements
-      } of ${totalElements}`}</p>
+      <span
+        className={`${
+          state.theme.theme === "LIGHT"
+            ? "text-gray-700 "
+            : "dark:text-gray-400"
+        }`}
+      >
+        Showing{" "}
+        <span
+          className={`font-semibold ${
+            state.theme.theme === "LIGHT" ? "text-gray-900" : "text-white"
+          }`}
+        >
+          {skipped ? skipped + 1 : 0}
+        </span>{" "}
+        to{" "}
+        <span
+          className={`font-semibold ${
+            state.theme.theme === "LIGHT" ? "text-gray-900" : "text-white"
+          }`}
+        >
+          {skipped
+            ? skipped + 10
+            : skipped === 0 && totalElements > 10
+            ? 10
+            : totalElements}
+        </span>{" "}
+        of{" "}
+        <span
+          className={`font-semibold ${
+            state.theme.theme === "LIGHT" ? "text-gray-900" : "text-white"
+          }`}
+        >
+          {totalElements}
+        </span>{" "}
+        Entries
+      </span>
+
       {VisibleElements > totalElements ? (
         <p
           className={`${

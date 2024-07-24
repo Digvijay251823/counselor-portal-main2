@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/Components/utils/Header";
 import LocationComponent from "@/Components/utils/LocationComponent";
 import { cookies } from "next/headers";
+import HeaderCounselor from "@/Components/Ui/Headers/HeaderCounselor/HeaderCounselor";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,8 +19,8 @@ export default function RootLayout({
   const authparsed = authcontent && JSON.parse(authcontent);
 
   return (
-    <section className="w-screen">
-      <Header />
+    <section className="w-screen overflow-x-hidden h-full">
+      <HeaderCounselor response={authparsed && authparsed.counselor} />
       <LocationComponent response={authparsed && authparsed.counselor} />
       {children}
     </section>

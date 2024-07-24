@@ -4,9 +4,6 @@ const ActivitiesPage = dynamic(
   () => import("@/Components/counselor/activities/ActivitiesPage")
 );
 const ErrorComponent = dynamic(() => import("@/Components/utils/ErrorPage"));
-const NotExistsResource = dynamic(
-  () => import("@/Components/utils/NotFoundComponent")
-);
 import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
@@ -45,12 +42,8 @@ async function page({
       throw new Error("Sign in to access the resource");
     }
     const response = await getActivities(authparsed.counselor.id, queryString);
-
-    if (!response || response.length === 0) {
-      return <NotExistsResource message="No Activities to show" />;
-    }
     return (
-      <div className="w-screen justify-center pt-10">
+      <div className="flex flex-col items-center pt-20">
         <ActivitiesPage response={response.content} />
         <Pagination totalElements={response.total} />
       </div>

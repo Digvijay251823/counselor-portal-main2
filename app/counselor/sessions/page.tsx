@@ -1,4 +1,5 @@
 import { SERVER_URL } from "@/Components/config/config";
+import Pagination from "@/Components/utils/Pagination";
 const SessionPage = dynamic(
   () => import("@/Components/counselor/session/SessionPage")
 );
@@ -33,8 +34,9 @@ async function page() {
     }
     const response = await getScheduledSessions(parsedauth?.counselor?.id);
     return (
-      <div className="w-screen justify-center">
+      <div className="flex flex-col items-center">
         <SessionPage response={response.content} />
+        <Pagination totalElements={response.total} skipped={response.skiped} />
       </div>
     );
   } catch (error: any) {

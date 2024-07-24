@@ -50,9 +50,9 @@ async function page({
       queryString
     );
     return (
-      <div className="w-screen justify-center">
+      <div className="flex flex-col items-center pt-5">
         <SadhanaPage response={response?.content} />
-        <Pagination totalElements={response.total} />
+        <Pagination totalElements={response.total} skipped={response.skip} />
       </div>
     );
   } catch (error: any) {

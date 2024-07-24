@@ -17,13 +17,11 @@ import { useParams, useRouter } from "next/navigation";
 import { HiUsers } from "react-icons/hi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { POST } from "@/actions/POSTREQUESTS";
-import { SERVER_URL } from "../config/config";
+
 import { useFormStatus } from "react-dom";
 import SuccessPage from "./SuccessPage";
-import RegistrationFormForAll from "./RegistrationFormForAll";
+
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { revalidatePath } from "next/cache";
 
 function CounseleeActivities({
   counseleeList,

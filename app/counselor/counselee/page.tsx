@@ -1,4 +1,5 @@
 import { SERVER_URL } from "@/Components/config/config";
+import CounseleeList from "@/Components/counselor/counselee/CounseleeList";
 import Pagination from "@/Components/utils/Pagination";
 const CounseleePage = dynamic(
   () => import("@/Components/counselor/counselee/CounseleePage")
@@ -11,6 +12,7 @@ import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import React from "react";
+import Pageable from "../../../Components/counselor/counselee/Pageable";
 
 async function getCounselees(counselorid: string, queryString: string) {
   unstable_noStore();
@@ -46,9 +48,9 @@ async function page({
       return <NotExistsResource message="No counselee to show" />;
     }
     return (
-      <div className="w-screen justify-center md:px-10 px-5 mt-10">
-        <CounseleePage data={response.content} />
-        <Pagination totalElements={response.total} />
+      <div className="flex flex-col items-center">
+        <CounseleeList counselee={response.content} />
+        <Pagination totalElements={response.total} skipped={response.skiped} />
       </div>
     );
   } catch (error: any) {
