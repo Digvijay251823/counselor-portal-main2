@@ -1,6 +1,7 @@
 "use client";
 import { useGlobalState } from "@/Components/context/state";
 import React, { useState } from "react";
+import Filter from "./Filter";
 
 interface Child {
   name: string;
@@ -61,23 +62,77 @@ const CounselorPage: React.FC<DataTableProps> = ({ data }) => {
             }`}
           >
             <tr className="border-b border-b-stone-400">
-              <th className={`px-6 py-3`}>firstName</th>
-              <th className={`px-6 py-3`}>lastName</th>
-              <th className={`px-6 py-3`}>initiatedName</th>
-              <th className={`px-6 py-3`}>phoneNumber</th>
-              <th className={`px-6 py-3`}>gender</th>
-              <th className={`px-6 py-3`}>age</th>
-              <th className={`px-6 py-3`}>email</th>
-              <th className={`px-6 py-3`}>maritalStatus</th>
-              <th className={`px-6 py-3`}>address</th>
-              <th className={`px-6 py-3`}>profession</th>
-              <th className={`px-6 py-3`}>yourInitiatingSpiritualMaster</th>
-              <th className={`px-6 py-3`}>harinamInitiationDate</th>
-              <th className={`px-6 py-3`}>harinamInitiationPlace</th>
-              <th className={`px-6 py-3`}>recommendedBy</th>
-              <th className={`px-6 py-3`}>currentCounselor</th>
-              <th className={`px-6 py-3`}>connectedToCounselorSinceYear</th>
-              <th className={`px-6 py-3`}>husband</th>
+              <th className={`px-6 py-3`}>
+                <div className="flex items-center gap-2">
+                  <p>First Name</p>
+                  <Filter category="firstName" />
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div className="flex items-center gap-2">
+                  <p>Last Name</p>
+                  <Filter category="lastName" />
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div className="flex items-center gap-2">
+                  <p>Initiated Name</p>
+                  <Filter category="initiatedName" />
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div className="flex items-center gap-2">
+                  <p>Phone Number</p>
+                  <Filter category="phoneNumber" />
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div className="flex items-center gap-2">
+                  <p>gender</p>
+                  <Filter category="gender" />
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div>
+                  <p>age</p>
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div>
+                  <p>email</p>
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div className="flex items-center gap-2">
+                  <p>marital Status</p>
+                  <Filter category="maritalStatus" />
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div>
+                  <p>address</p>
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div>
+                  <p>profession</p>
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div>
+                  <p>your Initiating Spiritual Master</p>
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div>
+                  <p>harinam Initiation Date</p>
+                </div>
+              </th>
+              <th className={`px-6 py-3`}>
+                <div>
+                  <p>harinam Initiation Place</p>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -177,34 +232,6 @@ const CounselorPage: React.FC<DataTableProps> = ({ data }) => {
                   <td>
                     {item.harinamInitiationPlace ? (
                       <div>{item.harinamInitiationPlace}</div>
-                    ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
-                    )}
-                  </td>
-                  <td>
-                    {item.recommendedBy ? (
-                      <div>{item.recommendedBy}</div>
-                    ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
-                    )}
-                  </td>
-                  <td>
-                    {item.currentCounselor ? (
-                      <div>{item.currentCounselor.initiatedName}</div>
-                    ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
-                    )}
-                  </td>
-                  <td>
-                    {item.connectedToCounselorSinceYear ? (
-                      <div>{item.connectedToCounselorSinceYear.toString()}</div>
-                    ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
-                    )}
-                  </td>
-                  <td>
-                    {item.husband ? (
-                      <div>{item.husband.initiatedName}</div>
                     ) : (
                       <div className="text-gray-400 px-4">Not Found</div>
                     )}

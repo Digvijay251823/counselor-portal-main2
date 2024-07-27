@@ -4,6 +4,8 @@ import { useGlobalState } from "@/Components/context/state";
 import Modal from "@/Components/utils/Modal";
 import SubmitHandlerButton from "@/Components/utils/SubmitHandlerButton";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import Filter from "./Filter";
+import Tabs from "./Tabs";
 
 export default function ChangeCounselor({
   response,
@@ -14,6 +16,9 @@ export default function ChangeCounselor({
   return (
     <div className="w-screen">
       <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
+        <div className="flex items-start mb-5">
+          <Tabs />
+        </div>
         <div className="overflow-x-auto shadow-md rounded">
           <table
             className={`w-full text-left border  ${
@@ -36,18 +41,70 @@ export default function ChangeCounselor({
                     : "border-b-stone-700 font-bold"
                 }`}
               >
-                <td className={`px-6 py-3`}>INITIATED NAME</td>
-                <td className={`px-6 py-3`}>FIRST NAME</td>
-                <td className={`px-6 py-3`}>LAST NAME</td>
-                <td className={`px-6 py-3`}>PHONE NUMBER</td>
-                <td className={`px-6 py-3`}>SPOKEN TO EXISTING</td>
-                <td className={`px-6 py-3`}>SPOKEN TO NEW</td>
-                <td className={`px-6 py-3`}>REASON TO CHANGE</td>
-                <td className={`px-6 py-3`}>STATUS OF CHANGE</td>
-                <td className={`px-6 py-3`}>PREFERENCE 1</td>
-                <td className={`px-6 py-3`}>PREFERENCE 2</td>
-                <td className={`px-6 py-3`}>PREFERENCE 3</td>
-                <td className={`px-6 py-3`}>ACTIONS</td>
+                <td className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>INITIATED NAME</p>
+                    <Filter category="initiatedName" />
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>FIRST NAME</p>
+                    <Filter category="firstName" />
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>LAST NAME</p>
+                    <Filter category="lastName" />
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div className="flex items-center gap-2">
+                    <p>PHONE NUMBER</p>
+                    <Filter category="phoneNumber" />
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>SPOKEN TO EXISTING</p>
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>SPOKEN TO NEW</p>
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>REASON TO CHANGE</p>
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>STATUS OF CHANGE</p>
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>PREFERENCE 1</p>
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>PREFERENCE 2</p>
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>PREFERENCE 3</p>
+                  </div>
+                </td>
+                <td className={`px-6 py-3`}>
+                  <div>
+                    <p>ACTIONS</p>
+                  </div>
+                </td>
               </tr>
             </thead>
             <tbody
@@ -57,72 +114,84 @@ export default function ChangeCounselor({
                   : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
               }
             >
-              {response?.map((item, index) => (
-                <tr
-                  key={index}
-                  className={
-                    state.theme.theme === "LIGHT"
-                      ? `bg-white border-b  hover:bg-stone-50`
-                      : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
-                  }
-                >
-                  <td className={`px-4 py-1.5`}>
-                    {item.counselee.initiatedName ? (
-                      <div>{item.counselee.initiatedName}</div>
-                    ) : (
-                      <div className="text-gray-400">Not Available</div>
-                    )}
-                  </td>
-                  <td className={`px-4 py-1.5`}>{item.counselee.firstName}</td>
-                  <td className={`px-4 py-1.5`}>{item.counselee.lastName}</td>
-                  <td className={`px-4 py-1.5`}>
-                    {item.counselee.phoneNumber}
-                  </td>
-                  <td className={`px-4 py-1.5`}>
-                    {item.alreadySpokenToNewCounselor ? "Yes" : "NO"}
-                  </td>
-                  <td className={`px-4 py-1.5`}>
-                    {item.alreadySpokenToExistingCounselor ? "Yes" : "No"}
-                  </td>
-                  <td className={`px-4 py-1.5`}>
-                    {item.reasonForCounselorChange}
-                  </td>
-                  <td className={`px-4 py-1.5`}>{item.statusOfChange}</td>
-                  <td className={`px-4 py-1.5`}>
-                    {item.preferedCounselor1?.initiatedName ? (
-                      item.preferedCounselor1?.initiatedName
-                    ) : (
-                      <p>Not Found</p>
-                    )}
-                  </td>
-                  <td className={`px-4 py-1.5`}>
-                    {item.preferedCounselor1?.initiatedName ? (
-                      item.preferedCounselor1?.initiatedName
-                    ) : (
-                      <p>Not Found</p>
-                    )}
-                  </td>
-                  <td className={`px-4 py-1.5`}>
-                    {item.preferedCounselor1?.initiatedName ? (
-                      item.preferedCounselor1?.initiatedName
-                    ) : (
-                      <p>Not Found</p>
-                    )}
-                  </td>
-                  <td>
-                    {item.statusOfChange === "APPROVED" ? (
-                      <div className="text-gray-400 text-center">Approved</div>
-                    ) : (
-                      <div>
-                        <ApproveAndAllotCounselor
-                          changeFormId={item.id}
-                          counseleeId={item.counselee.id}
-                        />
-                      </div>
-                    )}
+              {response.length > 0 ? (
+                response?.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={
+                      state.theme.theme === "LIGHT"
+                        ? `bg-white border-b  hover:bg-stone-50`
+                        : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
+                    }
+                  >
+                    <td className={`px-4 py-1.5`}>
+                      {item.counselee.initiatedName ? (
+                        <div>{item.counselee.initiatedName}</div>
+                      ) : (
+                        <div className="text-gray-400">Not Available</div>
+                      )}
+                    </td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.counselee.firstName}
+                    </td>
+                    <td className={`px-4 py-1.5`}>{item.counselee.lastName}</td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.counselee.phoneNumber}
+                    </td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.alreadySpokenToNewCounselor ? "Yes" : "NO"}
+                    </td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.alreadySpokenToExistingCounselor ? "Yes" : "No"}
+                    </td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.reasonForCounselorChange}
+                    </td>
+                    <td className={`px-4 py-1.5`}>{item.statusOfChange}</td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.preferedCounselor1?.initiatedName ? (
+                        item.preferedCounselor1?.initiatedName
+                      ) : (
+                        <p>Not Found</p>
+                      )}
+                    </td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.preferedCounselor2?.initiatedName ? (
+                        item.preferedCounselor2?.initiatedName
+                      ) : (
+                        <p>Not Found</p>
+                      )}
+                    </td>
+                    <td className={`px-4 py-1.5`}>
+                      {item.preferedCounselor2?.initiatedName ? (
+                        item.preferedCounselor2?.initiatedName
+                      ) : (
+                        <p>Not Found</p>
+                      )}
+                    </td>
+                    <td>
+                      {item.statusOfChange === "APPROVED" ? (
+                        <div className="text-gray-400 text-center">
+                          Approved
+                        </div>
+                      ) : (
+                        <div>
+                          <ApproveAndAllotCounselor
+                            changeFormId={item.id}
+                            counseleeId={item.counselee.id}
+                          />
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="text-center py-10 text-gray-400" colSpan={20}>
+                    No Entries To Show
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

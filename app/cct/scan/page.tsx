@@ -1,11 +1,10 @@
-import LogoMain from "@/Components/utils/icons/LogoMain";
-import dynamic from "next/dynamic";
+"use client";
 import React from "react";
-const Scanner = dynamic(() => import("@/Components/cct/scan/Scanner"));
+import Scanner from "@/Components/cct/scan/Scanner";
 
 function page() {
   return (
-    <div>
+    <div className="flex flex-col items-center mt-10">
       <Scanner />
     </div>
   );

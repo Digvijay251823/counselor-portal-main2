@@ -1,5 +1,6 @@
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
+import Pagination from "@/Components/utils/Pagination";
 import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
 import React from "react";
@@ -34,8 +35,12 @@ async function page({
     const queryString = new URLSearchParams(searchParams).toString();
     const responseData = await cbmSevas(queryString);
     return (
-      <div>
+      <div className="flex flex-col items-center gap-2 mt-10">
         <CbmSevas response={responseData.content} />
+        <Pagination
+          totalElements={responseData.total}
+          skipped={responseData.skipped}
+        />
       </div>
     );
   } catch (error: any) {

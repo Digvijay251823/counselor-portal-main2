@@ -1,5 +1,6 @@
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
+import Pagination from "@/Components/utils/Pagination";
 import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
 const ChangeCounselor = dynamic(
@@ -33,10 +34,9 @@ export default async function page({
     const queryString = new URLSearchParams(searchParams).toString();
     const response = await getChangeCounselor(queryString);
     return (
-      <div>
-        <div>
-          <ChangeCounselor response={response.content} />
-        </div>
+      <div className="flex flex-col items-center">
+        <ChangeCounselor response={response.content} />
+        <Pagination totalElements={response.total} />
       </div>
     );
   } catch (error: any) {

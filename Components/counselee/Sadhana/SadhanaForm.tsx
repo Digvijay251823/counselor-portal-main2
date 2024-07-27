@@ -151,7 +151,9 @@ function SadhanaForm({
     counseleeDetails?.initiatedName !== "no" &&
     counseleeDetails?.initiatedName !== "na"
       ? counseleeDetails?.initiatedName
-      : `${counseleeDetails.firstName} ${counseleeDetails.lastName}`;
+      : counseleeDetails.firstName && counseleeDetails.lastName
+      ? `${counseleeDetails.firstName} ${counseleeDetails.lastName}`
+      : `${counseleeDetails.firstName || counseleeDetails.lastName}`;
 
   const handleShare = (text: any) => {
     // Encode the message for URL

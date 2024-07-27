@@ -17,10 +17,9 @@ function TimeFormatter({ timeString }: { timeString: string }) {
     // Format the hour, minute, and second to ensure two digits
     let formattedHour = hour12.toString().padStart(2, "0");
     let formattedMinute = minute.toString().padStart(2, "0");
-    let formattedSecond = second.toString().padStart(2, "0");
 
     // Combine into final 12-hour format time string
-    let time12 = `${formattedHour}:${formattedMinute}:${formattedSecond} ${period}`;
+    let time12 = `${formattedHour}:${formattedMinute}`;
 
     return time12;
   }

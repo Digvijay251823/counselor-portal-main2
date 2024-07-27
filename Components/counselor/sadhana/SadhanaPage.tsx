@@ -73,7 +73,7 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
                 <th className={`px-4 py-2`}>Wake Up Time</th>
                 <th className={`px-4 py-2`}>Sleep Time</th>
                 <th className={`px-4 py-2`}>Prabhupada Book Reading</th>
-                <th className={`px-4 py-2`}> Book Name</th>
+                <th className={`px-4 py-2`}>Book Name</th>
                 <th className={`px-4 py-2`}>Prabhupada Class Hearing</th>
                 <th className={`px-4 py-2`}>Guru Class Hearing</th>
                 <th className={`px-4 py-2`}>Other Class Hearing</th>
@@ -97,82 +97,126 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
                       {item.sadhanaDate ? (
                         <DateFormatter dateString={item.sadhanaDate} />
                       ) : (
-                        <p className="text-gray-500">null</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">
                       {item.counselee?.initiatedName ? (
                         item.counselee?.initiatedName
                       ) : (
-                        <p>Not Available</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">
                       {item.counselee?.firstName ? (
                         item.counselee?.firstName
                       ) : (
-                        <p>Not Available</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">
                       {item.counselee?.lastName ? (
                         item.counselee?.lastName
                       ) : (
-                        <p>Not Available</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">
                       {item.counselee?.phoneNumber ? (
                         item.counselee?.phoneNumber
                       ) : (
-                        <p>Not Available</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">{item.numberOfRounds}</td>
                     <td className="px-4 py-1.5">
-                      {item?.earlyJapaRoundsBefore8AM ? (
-                        item?.earlyJapaRoundsBefore8AM
+                      {item.first8RoundsCompletedTime ? (
+                        <TimeFormatter
+                          timeString={item.first8RoundsCompletedTime}
+                        />
                       ) : (
-                        <p>Not Available</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">
-                      {item.earlyJapaRoundsAfter8AM}
-                    </td>
-                    <td className="px-4 py-1.5">
-                      {item.first8RoundsCompletedTime}
-                    </td>
-                    <td className="px-4 py-1.5">
-                      {item.next8RoundsCompletedTime}
+                      {item.next8RoundsCompletedTime ? (
+                        <TimeFormatter
+                          timeString={item.first8RoundsCompletedTime}
+                        />
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className="px-4 py-1.5">
                       {item.wakeUpTime ? (
                         <TimeFormatter timeString={item.wakeUpTime} />
                       ) : (
-                        <p className="text-gray-500">null</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">
                       {item.sleepTime ? (
                         <TimeFormatter timeString={item.sleepTime} />
                       ) : (
-                        <p className="text-gray-500">null</p>
+                        <p className="text-gray-400">Not Available</p>
                       )}
                     </td>
                     <td className="px-4 py-1.5">
-                      {item.prabhupadaBookReading}
+                      {item.prabhupadaBookReading ? (
+                        item.prabhupadaBookReading
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className="px-4 py-1.5">
-                      {item.nonPrabhupadaBookReading}
+                      {item.nonPrabhupadaBookReading ? (
+                        item.nonPrabhupadaBookReading
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
                     <td className="px-4 py-1.5">
-                      {item.prabhupadaClassHearing}
+                      {item.prabhupadaClassHearing ? (
+                        item.prabhupadaClassHearing
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
                     </td>
-                    <td className="px-4 py-1.5">{item.guruClassHearing}</td>
-                    <td className="px-4 py-1.5">{item.otherClassHearing}</td>
-                    <td className="px-4 py-1.5">{item.speaker}</td>
-                    <td className="px-4 py-1.5">{item.attendedArti}</td>
-                    <td className="px-4 py-1.5">{item.mobileInternetUsage}</td>
+                    <td className="px-4 py-1.5">
+                      {item.guruClassHearing ? (
+                        item.guruClassHearing
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
+                    </td>
+                    <td className="px-4 py-1.5">
+                      {item.otherClassHearing ? (
+                        item.otherClassHearing
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
+                    </td>
+                    <td className="px-4 py-1.5">
+                      {item.speaker ? (
+                        item.speaker
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
+                    </td>
+                    <td className="px-4 py-1.5">
+                      {item.attendedArti ? (
+                        item.attendedArti
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
+                    </td>
+                    <td className="px-4 py-1.5">
+                      {item.mobileInternetUsage ? (
+                        item.mobileInternetUsage
+                      ) : (
+                        <p className="text-gray-400">Not Available</p>
+                      )}
+                    </td>
                   </tr>
                 ))
               ) : (
