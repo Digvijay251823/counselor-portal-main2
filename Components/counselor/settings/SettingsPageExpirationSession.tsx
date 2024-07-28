@@ -11,49 +11,38 @@ export default function SettingSessionExpiration({
   numberOfDays: number;
 }) {
   const { state, dispatch } = useGlobalState();
-  const [expirationTime, setexpirationTime] = useState(2);
-  const [value] = useDebounce(expirationTime, 500);
+  const [expirationTime, setexpirationTime] = useState(numberOfDays);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const headers = new Headers();
-        setexpirationTime(value);
-        headers.append("Content-Type", "application/json");
-        const response = await fetch(`/api/counselor/sessionexpiration`, {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ expirationTime: expirationTime }),
-        });
-        if (response.ok) {
-          const responseData = await response.json();
-
-          dispatch({
-            type: "SHOW_TOAST",
-            payload: { type: "SUCCESS", message: responseData.message },
-          });
-        } else {
-          const responseData = await response.json();
-          dispatch({
-            type: "SHOW_TOAST",
-            payload: { type: "ERROR", message: responseData.message },
-          });
-        }
-      } catch (error: any) {
+  const handleSubmit = async (expirationTime: number) => {
+    try {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      const response = await fetch(`/api/counselor/sessionexpiration`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ expirationTime: expirationTime }),
+      });
+      if (response.ok) {
+        const responseData = await response.json();
+        setexpirationTime(expirationTime);
         dispatch({
           type: "SHOW_TOAST",
-          payload: { message: error.message, type: "ERRROR" },
+          payload: { type: "SUCCESS", message: responseData.message },
+        });
+      } else {
+        const responseData = await response.json();
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { type: "ERROR", message: responseData.message },
         });
       }
-    })();
-  }, [value]);
-
-  //   async function handleAutoApprove(value: number) {
-  //     if (value < 2) {
-  //       return;
-  //     }
-
-  //   }
+    } catch (error: any) {
+      dispatch({
+        type: "SHOW_TOAST",
+        payload: { message: error.message, type: "ERRROR" },
+      });
+    }
+  };
 
   return (
     <div>
@@ -72,7 +61,7 @@ export default function SettingSessionExpiration({
             className="text-red-500"
             onClick={() => {
               if (expirationTime > 2) {
-                setexpirationTime(expirationTime - 1);
+                handleSubmit(expirationTime - 1);
               }
             }}
           >
@@ -83,7 +72,7 @@ export default function SettingSessionExpiration({
             className="text-green-500"
             onClick={() => {
               if (expirationTime < 6) {
-                setexpirationTime(expirationTime + 1);
+                handleSubmit(expirationTime + 1);
               }
             }}
           >
