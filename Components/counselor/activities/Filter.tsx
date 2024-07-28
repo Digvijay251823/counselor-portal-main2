@@ -45,11 +45,11 @@ function Filter({
       </button>
       <div
         ref={componentRef}
-        className={`absolute w-full lg:right-32 right-0 left-0 transition-all duration-500 z-[2500] ${
+        className={`absolute w-max md:w-full lg:right-32 right-0 left-0 transition-all duration-500 z-[2500] ${
           isOpen ? " -translate-y-24 " : " -translate-y-[500px]"
         }`}
       >
-        <div className="md:w-[400px] lg:ml-10 ">
+        <div className="md:w-[400px] lg:ml-10 inline-block">
           <div className="mx-5">
             <ActionFilter category={category} />
           </div>
@@ -177,6 +177,18 @@ function FirstName() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
@@ -435,6 +447,18 @@ function PhoneNumber() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
@@ -524,6 +548,18 @@ function LastName() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
@@ -610,6 +646,18 @@ function InitiatedName() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
@@ -704,6 +752,18 @@ function DateInput() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }

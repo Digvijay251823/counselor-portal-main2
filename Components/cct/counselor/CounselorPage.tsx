@@ -149,91 +149,91 @@ const CounselorPage: React.FC<DataTableProps> = ({ data }) => {
                     {item.firstName ? (
                       <div>{item.firstName}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.lastName ? (
                       <div>{item.lastName}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.initiatedName ? (
                       <div>{item.initiatedName}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.phoneNumber ? (
                       <div>{item.phoneNumber}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.gender ? (
                       <div>{item.gender}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.age ? (
                       <div>{item.age}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.email ? (
                       <div>{item.email}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.maritalStatus ? (
                       <div>{item.maritalStatus}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.address ? (
                       <div>{item.address}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.profession ? (
                       <div>{item.profession}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.yourInitiatingSpiritualMaster ? (
                       <div>{item.yourInitiatingSpiritualMaster}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.harinamInitiationDate ? (
                       <div>{item.harinamInitiationDate.toString()}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                   <td>
                     {item.harinamInitiationPlace ? (
                       <div>{item.harinamInitiationPlace}</div>
                     ) : (
-                      <div className="text-gray-400 px-4">Not Found</div>
+                      <div className="text-gray-400 px-4">----</div>
                     )}
                   </td>
                 </tr>

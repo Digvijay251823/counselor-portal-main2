@@ -59,7 +59,9 @@ export default function HeaderCounselor({ response }: { response: Props }) {
             ></p>
           </div>
           <ChangeTheme />
-          <BsGear className="h-5 w-5" />
+          <Link href={"/counselor/settings"}>
+            <BsGear className="h-5 w-5 cursor-pointer" />
+          </Link>
           <div className="md:hidden block">
             <NavigationMenu />
           </div>

@@ -178,6 +178,18 @@ function FirstName() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
@@ -419,6 +431,18 @@ function PhoneNumber() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
@@ -508,6 +532,18 @@ function LastName() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
@@ -594,6 +630,18 @@ function InitiatedName() {
               }`
         }`}
       />
+      <div className="flex items-center">
+        <button
+          onClick={() => setSearchParamsInput("")}
+          className={`font-semibold text-sm px-1 py-1 ${
+            state.theme.theme === "LIGHT"
+              ? "hover:bg-gray-100"
+              : "hover:bg-stone-800"
+          }`}
+        >
+          clear
+        </button>
+      </div>
     </div>
   );
 }
