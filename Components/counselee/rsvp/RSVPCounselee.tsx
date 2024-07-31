@@ -93,7 +93,11 @@ export default function RsvpPage({
   const handleShare = () => {
     const message = `💫🍁🍁🍁🍁🍁🍁🍁🍁💫\n \t\t For \n \t"${
       futureSessions.name
-    }" \n These Counselee Confirmed Presence \n \n ${computedFormattedString}\n \n \t\t total : ${
+    }" \nconfigured by :\n ${
+      currentCounselor.initiatedName
+        ? currentCounselor.initiatedName
+        : `${currentCounselor.firstName} ${currentCounselor.lastName}`
+    } \n These Counselee Confirmed Presence \n \n ${computedFormattedString}\n \n \t\t total : ${
       rsvpCount + 1
     } \n 💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
     setRsvpStringMessage(message);
