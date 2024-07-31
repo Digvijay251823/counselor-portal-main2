@@ -76,7 +76,6 @@ function SadhanaForm({
   counselorId: string;
   sadhanaForm?: any;
 }) {
-  console.log(currentCounselor);
   const [isSuccess, setIsSuccess] = useState(false);
   const [SubmittedSuccess, setSubmittedSuccess] = useState(false);
   const [openRegistration, setOpenRegistration] = useState(false);
@@ -94,9 +93,6 @@ function SadhanaForm({
   const [attendedArthi, setAttendedArthi] = useState<any>("");
   const linksActivator = LinksActivator();
   const formRef = useRef<HTMLFormElement>(null);
-
-  console.log(counseleeDetails);
-
   useEffect(() => {
     if (phoneNumber.length === 10) {
       (async () => {
@@ -239,7 +235,7 @@ function SadhanaForm({
         },
       });
     } finally {
-      // formRef.current?.reset();
+      formRef.current?.reset();
     }
   }
   return (

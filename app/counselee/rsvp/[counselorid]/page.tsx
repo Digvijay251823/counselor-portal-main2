@@ -1,4 +1,5 @@
 import { SERVER_URL } from "@/Components/config/config";
+import RsvpPage from "@/Components/counselee/rsvp/RSVPCounselee";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import NotExistsResource from "@/Components/utils/NotFoundComponent";
 import { unstable_noStore } from "next/cache";
@@ -8,11 +9,11 @@ const CounseleeAttendance = dynamic(
   () => import("@/Components/counselee/attendance/CounseleeAttendance")
 );
 
-async function getScheduledSessionsAll(counselorid: string) {
+async function getRsvpEntries(id: string, scheduledSessionId: string) {
   unstable_noStore();
   try {
     const response = await fetch(
-      `${SERVER_URL}/session/counselor/rsvp/${counselorid}`
+      `${SERVER_URL}/counselee-attendance/counselor/rsvp?counselorid=${id}&scheduledSessionId=${scheduledSessionId}`
     );
     if (response.ok) {
       const responseData = await response.json();
@@ -22,13 +23,12 @@ async function getScheduledSessionsAll(counselorid: string) {
         return null;
       }
       const errorData = await response.json();
-      throw errorData;
+      throw new Error(errorData.message);
     }
   } catch (error: any) {
     throw new Error(error.message);
   }
 }
-
 async function getCounselees(id: string) {
   unstable_noStore();
   try {
@@ -37,6 +37,7 @@ async function getCounselees(id: string) {
     );
     if (response.ok) {
       const responseData = await response.json();
+
       return responseData;
     } else {
       if (response.status === 404) {
@@ -54,7 +55,7 @@ async function getScheduledSessions(counselorid: string) {
   unstable_noStore();
   try {
     const response = await fetch(
-      `${SERVER_URL}/session/counselor/not-expired/${counselorid}`
+      `${SERVER_URL}/session/counselor/${counselorid}`
     );
     if (response.ok) {
       const responseData = await response.json();
@@ -76,12 +77,15 @@ async function page({
   searchParams,
 }: {
   params: { counselorid: string };
-  searchParams: { query: string };
+  searchParams: { query: string; scheduledSessionId: string };
 }) {
   try {
     const response = await getScheduledSessions(params.counselorid);
     const counselees = await getCounselees(params.counselorid);
-    const rsvpSessions = await getScheduledSessionsAll(params.counselorid);
+    const rsvpEntries = await getRsvpEntries(
+      params.counselorid,
+      searchParams.scheduledSessionId
+    );
     if (!response) {
       return <NotExistsResource message="Sadhana Form Not Configured Yet" />;
     }
@@ -117,14 +121,13 @@ async function page({
       return <NotExistsResource message="NO Sessions To Show" />;
     }
     return (
-      <div className="w-full">
-        <CounseleeAttendance
-          response={response?.content}
-          counseleeList={results}
+      <div className="w-full flex justify-center">
+        <RsvpPage
+          sessions={response?.content}
+          results={results}
           currentCounselor={counselees.currentCounselor}
-          rsvpSessionsAvailablity={
-            rsvpSessions?.content?.length > 0 ? true : false
-          }
+          rsvps={rsvpEntries.content}
+          rsvpCount={rsvpEntries.total}
         />
       </div>
     );

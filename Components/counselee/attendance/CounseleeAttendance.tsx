@@ -17,15 +17,18 @@ import { HiUsers } from "react-icons/hi";
 import RegistrationFormForAll from "../RegistrationFormForAll";
 import WarningPage from "@/Components/utils/WarningPage";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import Link from "next/link";
 
 function CounseleeAttendance({
   counseleeList,
   response,
   currentCounselor,
+  rsvpSessionsAvailablity,
 }: {
   counseleeList: counselee[];
   response: sessions[];
   currentCounselor: counselor;
+  rsvpSessionsAvailablity: boolean;
 }) {
   const [warning, setWarning] = useState(false);
   const [selectedSession, setSelectedSession] = useState(response[0].id);
@@ -301,8 +304,20 @@ function CounseleeAttendance({
               <SubmitHandlerButton />
             </div>
           </form>
+          <div className="flex flex-col items-center">
+            {rsvpSessionsAvailablity
+              ? "Do You Want To Confirm Your Presence For Next Sesssion"
+              : null}
+            <Link
+              href={`/counselee/rsvp/${counselorid}`}
+              className="text-lg font-semibold text-blue-400 underline"
+            >
+              click here
+            </Link>
+          </div>
         </div>
       </div>
+
       <WarningPage
         isOpen={warning}
         onClose={() => setWarning(false)}
