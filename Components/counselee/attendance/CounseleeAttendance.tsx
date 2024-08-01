@@ -31,16 +31,21 @@ function CounseleeAttendance({
   rsvpSessionsAvailablity: boolean;
 }) {
   const [warning, setWarning] = useState(false);
-  const [selectedSession, setSelectedSession] = useState(response[0].id);
+  const [selectedSession, setSelectedSession] = useState(response[0]?.id);
   const [ModeOfAttendance, setModeOfAttendance] = useState("OFFLINE");
   const formRef = useRef<HTMLFormElement>(null);
   const [openRegistration, setOpenRegistration] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-
   const [counseleeDetails, setCounseleeDetails] = useState<any>({});
   const router = useRouter();
   const { state, dispatch } = useGlobalState();
   const { counselorid } = useParams();
+
+  useEffect(() => {
+    if (!selectedSession) {
+      router.push(`/counselee/rsvp/${counselorid}`);
+    }
+  }, [selectedSession]);
 
   useEffect(() => {
     if (phoneNumber.length === 10) {
@@ -74,6 +79,7 @@ function CounseleeAttendance({
       setOpenRegistration(false);
     }
   }, [phoneNumber]);
+
   async function handleSubmitAttendance(e: FormData) {
     if (!counseleeDetails?.id) {
       return;

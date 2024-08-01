@@ -3,6 +3,7 @@ import ErrorComponent from "@/Components/utils/ErrorPage";
 import NotExistsResource from "@/Components/utils/NotFoundComponent";
 import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
 import React from "react";
 const CounseleeAttendance = dynamic(
   () => import("@/Components/counselee/attendance/CounseleeAttendance")
@@ -25,7 +26,7 @@ async function getScheduledSessionsAll(counselorid: string) {
       throw errorData;
     }
   } catch (error: any) {
-    throw new Error(error.message);
+    throw new Error(error);
   }
 }
 
@@ -52,22 +53,20 @@ async function getCounselees(id: string) {
 
 async function getScheduledSessions(counselorid: string) {
   unstable_noStore();
-  try {
-    const response = await fetch(
-      `${SERVER_URL}/session/counselor/not-expired/${counselorid}`
-    );
-    if (response.ok) {
-      const responseData = await response.json();
-      return responseData;
-    } else {
-      if (response.status === 404) {
-        return null;
-      }
-      const errorData = await response.json();
-      throw errorData;
+
+  const response = await fetch(
+    `${SERVER_URL}/session/counselor/not-expired/${counselorid}`
+  );
+  if (response.ok) {
+    const responseData = await response.json();
+
+    return responseData;
+  } else {
+    if (response.status === 404) {
+      return null;
     }
-  } catch (error: any) {
-    throw new Error(error.message);
+    const errorData = await response.json();
+    throw errorData;
   }
 }
 
@@ -83,7 +82,7 @@ async function page({
     const counselees = await getCounselees(params.counselorid);
     const rsvpSessions = await getScheduledSessionsAll(params.counselorid);
     if (!response) {
-      return <NotExistsResource message="Sadhana Form Not Configured Yet" />;
+      return <NotExistsResource message="No Sessions Scheduled" />;
     }
 
     const results = counselees.content.filter((item: any) => {
@@ -112,9 +111,6 @@ async function page({
     });
     if (!response) {
       return <NotExistsResource message="Counselor Might Not Exist" />;
-    }
-    if (response.content.length === 0) {
-      return <NotExistsResource message="NO Sessions To Show" />;
     }
     return (
       <div className="w-full">

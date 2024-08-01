@@ -37,7 +37,6 @@ async function getCounselees(id: string) {
     );
     if (response.ok) {
       const responseData = await response.json();
-
       return responseData;
     } else {
       if (response.status === 404) {

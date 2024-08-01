@@ -146,6 +146,8 @@ interface Sadhana {
   attendedArti: boolean;
   mobileInternetUsage: number;
   sadhanaDate: string;
+  topic: string;
+  visibleSadhana: string;
   createdAt: string;
   updatedAt: string;
   counselee: counselee;

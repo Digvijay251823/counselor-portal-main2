@@ -136,16 +136,16 @@ function AttendancePage({
                       {item?.scheduledSession?.description}
                     </td>
                     <td className={`px-6 py-4`}>
-                      {item.counselee.initiatedName
-                        ? item.counselee.initiatedName
+                      {item.counselee?.initiatedName
+                        ? item.counselee?.initiatedName
                         : "Not Available"}
                     </td>
                     <td
                       className={`px-6 py-4`}
-                    >{`${item?.counselee.firstName}`}</td>
+                    >{`${item?.counselee?.firstName}`}</td>
                     <td
                       className={`px-6 py-4`}
-                    >{`${item?.counselee.lastName}`}</td>
+                    >{`${item?.counselee?.lastName}`}</td>
                     <td className={`px-6 py-4`}>
                       {item?.counselee?.phoneNumber}
                     </td>

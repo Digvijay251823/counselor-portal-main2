@@ -13,6 +13,17 @@ import { HidableColumns } from "@/Components/utils/TableUtils/HidableColumns";
 function SadhanaPage({ response }: { response: Sadhana[] }) {
   const { state } = useGlobalState();
   const [columnNamesArr, setColumnNamesArr] = useState<string[]>([]);
+
+  useEffect(() => {
+    const columnsNames = localStorage.getItem("SadhanaColumns");
+    if (columnsNames) {
+      setColumnNamesArr(JSON.parse(columnsNames));
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem("SadhanaColumns", JSON.stringify(columnNamesArr));
+  }, [columnNamesArr.length]);
+
   const handleAddItemToColumnNameArr = (option: { value: string }) => {
     if (columnNamesArr?.includes(option.value)) {
       setColumnNamesArr(
@@ -109,6 +120,10 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
             options={columnNamesArr}
           />
         </div>
+        <p className="text-xs text-red-500">
+          You Can Hide Unneccessory Columns by checking the checkboxes in the
+          button right below the configure
+        </p>
         <div className="overflow-x-auto shadow-md sm:rounded-lg">
           <table
             className={`w-full text-left rtl:text-right ${
@@ -280,6 +295,22 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
                   stylesClassNames={`px-4 py-2`}
                 >
                   Mobile Internet Usage
+                </HidableColumns>
+                <HidableColumns
+                  ColumnToHide="Topic"
+                  columnNamesArray={columnNamesArr}
+                  isColumnHeader={true}
+                  stylesClassNames={`px-4 py-2`}
+                >
+                  Topic
+                </HidableColumns>
+                <HidableColumns
+                  ColumnToHide="Visible_Sadhana"
+                  columnNamesArray={columnNamesArr}
+                  isColumnHeader={true}
+                  stylesClassNames={`px-4 py-2`}
+                >
+                  Visible Sadhana
                 </HidableColumns>
               </tr>
             </thead>
@@ -506,6 +537,30 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
                     >
                       {item.mobileInternetUsage ? (
                         item.mobileInternetUsage
+                      ) : (
+                        <p className="text-gray-400">----</p>
+                      )}
+                    </HidableColumns>
+                    <HidableColumns
+                      ColumnToHide="Topic"
+                      columnNamesArray={columnNamesArr}
+                      isColumnHeader={false}
+                      stylesClassNames="px-4 py-1.5"
+                    >
+                      {item.topic ? (
+                        item.topic
+                      ) : (
+                        <p className="text-gray-400">----</p>
+                      )}
+                    </HidableColumns>
+                    <HidableColumns
+                      ColumnToHide="Visible_Sadhana"
+                      columnNamesArray={columnNamesArr}
+                      isColumnHeader={false}
+                      stylesClassNames="px-4 py-1.5"
+                    >
+                      {item.visibleSadhana ? (
+                        item.visibleSadhana
                       ) : (
                         <p className="text-gray-400">----</p>
                       )}

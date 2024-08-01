@@ -2,6 +2,7 @@
 import { useGlobalState } from "@/Components/context/state";
 import CopyClipBoard from "@/Components/utils/CopyToClipBoard";
 import DateFormatter from "@/Components/utils/DateFormatter";
+import { LinksActivator } from "@/Components/utils/LinksActivator";
 import Modal from "@/Components/utils/Modal";
 import SubmitHandlerButton from "@/Components/utils/SubmitHandlerButton";
 import {
@@ -10,7 +11,12 @@ import {
   PencilSquareIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import {
   ChangeEvent,
   useCallback,
@@ -21,7 +27,6 @@ import {
 } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { HiUsers } from "react-icons/hi";
-import { useDebounce } from "use-debounce";
 
 export default function RsvpPage({
   sessions,
@@ -46,20 +51,10 @@ export default function RsvpPage({
   const [membersComming, setMembersComming] = useState(1);
   const [SubmittedSuccess, setSubmittedSuccess] = useState(false);
   const params = useParams();
+  const pathname = usePathname();
   const formRef = useRef<HTMLFormElement>(null);
   const { state, dispatch } = useGlobalState();
-  const [formattedString, setFormattedString] = useState("");
-
-  const computedFormattedString = useMemo(() => {
-    return previousRsvp
-      .map((item: any, index: number) => {
-        const { firstName, lastName } = item.counselee;
-        return `${index + 1}. ${firstName} ${lastName} | members = ${
-          item?.membersComming
-        }`;
-      })
-      .join("\n");
-  }, [previousRsvp]);
+  const [computedFormattedString, setFormattedString] = useState("");
 
   // 💫🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁💫
 
@@ -81,6 +76,8 @@ export default function RsvpPage({
     router.push(`?scheduledSessionId=${futureSessions.id}`);
   }, [futureSessions?.id]);
 
+  const linksActivator = LinksActivator();
+
   useEffect(() => {
     if (previousRsvp.length > 0) {
       const isRSVPStatus = previousRsvp.some((item: any) =>
@@ -88,18 +85,33 @@ export default function RsvpPage({
       );
       setIsRsvp(isRSVPStatus);
     }
-  }, [previousRsvp.length]);
+  }, [previousRsvp.length, CounseleeDetails]);
 
-  const handleShare = () => {
-    const message = `💫🍁🍁🍁🍁🍁🍁🍁🍁💫\n \t\t For \n \t"${
-      futureSessions.name
-    }" \nconfigured by :\n ${
-      currentCounselor.initiatedName
-        ? currentCounselor.initiatedName
-        : `${currentCounselor.firstName} ${currentCounselor.lastName}`
-    } \n These Counselee Confirmed Presence \n \n ${computedFormattedString}\n \n \t\t total : ${
-      rsvpCount + 1
-    } \n 💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
+  useEffect(() => {
+    setFormattedString(() => {
+      return previousRsvp
+        .map((item: any, index: number) => {
+          const { firstName, lastName } = item.counselee;
+          return `${index + 1}. ${firstName} ${lastName} | members = ${
+            item?.membersComming
+          }`;
+        })
+        .join("\n");
+    });
+  }, [previousRsvp.length, SubmittedSuccess]);
+
+  const handleShare = (previousRsvp: any) => {
+    const messageString = previousRsvp
+      .map((item: any, index: number) => {
+        const { firstName, lastName } = item.counselee;
+        return `${index + 1}. ${firstName} ${lastName} | members = ${
+          item?.membersComming
+        }`;
+      })
+      .join("\n");
+    const message = `💫🍁🍁🍁🍁🍁🍁🍁🍁💫\n \t*━❀꧁Counselee Meeting꧂❀━* \n\n \t *Topic:* "${`*${futureSessions.name}*`}" \n \t *Below* *are* *the* *List* *of* *Devotees*\n \t *Confirmed* *their* *Presence* \n \n ${
+      messageString ? messageString : computedFormattedString
+    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n ${`${linksActivator}/${pathname}`}💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
     setRsvpStringMessage(message);
   };
 
@@ -113,24 +125,36 @@ export default function RsvpPage({
         counseleeId: CounseleeDetails?.id,
         counselorId: params?.counselorid,
         membersComming: membersComming,
-        modeOfAttendance: "Hybrid",
+        modeOfAttendance: futureSessions.modeOfAttendance,
         type: "RSVP",
         isRSVP: rsvp,
       };
       const formDatatoShare: any = {
-        scheduledSessionId: futureSessions?.id,
-        counseleeId: CounseleeDetails?.id,
         counselorId: params?.counselorid,
         membersComming: membersComming,
-        modeOfAttendance: "Hybrid",
+        modeOfAttendance: futureSessions?.modeOfAttendance,
         type: "RSVP",
         isRSVP: rsvp,
         counselee: CounseleeDetails,
         scheduledSession: futureSessions,
       };
-      rsvp && setPreviousRsvp((prev: any) => [...prev, formDatatoShare]);
-      setSubmittedSuccess(true);
-      handleShare();
+      if (!rsvp) {
+        setPreviousRsvp((prev: any) => {
+          const previousRsvp = [...prev];
+          const remaining = previousRsvp.filter(
+            (item) => item?.counselee?.id !== CounseleeDetails.id
+          );
+          handleShare(remaining);
+          return remaining;
+        });
+      } else {
+        if (!isRSVP && rsvp) {
+          const prevRvsp = [...previousRsvp, formDatatoShare];
+          handleShare(prevRvsp);
+          setPreviousRsvp(prevRvsp);
+        }
+      }
+
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
       const response = await fetch(`/api/counslee/rsvp`, {
@@ -140,11 +164,13 @@ export default function RsvpPage({
       });
       if (response.ok) {
         const responseData = await response.json();
+
         setIsRsvp(rsvp);
         dispatch({
           type: "SHOW_TOAST",
           payload: { message: responseData.message, type: "SUCCESS" },
         });
+        setSubmittedSuccess(true);
       } else {
         const responseData = await response.json();
         dispatch({
@@ -159,6 +185,7 @@ export default function RsvpPage({
       });
     }
   }
+
   return (
     <div className="w-full">
       <div className="md:px-10 md:pt-20 md:pb-10 px-5 pt-10 pb-5">
@@ -313,9 +340,6 @@ export default function RsvpPage({
                       ? "border-gray-300"
                       : "border-stone-700"
                   }`}
-                  onClick={() => {
-                    handleSubmitRsvp(true);
-                  }}
                   disabled
                 >
                   Confirmed
@@ -334,14 +358,16 @@ export default function RsvpPage({
             state.theme.theme === "LIGHT" ? "bg-gray-50" : "bg-stone-900"
           }`}
         >
-          <p className="text-red-600 font-bold text-xl">Preview Message</p>
           <div className="p-5 flex flex-col gap-2 md:max-w-[40vw] max-w-[80vw]">
-            <div>{rsvpStringMessage}</div>
+            <div className="text-xl font-semibold">
+              Please Share Your Confirmation To Whatsapp
+            </div>
           </div>
           <div className="flex items-center gap-5 py-5">
             {" "}
             <button
               onClick={() => {
+                console.log(rsvpStringMessage);
                 const encodedMessage = encodeURIComponent(rsvpStringMessage);
                 // Construct the shareable link
                 const shareableLink = `whatsapp://send?text=${encodedMessage}`;
