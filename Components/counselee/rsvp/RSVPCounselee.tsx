@@ -137,7 +137,7 @@ export default function RsvpPage({
     const messageString = previousRsvp
       .map((item: any, index: number) => {
         const { firstName, lastName } = item.counselee;
-        return `${index + 1}. ${firstName} ${lastName} | members = ${
+        return `${index + 1}. ${firstName} ${lastName} | ${
           item?.membersComming
         }`;
       })
