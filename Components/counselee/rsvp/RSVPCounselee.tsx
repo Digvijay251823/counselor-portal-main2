@@ -109,9 +109,11 @@ export default function RsvpPage({
         }`;
       })
       .join("\n");
-    const message = `💫🍁🍁🍁🍁🍁🍁🍁🍁💫\n \t*━❀꧁Counselee Meeting꧂❀━* \n\n \t *Topic:* "${`*${futureSessions.name}*`}" \n \t *Below* *are* *the* *List* *of* *Devotees*\n \t *Confirmed* *their* *Presence* \n \n ${
+    const message = `💫🍁🍁🍁🍁🍁🍁🍁🍁💫\n *━❀꧁Counselee Meeting꧂❀━* \n\n \t *Topic:* "${
+      futureSessions.name
+    }" \n \t *Below* *are* *the* *List* *of* *Devotees*\n \t *Confirmed* *their* *Presence* \n \n ${
       messageString ? messageString : computedFormattedString
-    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n ${`${linksActivator}/${pathname}`}💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
+    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n ${`${linksActivator}/${pathname}`} \n\n💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
     setRsvpStringMessage(message);
   };
 
