@@ -5,6 +5,7 @@ import DateFormatter from "@/Components/utils/DateFormatter";
 import { LinksActivator } from "@/Components/utils/LinksActivator";
 import Modal from "@/Components/utils/Modal";
 import SubmitHandlerButton from "@/Components/utils/SubmitHandlerButton";
+import WarningPage from "@/Components/utils/WarningPage";
 import {
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
@@ -46,6 +47,7 @@ export default function RsvpPage({
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isRSVP, setIsRsvp] = useState(false);
   const [CounseleeDetails, setCounseleeDetails] = useState<any>({});
+  const [warning, setWarning] = useState(false);
   const [rsvpStringMessage, setRsvpStringMessage] = useState("");
   const [previousRsvp, setPreviousRsvp] = useState(rsvps ? rsvps : []);
   const [membersComming, setMembersComming] = useState(1);
@@ -55,6 +57,37 @@ export default function RsvpPage({
   const formRef = useRef<HTMLFormElement>(null);
   const { state, dispatch } = useGlobalState();
   const [computedFormattedString, setFormattedString] = useState("");
+
+  useEffect(() => {
+    if (phoneNumber.length === 10) {
+      (async () => {
+        try {
+          const response = await fetch(`/api/counslee/${phoneNumber}`);
+          if (response.ok) {
+            const responseData = await response.json();
+            setCounseleeDetails(responseData.content.content);
+          } else {
+            if (response.status === 404) {
+              setWarning(true);
+              localStorage.setItem("PHONE_NUMBER", phoneNumber.toString());
+              return;
+            }
+            const errorData = await response.json();
+            dispatch({
+              type: "SHOW_TOAST",
+              payload: { type: "ERROR", message: errorData.message },
+            });
+          }
+        } catch (error: any) {
+          dispatch({
+            type: "SHOW_TOAST",
+            payload: { type: "ERROR", message: error.message },
+          });
+        }
+      })();
+    } else {
+    }
+  }, [phoneNumber]);
 
   // 💫🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁💫
 
@@ -113,7 +146,7 @@ export default function RsvpPage({
       futureSessions.name
     }" \n \t *Below* *are* *the* *List* *of* *Devotees*\n \t *Confirmed* *their* *Presence* \n \n ${
       messageString ? messageString : computedFormattedString
-    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n ${`${linksActivator}/${pathname}`} \n\n💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
+    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n ${`${linksActivator}/counselee/attendance/${params.counselorid}`} \n\n💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
     setRsvpStringMessage(message);
   };
 
@@ -427,6 +460,11 @@ export default function RsvpPage({
           </div>
         </div>
       </Modal>
+      <WarningPage
+        isOpen={warning}
+        onClose={() => setWarning(false)}
+        counselorId={params?.counselorid.toString()}
+      />
     </div>
   );
 }

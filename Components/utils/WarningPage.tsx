@@ -11,7 +11,7 @@ export default function WarningPage({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  counselorId: string;
+  counselorId?: string;
 }) {
   const { state } = useGlobalState();
   const router = useRouter();
