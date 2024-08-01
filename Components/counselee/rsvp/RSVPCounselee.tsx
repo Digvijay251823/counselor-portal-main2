@@ -146,7 +146,7 @@ export default function RsvpPage({
       futureSessions.name
     }" \n \t *Below* *are* *the* *List* *of* *Devotees*\n \t *Confirmed* *their* *Presence* \n \n ${
       messageString ? messageString : computedFormattedString
-    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n ${`${linksActivator}/counselee/attendance/${params.counselorid}`} \n\n💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
+    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n  ${`${linksActivator}/counselee/attendance/${params.counselorid}`} \n\n💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
     setRsvpStringMessage(message);
   };
 
