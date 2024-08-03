@@ -103,6 +103,12 @@ function FirstName() {
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
 
+  useEffect(() => {
+    if (typeof searchUrlParams.firstName === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams?.firstName]);
+
   const prevQry: any = {
     ...searchUrlParams,
   };
@@ -347,6 +353,7 @@ function GenderSelect() {
 function PhoneNumber() {
   const { state } = useGlobalState();
   const [onFocusFilterInput, setOnFocusFilterInput] = useState(false);
+  const Inputref = useRef<HTMLInputElement>(null);
   const [searchParamsInput, setSearchParamsInput] = useState("");
   const initialRef = useRef(true);
   const router = useRouter();
@@ -354,6 +361,11 @@ function PhoneNumber() {
   const searchParams = useSearchParams();
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
+  useEffect(() => {
+    if (typeof searchUrlParams.phoneNumber === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams?.phoneNumber]);
 
   const prevQry: any = {
     ...searchUrlParams,
@@ -412,6 +424,7 @@ function PhoneNumber() {
       </p>
 
       <input
+        ref={Inputref}
         onChange={(e) => setSearchParamsInput(e.target.value)}
         value={searchParamsInput}
         type={"text"}
@@ -455,6 +468,12 @@ function LastName() {
   const searchParams = useSearchParams();
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
+
+  useEffect(() => {
+    if (typeof searchUrlParams.lastName === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams?.lastName]);
 
   const prevQry: any = {
     ...searchUrlParams,
@@ -557,6 +576,12 @@ function InitiatedName() {
   const searchParams = useSearchParams();
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
+
+  useEffect(() => {
+    if (typeof searchUrlParams.initiatedName === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams.initiatedName]);
 
   const prevQry: any = {
     ...searchUrlParams,

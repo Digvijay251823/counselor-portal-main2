@@ -1,3 +1,4 @@
+import { useGlobalState } from "@/Components/context/state";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +9,7 @@ import { useDebounce } from "use-debounce";
 export default function DateFilter() {
   const [fromDate, setFromDate] = useState<any>("");
   const [toDate, setToDate] = useState<any>("");
+  const { state } = useGlobalState();
   const initialRef = useRef(true);
   const router = useRouter();
   const pathname = usePathname();
@@ -88,14 +90,22 @@ export default function DateFilter() {
           onChange={(e) => setFromDate(e?.toISOString().toString())}
           value={fromDate}
           placeholderText="Date"
-          className="w-[90px] border py-1 rounded px-1"
+          className={`w-[90px] border py-1 rounded px-1 outline-none ${
+            state.theme.theme === "LIGHT"
+              ? "bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-500 border-gray-300"
+              : "bg-stone-900 focus:ring-2 focus:ring-blue-950 focus:border-blue-500 border-stone-700"
+          }`}
         />
         <p>To</p>
         <ReactDatePicker
           onChange={(e) => setToDate(e?.toISOString().toString())}
           value={toDate}
           placeholderText="Date"
-          className="w-[90px] border py-1 rounded px-1"
+          className={`w-[90px] border py-1 rounded px-1 outline-none ${
+            state.theme.theme === "LIGHT"
+              ? "bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-500 border-gray-300"
+              : "bg-stone-900 focus:ring-2 focus:ring-blue-950 focus:border-blue-500 border-stone-700"
+          }`}
         />
       </div>
     </div>

@@ -90,7 +90,6 @@ export default function RsvpPage({
   }, [phoneNumber]);
 
   // 💫🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁🍁💫
-
   useEffect(() => {
     const futureSession: sessions[] = [];
     sessions.forEach((element) => {
@@ -142,11 +141,16 @@ export default function RsvpPage({
         }`;
       })
       .join("\n");
-    const message = `💫🍁🍁🍁🍁🍁🍁🍁🍁💫\n *━❀꧁Counselee Meeting꧂❀━* \n\n \t *Topic:* "${
+    const message = `\n *━❀꧁Counselee Meeting꧂❀━* \n\n *Topic:* "${
       futureSessions.name
-    }" \n \t *Below* *are* *the* *List* *of* *Devotees*\n \t *Confirmed* *their* *Presence* \n \n ${
+    }"\n \t  ${"Date : " + futureSessions?.startTime?.split("T")[0]} \n \t ${
+      "Time : " +
+      futureSessions?.startTime?.split("T")[1]?.split(":")[0] +
+      ":" +
+      futureSessions?.startTime?.split("T")[1]?.split(":")[1]
+    } \n *Below* *are* *the* *List* *of* *Devotees*\n  *Confirmed* *their* *Presence* \n \n ${
       messageString ? messageString : computedFormattedString
-    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n  ${`${linksActivator}/counselee/attendance/${params.counselorid}`} \n\n💫🍁🍁🍁🍁🍁🍁🍁🍁💫`;
+    }\n \n *Use* *Below* *Link* *To* *Confirm* *Your* *Presence*\n  ${`${linksActivator}/counselee/attendance/${params.counselorid}`} \n\n`;
     setRsvpStringMessage(message);
   };
 

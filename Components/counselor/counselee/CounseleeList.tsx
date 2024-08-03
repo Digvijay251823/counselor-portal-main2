@@ -110,6 +110,12 @@ export default function CounseleeList({
                   <div>Age</div>
                 </th>
                 <th className={`px-6 py-3`}>
+                  <div>Sessions Attended</div>
+                </th>
+                <th className={`px-6 py-3`}>
+                  <div>Total Sessions</div>
+                </th>
+                <th className={`px-6 py-3`}>
                   <div>Details</div>
                 </th>
               </tr>
@@ -129,35 +135,35 @@ export default function CounseleeList({
                         {item.initiatedName ? (
                           <div>{item.initiatedName}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.firstName ? (
                           <div>{item.firstName}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.lastName ? (
                           <div>{item.lastName}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.phoneNumber ? (
                           <div>{item.phoneNumber}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.maritalStatus ? (
                           <p>{item.maritalStatus}</p>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
@@ -168,40 +174,46 @@ export default function CounseleeList({
                                 dateString={item.createdAt.toString()}
                               />
                             ) : (
-                              <p className="text-gray-400">Not Available</p>
+                              <p className="text-gray-400">----</p>
                             )}
                           </div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.email ? (
                           <div>{item.email}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.address ? (
                           <div className=" truncate">{item.address}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.gender ? (
                           <div>{item.gender}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
                       </td>
                       <td className={`px-6 py-2`}>
                         {item.age ? (
                           <div>{item.age}</div>
                         ) : (
-                          <p className="text-gray-400">Not Available</p>
+                          <p className="text-gray-400">----</p>
                         )}
+                      </td>
+                      <td className={`px-6 py-2 text-center`}>
+                        <div>{item.sessionsAttended}</div>
+                      </td>
+                      <td className={`px-6 py-2 text-center`}>
+                        <div>{item.totalSessions}</div>
                       </td>
                       <td className={`px-6 py-2`}>
                         <div

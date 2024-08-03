@@ -9,28 +9,36 @@ import { useGlobalState } from "../context/state";
 function Pagination({
   totalElements,
   skipped,
+  limit,
 }: {
   totalElements: number;
   skipped?: number;
+  limit?: number;
 }) {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { state } = useGlobalState();
-  const [VisibleElements, setVisibleElement] = useState<number>(10);
+  const [VisibleElements, setVisibleElement] = useState<number>(
+    limit ? limit : 10
+  );
+
+  const Limit = limit ? Number(limit) : 10;
 
   useEffect(() => {
     const searchParamsUrl = new URLSearchParams(searchParams).get("page");
+    const limit = new URLSearchParams(searchParams).get("size");
 
     const page = searchParamsUrl ? Number(searchParamsUrl) : 0;
     const pageNumber = currentPage + 1;
-    setVisibleElement(pageNumber * 10);
+    const Limit = limit ? Number(limit) : 10;
+    setVisibleElement(pageNumber * Limit);
     setCurrentPage(page);
   }, [searchParams, currentPage]);
 
   return (
     <div className="flex items-center justify-between gap-5 p-5">
-      {VisibleElements !== 10 ? (
+      {VisibleElements !== Limit ? (
         <Link
           href={{
             pathname,
@@ -39,7 +47,7 @@ function Pagination({
               page: currentPage - 1,
             },
           }}
-          onClick={() => setVisibleElement((prev) => prev - 10)}
+          onClick={() => setVisibleElement((prev) => prev - Limit)}
         >
           <p
             className={`${
@@ -83,11 +91,7 @@ function Pagination({
             state.theme.theme === "LIGHT" ? "text-gray-900" : "text-white"
           }`}
         >
-          {skipped
-            ? skipped + 10
-            : skipped === 0 && totalElements > 10
-            ? 10
-            : totalElements}
+          {VisibleElements > totalElements ? totalElements : VisibleElements}
         </span>{" "}
         of{" "}
         <span
@@ -100,7 +104,7 @@ function Pagination({
         Entries
       </span>
 
-      {VisibleElements > totalElements ? (
+      {VisibleElements > totalElements || VisibleElements === totalElements ? (
         <p
           className={`${
             state.theme.theme === "LIGHT"
@@ -119,7 +123,7 @@ function Pagination({
               page: currentPage + 1,
             },
           }}
-          onClick={() => setVisibleElement((prev) => prev + 10)}
+          onClick={() => setVisibleElement((prev) => prev + Limit)}
         >
           <p
             className={`${

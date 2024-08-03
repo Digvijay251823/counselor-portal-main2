@@ -115,6 +115,7 @@ function AttendancePage({
                     <Filter category="approved" />
                   </div>
                 </th>
+                <th className={`px-6 py-3`}>type</th>
                 <th className={`px-6 py-3`}>Mode Of Attendance</th>
               </tr>
             </thead>
@@ -174,8 +175,13 @@ function AttendancePage({
                         </div>
                       )}
                     </td>
-                    <td className={`px-6 py-4`}>
-                      <ApproveAttendance item={item} />
+                    <td className={`px-6 py-4`}>{item.type}</td>
+                    <td className={`px-6 py-4 text-center`}>
+                      {item?.type === "Attendance" ? (
+                        <ApproveAttendance item={item} />
+                      ) : (
+                        "----"
+                      )}
                     </td>
                   </tr>
                 ))

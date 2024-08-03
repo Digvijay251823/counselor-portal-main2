@@ -19,6 +19,8 @@ interface counselee {
   currentCounselor: counselee;
   spouce: counselee;
   husband: counselee;
+  sessionsAttended: number;
+  totalSessions: number;
   connectedToCounselorSince: string;
   children: [
     {

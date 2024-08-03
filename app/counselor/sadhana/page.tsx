@@ -1,5 +1,6 @@
 import { SERVER_URL } from "@/Components/config/config";
 import Pagination from "@/Components/utils/Pagination";
+import PaginationPage from "@/Components/utils/PaginationPage/PaginationPage";
 const SadhanaPage = dynamic(
   () => import("@/Components/counselor/sadhana/SadhanaPage")
 );
@@ -52,7 +53,15 @@ async function page({
     return (
       <div className="flex flex-col items-center pt-5">
         <SadhanaPage response={response?.content} />
-        <Pagination totalElements={response.total} skipped={response.skip} />
+        <PaginationPage
+          totalPages={response.totalPages}
+          currentPage={response.page}
+        />
+        <Pagination
+          totalElements={response.total}
+          skipped={response.skip}
+          limit={response?.limit}
+        />
       </div>
     );
   } catch (error: any) {

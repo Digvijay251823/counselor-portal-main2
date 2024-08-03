@@ -140,6 +140,15 @@ const Signin: React.FC = () => {
                   Sign up
                 </Link>
               </p>
+              <p className="text-sm font-light text-stone-500 dark:text-stone-400">
+                For Assistant Counselor?{" "}
+                <Link
+                  href={"/auth/assistant/signup"}
+                  className="font-medium text-purple-600 hover:underline dark:text-purple-500"
+                >
+                  Assistant Counselor Sign up
+                </Link>
+              </p>
             </form>
           </div>
         </div>

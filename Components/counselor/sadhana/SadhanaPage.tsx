@@ -49,7 +49,7 @@ function SadhanaPage({ response }: { response: Sadhana[] }) {
       </div>
       <div>
         <div className="flex justify-between pb-2">
-          <Link href={"/counselor/sadhana"}>
+          <Link href={"/counselor/sadhana?page=0&size=30"}>
             <button className="bg-blue-600 text-white border px-2 py-1.5 rounded-lg">
               Clear Filters
             </button>

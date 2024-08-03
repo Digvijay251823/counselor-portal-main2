@@ -103,6 +103,12 @@ function FirstName() {
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
 
+  useEffect(() => {
+    if (typeof searchUrlParams.firstName === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams.firstName]);
+
   const prevQry: any = {
     ...searchUrlParams,
   };
@@ -356,6 +362,12 @@ function PhoneNumber() {
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
 
+  useEffect(() => {
+    if (typeof searchUrlParams.phoneNumber === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams.phoneNumber]);
+
   const prevQry: any = {
     ...searchUrlParams,
   };
@@ -456,6 +468,12 @@ function LastName() {
   const searchParams = useSearchParams();
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
+
+  useEffect(() => {
+    if (typeof searchUrlParams.lastName === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams.lastName]);
 
   const prevQry: any = {
     ...searchUrlParams,
@@ -558,6 +576,12 @@ function InitiatedName() {
   const searchParams = useSearchParams();
   const searchUrlParams = Object.fromEntries(new URLSearchParams(searchParams));
   const [value] = useDebounce(searchParamsInput, 500);
+
+  useEffect(() => {
+    if (typeof searchUrlParams.initiatedName === "undefined") {
+      setSearchParamsInput("");
+    }
+  }, [searchUrlParams.initiatedName]);
 
   const prevQry: any = {
     ...searchUrlParams,
