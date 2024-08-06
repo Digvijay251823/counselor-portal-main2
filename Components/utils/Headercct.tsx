@@ -125,6 +125,7 @@ function Headercct() {
                   ChangeCounselor
                 </p>
               </Link>
+              <OthersMore />
             </nav>
           </div>
         </div>
@@ -488,6 +489,110 @@ function MenuCBM() {
                     </h1>
                   </div>
                   <p>Here you can manage all the meetings of past and future</p>
+                </div>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
+}
+function OthersMore() {
+  const [isOpen, setIsOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const { state } = useGlobalState();
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 200);
+  };
+
+  const handleMouseEnterMenu = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  useEffect(() => {
+    const handleDocumentClick = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
+  return (
+    <nav className="relative" onMouseLeave={handleMouseLeave}>
+      <div
+        className="cursor-pointer "
+        onMouseEnter={handleMouseEnter}
+        ref={menuRef}
+      >
+        <span className="font-semibold text-lg flex items-center">
+          <p>More</p>
+
+          <ChevronDownIcon
+            className={`h-5 w-5 transition-all duration-300 ${
+              isOpen && "-rotate-180"
+            }`}
+          />
+        </span>
+        <div
+          className={`absolute top-full w-[400px] lg:left-0 right-0 mt-2  ${
+            state.theme.theme === "LIGHT"
+              ? "bg-white text-black"
+              : "bg-stone-900 text-white"
+          } rounded-[30px] shadow-lg transform transition-transform duration-300 ${
+            isOpen
+              ? "scale-100 opacity-100"
+              : "scale-95 opacity-0 pointer-events-none"
+          }`}
+          onMouseEnter={handleMouseEnterMenu}
+          onMouseLeave={handleMouseLeave}
+        >
+          <ul className="p-5 z-[2500]">
+            <li
+              className={`px-4 py-2 ${
+                state.theme.theme === "LIGHT"
+                  ? "hover:bg-gray-50"
+                  : "hover:bg-stone-950"
+              } rounded-[20px]`}
+            >
+              <Link href="/cct/planningrelocate">
+                <div>
+                  <div className="flex items-center gap-3">
+                    <p
+                      className={`rounded-full ${
+                        state.theme.theme === "LIGHT"
+                          ? "bg-purple-100"
+                          : "bg-purple-950 bg-opacity-45"
+                      } p-2`}
+                    >
+                      <FaUserFriends />
+                    </p>
+                    <h1 className="text-xl font-bold whitespace-nowrap">
+                      Relocate To pune
+                    </h1>
+                  </div>
+                  <p>
+                    Here is the list of all devotees who want to relocate to
+                    pune
+                  </p>
                 </div>
               </Link>
             </li>

@@ -260,15 +260,15 @@ function CounseleeAttendance({
                         } w-full p-2 flex items-center gap-3`}
                       >
                         <label
-                          htmlFor={item.name}
+                          htmlFor={item?.name}
                           className="font-bold text-lg"
                         >
-                          {item.name}
+                          {item?.name}
                         </label>
                       </div>
                       <div className="flex items-center font-semibold">
                         scheduled At :
-                        <DateFormatter dateString={item.startTime} />
+                        <DateFormatter dateString={item?.startTime} />
                       </div>
                     </div>
                   ))}

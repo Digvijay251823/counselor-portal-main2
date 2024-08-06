@@ -3,7 +3,7 @@ import AssistantSignUp from "@/Components/auth/signup/Assistant";
 
 export default function page() {
   return (
-    <div>
+    <div className="w-screen">
       <AssistantSignUp />
     </div>
   );

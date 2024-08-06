@@ -86,7 +86,7 @@ async function page({
       searchParams.scheduledSessionId
     );
     if (!response) {
-      return <NotExistsResource message="Sadhana Form Not Configured Yet" />;
+      return <NotExistsResource message="No Session Found" />;
     }
 
     const results = counselees.content.filter((item: any) => {
@@ -116,6 +116,7 @@ async function page({
     if (!response) {
       return <NotExistsResource message="Counselor Might Not Exist" />;
     }
+
     if (response.content.length === 0) {
       return <NotExistsResource message="NO Sessions To Show" />;
     }

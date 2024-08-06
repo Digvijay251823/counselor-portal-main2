@@ -31,6 +31,37 @@ interface counselee {
   createdAt: string;
   updatedAt: string;
 }
+interface devoteePlanningToRelocate {
+  id: string;
+  firstName: string;
+  lastName: string;
+  initiatedName: string;
+  phoneNumber: string;
+  gender: string;
+  age: number;
+  email: string;
+  maritalStatus: string;
+  address: string;
+  profession: string;
+  yourInitiatingSpiritualMaster: string;
+  harinamInitiationDate: string;
+  harinamInitiationPlace: string;
+  chantingRounds: string;
+  chantingStartedThisRoundsDate: string;
+  recommendedBy: string;
+  comments: string;
+  whenwanttorelocate: string;
+  whereplannedtolive: string;
+  expectedsupportfromtemple: string;
+  children: [
+    {
+      name: string;
+      age: number;
+    }
+  ];
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface counselor {
   id: string;

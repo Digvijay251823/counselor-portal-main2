@@ -4,7 +4,6 @@ import CopyClipBoard from "@/Components/utils/CopyToClipBoard";
 import DateFormatter from "@/Components/utils/DateFormatter";
 import { LinksActivator } from "@/Components/utils/LinksActivator";
 import Modal from "@/Components/utils/Modal";
-import SubmitHandlerButton from "@/Components/utils/SubmitHandlerButton";
 import WarningPage from "@/Components/utils/WarningPage";
 import {
   ClipboardDocumentCheckIcon,
@@ -12,12 +11,7 @@ import {
   PencilSquareIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import {
   ChangeEvent,
   useCallback,
@@ -53,7 +47,6 @@ export default function RsvpPage({
   const [membersComming, setMembersComming] = useState(1);
   const [SubmittedSuccess, setSubmittedSuccess] = useState(false);
   const params = useParams();
-  const pathname = usePathname();
   const formRef = useRef<HTMLFormElement>(null);
   const { state, dispatch } = useGlobalState();
   const [computedFormattedString, setFormattedString] = useState("");
@@ -270,7 +263,7 @@ export default function RsvpPage({
                   {CounseleeDetails?.initiatedName}
                 </p>
               ) : (
-                <p className="text-purple-500 text-xl font-bold">{`${CounseleeDetails.firstName} ${CounseleeDetails.lastName}`}</p>
+                <p className="text-purple-500 text-xl font-bold">{`${CounseleeDetails?.firstName} ${CounseleeDetails?.lastName}`}</p>
               )}
             </div>
             <button
@@ -285,81 +278,79 @@ export default function RsvpPage({
         </>
       )}
 
-      <div className="flex justify-center w-full">
-        <div
-          className={`md:mx-10 mx-3 mb-20 md:w-[80vw] w-[90vw] p-5 rounded-2xl shadow-xl ${
-            state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
-          }`}
-        >
-          <form onSubmit={(e) => e.preventDefault()} ref={formRef}>
-            <div className="flex flex-col gap-5 ">
-              <div className="flex flex-col gap-5">
-                {currentCounselor && (
-                  <div className="flex md:flex-row flex-col items-center md:gap-5">
-                    <div className="flex items-center gap-4">
-                      <p
-                        className={`w-max p-2 rounded-full ${
-                          state.theme.theme === "LIGHT"
-                            ? "bg-gray-50"
-                            : "bg-stone-800"
-                        }`}
-                      >
-                        <HiUsers />
+      {futureSessions && Object?.keys(futureSessions)?.length > 0 ? (
+        <div className="flex justify-center w-full">
+          <div
+            className={`md:mx-10 mx-3 mb-20 md:w-[80vw] w-[90vw] p-5 rounded-2xl shadow-xl ${
+              state.theme.theme === "LIGHT" ? "bg-white" : "bg-stone-900"
+            }`}
+          >
+            <form onSubmit={(e) => e.preventDefault()} ref={formRef}>
+              <div className="flex flex-col gap-5 ">
+                <div className="flex flex-col gap-5">
+                  {currentCounselor && (
+                    <div className="flex md:flex-row flex-col items-center md:gap-5">
+                      <div className="flex items-center gap-4">
+                        <p
+                          className={`w-max p-2 rounded-full ${
+                            state.theme.theme === "LIGHT"
+                              ? "bg-gray-50"
+                              : "bg-stone-800"
+                          }`}
+                        >
+                          <HiUsers />
+                        </p>
+                        <p className="font-bold text-xl">Counselor:</p>
+                      </div>
+                      <p className="font-semibold text-lg">
+                        {currentCounselor?.initiatedName}
                       </p>
-                      <p className="font-bold text-xl">Counselor:</p>
                     </div>
-                    <p className="font-semibold text-lg">
-                      {currentCounselor.initiatedName}
-                    </p>
+                  )}
+                  <div className="">
+                    <h1 className="font-bold text-lg text-center">
+                      Upcomming Session
+                    </h1>
                   </div>
-                )}
-                <div className="">
-                  <h1 className="font-bold text-lg text-center">
-                    Upcomming Session
+                  <h1 className="md:text-5xl text-3xl font-semibold text-center">
+                    {futureSessions?.name
+                      ? futureSessions?.name
+                      : "No Session To Show"}
                   </h1>
-                </div>
-                <h1 className="md:text-5xl text-3xl font-semibold text-center">
-                  {futureSessions?.name}
-                </h1>
-                <div className="flex justify-center">
-                  <DateFormatter dateString={futureSessions.startTime} />
-                </div>
-                <div className="w-full flex flex-col items-center">
-                  <label htmlFor="membersComming" className="font-semibold">
-                    How Many Members Are Comming Including You{" "}
-                    <i className="text-red-400">*</i>
-                  </label>
-                  <input
-                    type="number"
-                    id="membersComming"
-                    value={membersComming}
-                    name="membersComming"
-                    className={`border px-2 py-1.5 w-full md:w-[400px] rounded-lg mt-2 ${
-                      state.theme.theme === "LIGHT"
-                        ? "border-gray-300"
-                        : "border-stone-600 bg-stone-900"
-                    }`}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      setMembersComming(Number(e.target.value))
-                    }
-                  />
+                  <div className="flex justify-center">
+                    {futureSessions?.startTime ? (
+                      <DateFormatter dateString={futureSessions?.startTime} />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  {futureSessions?.startTime ? (
+                    <div className="w-full flex flex-col items-center">
+                      <label htmlFor="membersComming" className="font-semibold">
+                        How Many Members Are Comming Including You{" "}
+                        <i className="text-red-400">*</i>
+                      </label>
+                      <input
+                        type="number"
+                        id="membersComming"
+                        value={membersComming}
+                        name="membersComming"
+                        className={`border px-2 py-1.5 w-full md:w-[400px] rounded-lg mt-2 ${
+                          state.theme.theme === "LIGHT"
+                            ? "border-gray-300"
+                            : "border-stone-600 bg-stone-900"
+                        }`}
+                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                          setMembersComming(Number(e.target.value))
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
-            </div>
-            <div className="flex justify-center p-5 gap-5 md:w-full">
-              <button
-                className={`text-lg font-semibold w-[120px] py-1.5 border rounded-lg ${
-                  state.theme.theme === "LIGHT"
-                    ? "border-gray-300"
-                    : "border-stone-700"
-                }`}
-                onClick={() => {
-                  handleSubmitRsvp(false);
-                }}
-              >
-                Cancel
-              </button>
-              {!isRSVP ? (
+              <div className="flex justify-center p-5 gap-5 md:w-full">
                 <button
                   className={`text-lg font-semibold w-[120px] py-1.5 border rounded-lg ${
                     state.theme.theme === "LIGHT"
@@ -367,27 +358,43 @@ export default function RsvpPage({
                       : "border-stone-700"
                   }`}
                   onClick={() => {
-                    handleSubmitRsvp(true);
+                    handleSubmitRsvp(false);
                   }}
                 >
-                  Confirm
+                  Cancel
                 </button>
-              ) : (
-                <button
-                  className={`text-lg font-semibold w-[120px] py-1.5 rounded-lg text-green-500 ${
-                    state.theme.theme === "LIGHT"
-                      ? "border-gray-300"
-                      : "border-stone-700"
-                  }`}
-                  disabled
-                >
-                  Confirmed
-                </button>
-              )}
-            </div>
-          </form>
+                {!isRSVP ? (
+                  <button
+                    className={`text-lg font-semibold w-[120px] py-1.5 border rounded-lg ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300"
+                        : "border-stone-700"
+                    }`}
+                    onClick={() => {
+                      handleSubmitRsvp(true);
+                    }}
+                  >
+                    Confirm
+                  </button>
+                ) : (
+                  <button
+                    className={`text-lg font-semibold w-[120px] py-1.5 rounded-lg text-green-500 ${
+                      state.theme.theme === "LIGHT"
+                        ? "border-gray-300"
+                        : "border-stone-700"
+                    }`}
+                    disabled
+                  >
+                    Confirmed
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
       <Modal
         isOpen={SubmittedSuccess}
         onClose={() => setSubmittedSuccess(false)}
