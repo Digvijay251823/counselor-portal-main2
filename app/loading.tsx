@@ -1,3 +1,4 @@
+"use client";
 import LogoMain from "@/Components/utils/icons/LogoMain";
 
 export default function LoadingComponent() {

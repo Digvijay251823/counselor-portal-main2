@@ -1,20 +1,7 @@
 "use client";
 import { useGlobalState } from "@/Components/context/state";
-import { usePathname, useRouter } from "next/navigation";
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { SERVER_URL } from "../config/config";
-import {
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-  UserIcon,
-} from "@heroicons/react/16/solid";
-import { POST } from "@/actions/POSTREQUESTS";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronDownIcon, UserIcon } from "@heroicons/react/16/solid";
 import { HiUsers } from "react-icons/hi";
 import { PencilSquareIcon } from "@heroicons/react/16/solid";
 import SuccessPage from "./SuccessPage";
@@ -28,13 +15,12 @@ interface Counselor {
 }
 
 function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
-  const router = useRouter();
   const [formState, setFormState] = useState<any>({
     firstName: "",
     lastName: "",
     age: 0,
     gender: "",
-    city: "",
+    address: "",
     currentCounselor: "",
   });
   const { state, dispatch } = useGlobalState();
@@ -62,7 +48,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
           const response = await fetch(`/api/counslee/${phoneNumber}`);
           if (response.ok) {
             const responseData = await response.json();
-            console.log(responseData?.content?.content);
             setOpenRegistration(false);
             setCounseleeObject(responseData.content.content);
           } else {
@@ -89,16 +74,15 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       setOpenRegistration(false);
     }
   }, [phoneNumber]);
-
   const validateStep = () => {
     const requiredFields = [
       "firstName",
       "lastName",
       "age",
       "gender",
-      "city",
-      "currentCounselor",
+      "address",
     ];
+
     const stepErrors: any = {};
 
     requiredFields.forEach((field: any) => {
@@ -106,7 +90,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
         stepErrors[field] = "This field is required";
       }
     });
-
     setErrors(stepErrors);
 
     return Object.keys(stepErrors).length === 0; // Return true if no errors
@@ -116,6 +99,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
     if (!validateStep()) {
       return;
     }
+
     const firstName = e.get("firstName")?.toString();
     const lastName = e.get("lastName")?.toString();
     const age = e.get("age")?.toString();
@@ -140,7 +124,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       phoneNumber,
       currentCounselor,
     };
-
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     try {
@@ -191,7 +174,6 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
           },
         ],
       };
-      console.log(formData);
       const response = await fetch("/api/counslee/changecounselorrequest", {
         method: "POST",
         headers: headers,
@@ -278,6 +260,7 @@ function ChangeForm({ counselors }: { counselors?: Counselor[] }) {
       setCounseleeObject({});
     }
   }
+
   return (
     <div>
       <div className="md:px-10 md:pt-20 md:pb-10 px-5 pt-10 pb-5">

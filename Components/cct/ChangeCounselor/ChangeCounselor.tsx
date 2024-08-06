@@ -66,6 +66,9 @@ export default function ChangeCounselor({
                   </div>
                 </td>
                 <td className={`px-6 py-3`}>
+                  <p>CURRENT COUNSELOR</p>
+                </td>
+                <td className={`px-6 py-3`}>
                   <div>
                     <p>SPOKEN TO EXISTING</p>
                   </div>
@@ -138,6 +141,9 @@ export default function ChangeCounselor({
                     <td className={`px-4 py-1.5`}>
                       {item.counselee.phoneNumber}
                     </td>
+                    {/* <td className={`px-4 py-1.5`}>
+                      {item.counselee.phoneNumber}
+                    </td> */}
                     <td className={`px-4 py-1.5`}>
                       {item.alreadySpokenToNewCounselor ? "Yes" : "NO"}
                     </td>
