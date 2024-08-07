@@ -17,6 +17,7 @@ function SessionPage({ response }: { response: sessions[] }) {
   useEffect(() => {
     setSessionArray(response);
   }, [response]);
+
   return (
     <div>
       <div>
@@ -64,61 +65,71 @@ function SessionPage({ response }: { response: sessions[] }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {sessionArray?.map((session, index) => (
-                    <tr
-                      key={index}
-                      className={
-                        state.theme.theme === "LIGHT"
-                          ? `bg-white border-b  hover:bg-stone-50`
-                          : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
-                      }
-                    >
-                      <td className={`px-4 py-1.5`}>{session.name}</td>
-                      <td className={`px-4 py-1.5`}>{session.description}</td>
-                      <td className={`px-4 py-1.5`}>
-                        {session.startTime ? (
-                          <DateFormatter dateString={session.startTime} />
-                        ) : (
-                          ""
-                        )}
-                      </td>
-                      <td className={`px-4 py-1.5`}>
-                        {session.createdAt ? (
-                          <DateFormatter dateString={session.createdAt} />
-                        ) : (
-                          ""
-                        )}
-                      </td>
-                      <td className={`px-4 py-1.5`}>
-                        {session.updatedAt ? (
-                          <DateFormatter dateString={session.updatedAt} />
-                        ) : (
-                          ""
-                        )}
-                      </td>
-                      <td className={`px-4 py-1.5`}>
-                        <div className="p-2 flex justify-center">
-                          <Reschedule session={session} />
-                        </div>
-                      </td>
-                      <td className={`px-4 py-1.5`}>
-                        <div>
-                          {session.expired ? (
-                            <div className="text-gray-400">Expired</div>
+                  {sessionArray?.length > 0 ? (
+                    sessionArray?.map((session, index) => (
+                      <tr
+                        key={index}
+                        className={
+                          state.theme.theme === "LIGHT"
+                            ? `bg-white border-b  hover:bg-stone-50`
+                            : `border-b hover:bg-stone-600 bg-stone-800 border-stone-700`
+                        }
+                      >
+                        <td className={`px-4 py-1.5`}>{session.name}</td>
+                        <td className={`px-4 py-1.5`}>{session.description}</td>
+                        <td className={`px-4 py-1.5`}>
+                          {session.startTime ? (
+                            <DateFormatter dateString={session.startTime} />
                           ) : (
-                            <DeleteSession
-                              sessionData={session}
-                              deletedSession={(value: sessions) => {
-                                setSessionArray((prev) =>
-                                  prev.filter((item) => item.id !== value.id)
-                                );
-                              }}
-                            />
+                            ""
                           )}
+                        </td>
+                        <td className={`px-4 py-1.5`}>
+                          {session.createdAt ? (
+                            <DateFormatter dateString={session.createdAt} />
+                          ) : (
+                            ""
+                          )}
+                        </td>
+                        <td className={`px-4 py-1.5`}>
+                          {session.updatedAt ? (
+                            <DateFormatter dateString={session.updatedAt} />
+                          ) : (
+                            ""
+                          )}
+                        </td>
+                        <td className={`px-4 py-1.5`}>
+                          <div className="p-2 flex justify-center">
+                            <Reschedule session={session} />
+                          </div>
+                        </td>
+                        <td className={`px-4 py-1.5`}>
+                          <div>
+                            {session.expired ? (
+                              <div className="text-gray-400">Expired</div>
+                            ) : (
+                              <DeleteSession
+                                sessionData={session}
+                                deletedSession={(value: sessions) => {
+                                  setSessionArray((prev) =>
+                                    prev.filter((item) => item.id !== value.id)
+                                  );
+                                }}
+                              />
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={20}>
+                        <div className="text-center py-10 text-gray-400">
+                          No Sessions To Show
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

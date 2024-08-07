@@ -4,11 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { email, password } = await req.json();
+    const { phoneNumber, password } = await req.json();
     const formData = {
-      email,
+      phoneNumber,
       password,
     };
+    console.log(formData);
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     const response = await fetch(`${SERVER_URL}/auth/authenticate`, {

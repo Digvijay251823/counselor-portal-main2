@@ -3,24 +3,28 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const { phoneNumber, email, password } = await req.json();
+    const formData = await req.json();
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-    const formData = {
-      phoneNumber,
-      email,
-      password,
-    };
-    const response = await fetch(`${SERVER_URL}/auth/registeration`, {
+
+    const filteredFormData = Object.entries(formData)
+      .filter(
+        ([key, value]) => value !== null && value !== undefined && value !== ""
+      )
+      .reduce((obj: any, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      }, {});
+
+    const response = await fetch(`${SERVER_URL}/Counselor/create`, {
       method: "POST",
       headers,
-      body: JSON.stringify(formData),
+      body: JSON.stringify(filteredFormData),
     });
     if (response.ok) {
-      const responseData = await response.json();
       return NextResponse.json(
-        { message: responseData.message },
-        { status: response.status }
+        { message: "SuccessFully Registered" },
+        { status: 200 }
       );
     } else {
       const errorData = await response.json();
@@ -29,6 +33,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: response.status }
       );
     }
+    // return NextResponse.json(
+    //   { message: " responseData.message" },
+    //   { status: 200 }
+    // );
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

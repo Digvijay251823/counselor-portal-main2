@@ -9,26 +9,29 @@ import LogoComponent from "@/Components/utils/icons/Logo";
 import LogoMain from "@/Components/utils/icons/LogoMain";
 
 const Signin: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [remembered, setRemembered] = useState(false);
   const router = useRouter();
   const { state, dispatch } = useGlobalState();
   const handleSubmit = async (e: FormData) => {
-    const email = e.get("email")?.toString();
+    const phoneNumber = e.get("phoneNumber")?.toString();
     const passwordInput = e.get("password")?.toString();
     try {
-      const formData: any = { email, password: passwordInput };
+      const formData: any = { phoneNumber, password: passwordInput };
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
-      const response = await fetch("/api/auth/signin", {
+      const response = await fetch("/api/auth/assistant/signin", {
         method: "POST",
         headers,
         body: JSON.stringify(formData),
       });
       if (response.ok) {
         const responseData = await response.json();
-        if (responseData.counselor.role === "counselor") {
+        if (
+          responseData.counselor.role === "counselor" ||
+          responseData.counselor.role === "assistantcounselor"
+        ) {
           router.push("/counselor/counselee");
         } else {
           router.push("/cct/counselee");
@@ -79,23 +82,28 @@ const Signin: React.FC = () => {
             <form className="space-y-4 md:space-y-6" action={handleSubmit}>
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="phoneNumber"
                   className={`block mb-2 text-sm font-medium `}
                 >
-                  Your email
+                  Your Phone Number
                 </label>
                 <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="tel"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    if (e.target.value.length > 10) {
+                      return;
+                    }
+                    setphoneNumber(e.target.value);
+                  }}
                   className={`border sm:text-sm rounded-lg block w-full p-2.5 focus:ring-4 outline-none ${
                     state.theme.theme === "LIGHT"
                       ? "bg-stone-50 border-stone-300 text-stone-900 focus:ring-purple-100 focus:border-purple-500"
                       : "bg-stone-700 border-stone-600 placeholder-stone-400  focus:ring-purple-950 focus:border-purple-500"
                   }`}
-                  placeholder="name@company.com"
+                  placeholder="enter you contact number"
                   required
                 />
               </div>

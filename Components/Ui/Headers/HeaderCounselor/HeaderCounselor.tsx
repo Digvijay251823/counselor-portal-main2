@@ -18,6 +18,8 @@ import { TbClock } from "react-icons/tb";
 
 interface Props {
   id: string;
+  firstName: string;
+  lastName: string;
   initiatedName: string;
   email: string;
   phoneNumber: string;
@@ -261,7 +263,11 @@ function MenuCBM({ response }: { response: Props }) {
             <LuUser2 className="h-4 w-4" />
           </p>
           <div>
-            <p className="font-bold">{response?.initiatedName}</p>
+            <p className="font-bold">
+              {response?.initiatedName
+                ? response?.initiatedName
+                : `${response?.firstName} ${response?.lastName}`}
+            </p>
             <p
               className={`font-semibold ${
                 state.theme.theme === "LIGHT"

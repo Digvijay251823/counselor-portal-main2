@@ -9,6 +9,8 @@ import Link from "next/link";
 import { LogoutCounselor } from "@/actions/ADMINREQUESTS";
 interface Props {
   id: string;
+  firstName: string;
+  lastName: string;
   initiatedName: string;
   email: string;
   phoneNumber: string;
@@ -139,7 +141,11 @@ function MenuCBM({ response }: { response: Props }) {
             <LuUser2 className="h-4 w-4" />
           </p>
           <div>
-            <p className="font-bold text">{response?.initiatedName}</p>
+            <p className="font-bold text">
+              {response?.initiatedName
+                ? response?.initiatedName
+                : `${response?.firstName} ${response?.lastName}`}
+            </p>
             <p
               className={`font-semibold ${
                 state.theme.theme === "LIGHT"
