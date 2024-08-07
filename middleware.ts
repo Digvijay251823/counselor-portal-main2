@@ -20,5 +20,13 @@ export const config = {
     "/counselor/sadhana",
     "/counselor/scan",
     "/counselor/sadhana/configure",
+    "/cct/counselee",
+    "/cct/changecounselor",
+    "/cct/counselors",
+    "/cct/cbmmeetings",
+    "/cct/cbmattendance",
+    "/cct/sevas",
+    "/cct/planningrelocate",
+    "/cct/scan",
   ],
 };

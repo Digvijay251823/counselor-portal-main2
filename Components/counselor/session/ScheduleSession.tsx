@@ -52,6 +52,7 @@ function ScheduleSession({
         type: "SHOW_TOAST",
         payload: { type: "ERROR", message: "please fill all the details" },
       });
+      return;
     }
     const formData: any = {
       name: name,

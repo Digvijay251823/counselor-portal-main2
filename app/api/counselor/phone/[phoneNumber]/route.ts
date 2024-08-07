@@ -9,6 +9,7 @@ export async function GET(
     const response = await fetch(
       `${SERVER_URL}/Counselor/phonenumber/${params.phoneNumber}`
     );
+
     if (response.ok) {
       const responseData = await response.json();
       return NextResponse.json(

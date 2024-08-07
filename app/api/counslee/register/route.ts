@@ -2,16 +2,8 @@ import { SERVER_URL } from "@/Components/config/config";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const {
-    firstName,
-    lastName,
-    age,
-    gender,
-    address,
-    phoneNumber,
-    currentCounselor,
-  } = await req.json();
-
+  const { firstName, lastName, age, gender, address, phoneNumber } =
+    await req.json();
   const formData = {
     firstName,
     lastName,
@@ -19,7 +11,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     gender,
     address,
     phoneNumber,
-    currentCounselor,
   };
   const filteredFormData = Object.entries(formData)
     .filter(
