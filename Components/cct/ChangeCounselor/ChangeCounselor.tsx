@@ -1,9 +1,6 @@
 "use client";
 
 import { useGlobalState } from "@/Components/context/state";
-import Modal from "@/Components/utils/Modal";
-import SubmitHandlerButton from "@/Components/utils/SubmitHandlerButton";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import Filter from "./Filter";
 import Tabs from "./Tabs";
 import ApproveAndAllotCounselor from "./ApproveAndAllotCounselor";
@@ -143,9 +140,15 @@ export default function ChangeCounselor({
                       {item.counselee.phoneNumber}
                     </td>
                     <td className={`px-4 py-1.5`}>
-                      {item.counselee.currentCounselor?.initiatedName
-                        ? item.counselee.currentCounselor?.initiatedName
-                        : `${item.counselee.currentCounselor?.firstName} ${item.counselee.currentCounselor?.lastName}`}
+                      {item.counselee.currentCounselor ? (
+                        item.counselee.currentCounselor?.initiatedName ? (
+                          item.counselee.currentCounselor?.initiatedName
+                        ) : (
+                          `${item.counselee.currentCounselor?.firstName} ${item.counselee.currentCounselor?.lastName}`
+                        )
+                      ) : (
+                        <p className="text-gray-400">----</p>
+                      )}
                     </td>
                     <td className={`px-4 py-1.5`}>
                       {item.alreadySpokenToNewCounselor ? "Yes" : "NO"}

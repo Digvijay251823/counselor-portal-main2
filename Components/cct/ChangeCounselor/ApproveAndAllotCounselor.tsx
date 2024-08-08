@@ -16,6 +16,7 @@ export default function ApproveAndAllotCounselor({
   const [counselors] = useState(data);
   const { state, dispatch } = useGlobalState();
   const [selectedCounselor, setSelectedCounselorr] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(e: FormData) {
     const formData = {
@@ -79,13 +80,15 @@ export default function ApproveAndAllotCounselor({
                   Allot One Counselor
                 </label>
                 <MenuIconAndDropDownDevotees
+                  setLoading={(value: boolean) => setIsLoading(value)}
                   DataArr={counselors}
                   setSelected={(value) => setSelectedCounselorr(value)}
                 />
               </div>
             </div>
-            {selectedCounselor?.id && (
-              <div className="flex justify-center py-10">
+
+            <div className="flex justify-center py-10">
+              {selectedCounselor.id && (
                 <SubmitHandlerButton
                   btnStyles={`w-[140px] py-2 focus:ring-4 text-lg font-semibold ${
                     state.theme.theme === "LIGHT"
@@ -93,8 +96,13 @@ export default function ApproveAndAllotCounselor({
                       : "bg-purple-400 focus:ring-purple-800"
                   }`}
                 />
-              </div>
-            )}
+              )}
+              {isLoading && (
+                <button disabled className="">
+                  Loading...
+                </button>
+              )}
+            </div>
           </form>
         </div>
       </Modal>
@@ -107,9 +115,11 @@ type PropsMenu = {
   DataArr: any;
   defaultVal?: string;
   position?: string;
+  setLoading: (value: boolean) => void;
 };
 
 function MenuIconAndDropDownDevotees({
+  setLoading,
   setSelected,
   DataArr,
   defaultVal,
@@ -129,6 +139,7 @@ function MenuIconAndDropDownDevotees({
 
   const handleGetCounselor = async (PrabhujiPhone: string) => {
     try {
+      setLoading(true);
       const response = await fetch(`/api/counselor/phone/${PrabhujiPhone}`);
       if (response.ok) {
         const responseData = await response.json();
@@ -145,6 +156,8 @@ function MenuIconAndDropDownDevotees({
         type: "SHOW_TOAST",
         payload: { message: error.message, type: "ERROR" },
       });
+    } finally {
+      setLoading(false);
     }
   };
 
