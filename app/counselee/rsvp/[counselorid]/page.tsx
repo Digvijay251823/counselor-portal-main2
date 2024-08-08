@@ -3,11 +3,7 @@ import RsvpPage from "@/Components/counselee/rsvp/RSVPCounselee";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import NotExistsResource from "@/Components/utils/NotFoundComponent";
 import { unstable_noStore } from "next/cache";
-import dynamic from "next/dynamic";
 import React from "react";
-const CounseleeAttendance = dynamic(
-  () => import("@/Components/counselee/attendance/CounseleeAttendance")
-);
 
 async function getRsvpEntries(id: string, scheduledSessionId: string) {
   unstable_noStore();
