@@ -8,6 +8,9 @@ import React from "react";
 async function getRsvpEntries(id: string, scheduledSessionId: string) {
   unstable_noStore();
   try {
+    if (!scheduledSessionId || !id) {
+      return;
+    }
     const response = await fetch(
       `${SERVER_URL}/counselee-attendance/counselor/rsvp?counselorid=${id}&scheduledSessionId=${scheduledSessionId}`
     );
@@ -78,9 +81,10 @@ async function page({
     const response = await getScheduledSessions(params.counselorid);
     const counselees = await getCounselees(params.counselorid);
     const rsvpEntries = await getRsvpEntries(
-      params.counselorid,
-      searchParams.scheduledSessionId
+      params?.counselorid,
+      searchParams?.scheduledSessionId
     );
+
     if (!response) {
       return <NotExistsResource message="No Session Found" />;
     }
@@ -122,8 +126,7 @@ async function page({
           sessions={response?.content}
           results={results}
           currentCounselor={counselees.currentCounselor}
-          rsvps={rsvpEntries.content}
-          rsvpCount={rsvpEntries.total}
+          rsvps={rsvpEntries?.content}
         />
       </div>
     );

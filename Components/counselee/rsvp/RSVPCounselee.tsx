@@ -28,13 +28,11 @@ export default function RsvpPage({
   results,
   currentCounselor,
   rsvps,
-  rsvpCount,
 }: {
   sessions: sessions[];
   results: counselee[];
   currentCounselor: counselor;
   rsvps: any;
-  rsvpCount: number;
 }) {
   const router = useRouter();
   const [futureSessions, setFutureSessions] = useState<sessions | any>({});
