@@ -105,18 +105,16 @@ function AttendancePage({
                 <th className={`px-6 py-3`}>
                   <div className="flex items-center gap-2">
                     <p>Start Time</p>
-                    <Filter category="startTime" />
                   </div>
                 </th>
-
+                <th className={`px-6 py-3`}>Mode Of Attendance</th>
+                <th className={`px-6 py-3`}>type</th>
                 <th className={`px-6 py-3`}>
                   <div className="flex items-center gap-2">
                     <p>Status</p>
                     <Filter category="approved" />
                   </div>
                 </th>
-                <th className={`px-6 py-3`}>type</th>
-                <th className={`px-6 py-3`}>Mode Of Attendance</th>
               </tr>
             </thead>
             <tbody>

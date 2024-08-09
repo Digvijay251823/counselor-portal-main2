@@ -1,6 +1,7 @@
 import { SERVER_URL } from "@/Components/config/config";
 import ErrorComponent from "@/Components/utils/ErrorPage";
 import Pagination from "@/Components/utils/Pagination";
+import PaginationPage from "@/Components/utils/PaginationPage/PaginationPage";
 import { unstable_noStore } from "next/cache";
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
@@ -42,9 +43,14 @@ async function page({
       throw new Error("Sign in to access the resource");
     }
     const response = await getAttendance(queryString);
+    console.log(response.totalPages);
     return (
       <div className="flex flex-col items-center">
         <CBMAttendance response={response?.content} />
+        <PaginationPage
+          totalPages={response.totalPages}
+          currentPage={response.page}
+        />
         <Pagination totalElements={response.total} skipped={response.skip} />
       </div>
     );

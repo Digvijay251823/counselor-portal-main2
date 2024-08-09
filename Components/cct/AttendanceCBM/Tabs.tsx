@@ -11,7 +11,7 @@ export default function Tabs() {
   );
 
   return (
-    <div className="mt-5">
+    <div>
       <ul className="text-sm font-medium text-center text-gray-500 rounded-lg shadow flex dark:divide-gray-700 dark:text-gray-400">
         <li className="w-full focus-within:z-10">
           <Link

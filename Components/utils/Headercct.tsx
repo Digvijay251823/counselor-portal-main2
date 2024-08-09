@@ -442,7 +442,7 @@ function MenuCBM() {
                   : "hover:bg-stone-950"
               } rounded-[20px]`}
             >
-              <Link href="/cct/cbmattendance">
+              <Link href="/cct/cbmattendance?size=30">
                 <div>
                   <div className="flex items-center gap-3">
                     <p

@@ -3,13 +3,16 @@ import { useGlobalState } from "@/Components/context/state";
 import DateFormatter from "@/Components/utils/DateFormatter";
 import React from "react";
 import Tabs from "./Tabs";
+import Filter from "./Filter";
+import DateFilter from "./DateFilter";
 
 function CBMAttendance({ response }: { response: Attendance[] }) {
   const { state } = useGlobalState();
   return (
     <div className="lg:px-10 md:w-[98vw] w-[98vw] px-2">
       <div>
-        <div className="flex items-start mb-5">
+        <div className="flex md:flex-row flex-col items-start my-5 md:justify-between gap-5">
+          <DateFilter />
           <Tabs />
         </div>
         <div className="overflow-x-auto shadow-md rounded">
@@ -35,13 +38,15 @@ function CBMAttendance({ response }: { response: Attendance[] }) {
                 }`}
               >
                 <th className={`px-6 py-3`}>
-                  <div>
+                  <div className="flex items-center gap-2">
                     <p>NAME</p>
+                    <Filter category="initiatedName" />
                   </div>
                 </th>
                 <th className={`px-6 py-3`}>
-                  <div>
+                  <div className="flex items-center gap-2">
                     <p>CONTACT NUMBER</p>
+                    <Filter category="phoneNumber" />
                   </div>
                 </th>
                 <th className={`px-6 py-3`}>
@@ -50,8 +55,9 @@ function CBMAttendance({ response }: { response: Attendance[] }) {
                   </div>
                 </th>
                 <th className={`px-6 py-3`}>
-                  <div>
+                  <div className="flex items-center gap-2">
                     <p>SESSION NAME</p>
+                    <Filter category="sessionName" />
                   </div>
                 </th>
                 <th className={`px-6 py-3`}>
