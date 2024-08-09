@@ -47,7 +47,11 @@ async function page({
           pendingRecordsCount={response.pendingRecordsCount}
           approvedRecordsCount={response.approvedRecordsCount}
         />
-        <Pagination totalElements={response.total} skipped={response.skip} />
+        <Pagination
+          totalElements={response.total}
+          skipped={response.skip}
+          limit={response?.limit}
+        />
       </div>
     );
   } catch (error: any) {

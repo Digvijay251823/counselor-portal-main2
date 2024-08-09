@@ -23,6 +23,19 @@ import {
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { HiUsers } from "react-icons/hi";
 
+function formatTimeFromISO(isoString: string) {
+  const date = new Date(isoString);
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours ? hours : 12; // The hour '0' should be '12'
+  const minutesStr = minutes < 10 ? "0" + minutes : minutes; // Add leading zero to minutes
+
+  return `${hours}:${minutesStr} ${ampm}`;
+}
+
 export default function RsvpPage({
   sessions,
   results,
@@ -343,7 +356,10 @@ export default function RsvpPage({
                   </h1>
                   <div className="flex justify-center">
                     {futureSessions?.startTime ? (
-                      <DateFormatter dateString={futureSessions?.startTime} />
+                      <div className="flex flex-col items-center font-semibold">
+                        <DateFormatter dateString={futureSessions?.startTime} />
+                        <p>{formatTimeFromISO(futureSessions.startTime)}</p>
+                      </div>
                     ) : (
                       ""
                     )}

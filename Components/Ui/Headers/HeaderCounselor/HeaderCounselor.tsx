@@ -146,7 +146,7 @@ export default function HeaderCounselor({ response }: { response: Props }) {
             Activities
           </p>
         </Link>
-        <Link href={"/counselor/attendance?size=30"}>
+        <Link href={"/counselor/attendance?size=30&page=0"}>
           <p
             className={`px-3 py-2 rounded-lg ${
               state.theme.theme === "LIGHT"
