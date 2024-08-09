@@ -27,21 +27,18 @@ export default function RsvpPage({
   sessions,
   results,
   currentCounselor,
-  rsvps,
 }: {
   sessions: sessions[];
   results: counselee[];
   currentCounselor: counselor;
-  rsvps: any;
 }) {
-  const router = useRouter();
   const [futureSessions, setFutureSessions] = useState<sessions | any>({});
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isRSVP, setIsRsvp] = useState(false);
   const [CounseleeDetails, setCounseleeDetails] = useState<any>({});
   const [warning, setWarning] = useState(false);
   const [rsvpStringMessage, setRsvpStringMessage] = useState("");
-  const [previousRsvp, setPreviousRsvp] = useState(rsvps ? rsvps : []);
+  const [previousRsvp, setPreviousRsvp] = useState([]);
   const [membersComming, setMembersComming] = useState(1);
   const [SubmittedSuccess, setSubmittedSuccess] = useState(false);
   const params = useParams();
@@ -96,7 +93,36 @@ export default function RsvpPage({
     if (!futureSessions?.id) {
       return undefined;
     }
-    router.push(`?scheduledSessionId=${futureSessions.id}`);
+    (async () => {
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      try {
+        const formData = {
+          scheduledSessionId: futureSessions.id,
+          counselorid: params.counselorid,
+        };
+        const response = await fetch(`/api/previousrsvp`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(formData),
+        });
+        if (response.ok) {
+          const responseData = await response.json();
+          setPreviousRsvp(responseData.content);
+        } else {
+          const responseData = await response.json();
+          dispatch({
+            type: "SHOW_TOAST",
+            payload: { type: "ERROR", message: responseData.message },
+          });
+        }
+      } catch (error: any) {
+        dispatch({
+          type: "SHOW_TOAST",
+          payload: { type: "ERROR", message: error.message },
+        });
+      }
+    })();
   }, [futureSessions?.id]);
 
   const linksActivator = LinksActivator();
@@ -169,17 +195,17 @@ export default function RsvpPage({
         scheduledSession: futureSessions,
       };
       if (!rsvp) {
-        setPreviousRsvp((prev: any) => {
+        setPreviousRsvp((prev) => {
           const previousRsvp = [...prev];
           const remaining = previousRsvp.filter(
-            (item) => item?.counselee?.id !== CounseleeDetails.id
+            (item: any) => item?.counselee?.id !== CounseleeDetails.id
           );
           handleShare(remaining);
           return remaining;
         });
       } else {
         if (!isRSVP && rsvp) {
-          const prevRvsp = [...previousRsvp, formDatatoShare];
+          const prevRvsp: any = [...previousRsvp, formDatatoShare];
           handleShare(prevRvsp);
           setPreviousRsvp(prevRvsp);
         }

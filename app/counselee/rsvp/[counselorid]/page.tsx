@@ -5,29 +5,6 @@ import NotExistsResource from "@/Components/utils/NotFoundComponent";
 import { unstable_noStore } from "next/cache";
 import React from "react";
 
-async function getRsvpEntries(id: string, scheduledSessionId: string) {
-  unstable_noStore();
-  try {
-    if (!scheduledSessionId || !id) {
-      return;
-    }
-    const response = await fetch(
-      `${SERVER_URL}/counselee-attendance/counselor/rsvp?counselorid=${id}&scheduledSessionId=${scheduledSessionId}`
-    );
-    if (response.ok) {
-      const responseData = await response.json();
-      return responseData;
-    } else {
-      if (response.status === 404) {
-        return null;
-      }
-      const errorData = await response.json();
-      throw new Error(errorData.message);
-    }
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
-}
 async function getCounselees(id: string) {
   unstable_noStore();
   try {
@@ -80,11 +57,6 @@ async function page({
   try {
     const response = await getScheduledSessions(params.counselorid);
     const counselees = await getCounselees(params.counselorid);
-    const rsvpEntries = await getRsvpEntries(
-      params?.counselorid,
-      searchParams?.scheduledSessionId
-    );
-
     if (!response) {
       return <NotExistsResource message="No Session Found" />;
     }
@@ -126,7 +98,6 @@ async function page({
           sessions={response?.content}
           results={results}
           currentCounselor={counselees.currentCounselor}
-          rsvps={rsvpEntries?.content}
         />
       </div>
     );
